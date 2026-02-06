@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-// The PHP API endpoint (In dev, we call the localhost / public / api)
-// In production, this will be /api/mailer.php
-const API_URL = import.meta.env.DEV ? 'http://localhost:5173/api/mailer.php' : '/api/mailer.php';
+// The PHP API endpoint (In dev, we call the localhost / public / mailer.php)
+// In production, this will be /mailer.php
+const API_URL = import.meta.env.DEV ? 'http://localhost:5173/mailer.php' : '/mailer.php';
 
 export const polishMessage = async (message: string, isEnglish: boolean) => {
   const prompt = isEnglish
