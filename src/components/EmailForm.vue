@@ -27,42 +27,66 @@ const sendEmail = async () => {
       to_email: form.value.clientEmail,
       subject: form.value.subject,
       body: `
-        <div style="background-color: #080b1a; color: #ffffff; padding: 40px; font-family: 'Orbitron', 'Inter', Arial, sans-serif; max-width: 600px; margin: 40px auto; border: 1px solid #00f7ff33; border-radius: 16px; box-shadow: 0 0 40px rgba(0, 247, 255, 0.1);">
-          <!-- Futuristic Header -->
-          <div style="border-bottom: 2px solid #00f7ff; padding-bottom: 25px; margin-bottom: 35px; text-align: center;">
-            <p style="color: #00f7ff; font-family: 'Orbitron', sans-serif; letter-spacing: 6px; margin: 0; font-size: 20px; text-transform: uppercase; text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);">🛰️ Secure Transmission</p>
-          </div>
+        <div style="background-color: #080b1a; color: #ffffff; padding: 40px; font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 40px auto; border: 1px solid #00f7ff33; border-radius: 16px; box-shadow: 0 0 50px rgba(0, 247, 255, 0.15);">
           
-          <!-- Interface Chassis -->
-          <div style="background: rgba(17, 22, 51, 0.6); padding: 35px; border-radius: 12px; border-left: 4px solid #00f7ff; border-right: 1px solid rgba(0, 247, 255, 0.1);">
-            
-            <!-- Origin Chip -->
-            <div style="margin-bottom: 25px;">
-              <span style="display: inline-block; padding: 3px 10px; border: 1px solid #00f7ff; color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 2px; border-radius: 4px; background: rgba(0, 247, 255, 0.1); margin-bottom: 10px; font-weight: bold;">ORIGIN_ID</span>
-              <p style="margin: 0; color: #ffffff; font-size: 16px; font-weight: 500;">B. Eng. Felipe de Jesús Miramontes Romero</p>
+          <!-- HUD System Header -->
+          <div style="border-bottom: 1px solid rgba(0, 247, 255, 0.3); padding-bottom: 20px; margin-bottom: 40px; display: table; width: 100%;">
+            <div style="display: table-cell; vertical-align: middle;">
+              <span style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 11px; letter-spacing: 2px; font-weight: bold;">[ ● ONLINE ]</span>
+              <span style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 11px; letter-spacing: 2px; font-weight: bold; margin-left: 15px; opacity: 0.7;">[ ● SECURE_AUTH ]</span>
             </div>
-            
-            <!-- Subject Chip -->
-            <div style="margin-bottom: 35px;">
-              <span style="display: inline-block; padding: 3px 10px; border: 1px solid #00f7ff; color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 2px; border-radius: 4px; background: rgba(0, 247, 255, 0.1); margin-bottom: 10px; font-weight: bold;">COMMS_RE</span>
-              <p style="margin: 0; color: #00f7ff; font-size: 18px; font-weight: 600;">${form.value.subject}</p>
+            <div style="display: table-cell; text-align: right; vertical-align: middle; color: #5b6ea3; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 1px;">
+              TIMESTAMP: ${new Date().toISOString().split('T')[0]} | V3.0
             </div>
+          </div>
+
+          <!-- Component Interface -->
+          <div style="background: rgba(17, 22, 51, 0.4); padding: 35px; border-radius: 12px; border: 1px solid rgba(0, 247, 255, 0.1); position: relative;">
             
-            <!-- Data Stream -->
-            <div style="border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 30px;">
-              <div style="margin-bottom: 15px;">
-                <span style="display: inline-block; color: #5b6ea3; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px;">[ DECRYPTED_DATA_STREAM ]</span>
+            <!-- Link Origin -->
+            <div style="margin-bottom: 30px;">
+              <div style="margin-bottom: 8px;">
+                <span style="display: inline-block; color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px;">👤 LINK_ORIGIN_VERIFIED</span>
               </div>
-              <div style="color: #cbd5e1; line-height: 1.8; font-size: 16px; text-align: left; padding: 20px; background: rgba(0, 0, 0, 0.2); border-radius: 8px; border: 1px dashed rgba(0, 247, 255, 0.2);">
+              <p style="margin: 0; color: #ffffff; font-size: 17px; font-weight: 500; border-left: 2px solid #00f7ff; padding-left: 15px;">
+                B. Eng. Felipe de Jesús Miramontes Romero
+              </p>
+            </div>
+            
+            <!-- Transceiver Subject -->
+            <div style="margin-bottom: 40px;">
+              <div style="margin-bottom: 8px;">
+                <span style="display: inline-block; color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px;">🛰️ TRANSCEIVER_SUBJECT</span>
+              </div>
+              <p style="margin: 0; color: #00f7ff; font-size: 20px; font-weight: 600; text-shadow: 0 0 10px rgba(0, 247, 255, 0.3); border-left: 2px solid #00f7ff; padding-left: 15px;">
+                ${form.value.subject}
+              </p>
+            </div>
+            
+            <!-- Data Stream Section -->
+            <div style="border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 35px;">
+              <div style="margin-bottom: 20px;">
+                <span style="display: inline-block; color: #5b6ea3; font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 3px;">📥 DECRYPTED_DATA_PACKETS</span>
+              </div>
+              <div style="color: #cbd5e1; line-height: 1.8; font-size: 16px; padding: 25px; background: rgba(0, 0, 0, 0.3); border-radius: 12px; border: 1px solid rgba(0, 247, 255, 0.15); box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);">
+                <div style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 8px; margin-bottom: 15px; opacity: 0.5;">[ START_ENVELOPE ]</div>
                 ${form.value.message.replace(/\n/g, '<br>')}
+                <div style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 8px; margin-top: 25px; opacity: 0.5;">[ END_ENVELOPE ]</div>
               </div>
             </div>
           </div>
           
-          <!-- Neural Footer -->
-          <div style="margin-top: 45px; text-align: center; border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 25px;">
-            <p style="color: #00f7ff; font-size: 10px; letter-spacing: 3px; margin: 0; font-family: 'Orbitron', sans-serif; opacity: 0.8;">FELIPEMIRAMONTESR.NET | V2.9 ELITE</p>
-            <p style="color: #273452; font-size: 9px; margin-top: 10px; font-family: 'Orbitron', sans-serif;">Protocol: SMTP_AUTH_SSL | Cipher: RSA_2048</p>
+          <!-- Neural Link Footer -->
+          <div style="margin-top: 50px; border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 30px;">
+            <div style="display: table; width: 100%;">
+              <div style="display: table-cell; vertical-align: middle;">
+                <p style="color: #00f7ff; font-size: 10px; letter-spacing: 4px; margin: 0; font-family: 'Orbitron', sans-serif; text-transform: uppercase;">🛡️ System Integrity Verified</p>
+                <p style="color: #273452; font-size: 8px; margin-top: 8px; font-family: 'Orbitron', sans-serif;">Auth: SMTP_TLS_V1.3 | Node: mailer.felipemiramontesr.net</p>
+              </div>
+              <div style="display: table-cell; text-align: right; vertical-align: middle;">
+                <div style="width: 8px; height: 8px; background: #00f7ff; border-radius: 50%; display: inline-block; box-shadow: 0 0 10px #00f7ff;"></div>
+              </div>
+            </div>
           </div>
         </div>
       `
