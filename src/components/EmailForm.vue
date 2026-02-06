@@ -1,16 +1,22 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { Mail, Send, User, AtSign, Type, Loader2 } from 'lucide-vue-next';
 import { sendEmailViaProxy } from '../services/aiService';
 
 const form = ref({
-  clientName: 'B. Eng. Felipe de Jesús Miramontes Romero',
-  clientEmail: 'info@felipemiramontesr.net',
+  clientName: '',
+  clientEmail: '',
   subject: '',
   message: '',
 });
 
 const isSending = ref(false);
+
+onMounted(() => {
+  // Explicit re-fill on mount to beat aggressive browser state
+  form.value.clientName = 'B. Eng. Felipe de Jesús Miramontes Romero';
+  form.value.clientEmail = 'info@felipemiramontesr.net';
+});
 
 const sendEmail = async () => {
   if (!form.value.message || !form.value.subject) {
@@ -64,15 +70,15 @@ const sendEmail = async () => {
       </div>
     </div>
 
-    <form @submit.prevent="sendEmail" class="main-form">
+    <form @submit.prevent="sendEmail" class="main-form" autocomplete="off">
       <div class="input-row">
         <div class="input-group">
           <label><User :size="14" /> Sender Name</label>
-          <input v-model="form.clientName" type="text" placeholder="Your Name" required />
+          <input v-model="form.clientName" type="text" placeholder="Your Name" required autocomplete="off" />
         </div>
         <div class="input-group">
           <label><AtSign :size="14" /> Sender Email</label>
-          <input v-model="form.clientEmail" type="email" placeholder="your@email.com" required />
+          <input v-model="form.clientEmail" type="email" placeholder="your@email.com" required autocomplete="off" />
         </div>
       </div>
 
