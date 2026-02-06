@@ -36,21 +36,23 @@ const sendEmail = async () => {
           <!-- Content Case -->
           <div style="background: rgba(17, 22, 51, 0.6); padding: 25px; border-radius: 8px; border-left: 4px solid #00f7ff;">
             <p style="margin: 0 0 15px 0; color: #e0e0f0; font-size: 15px;">
-              <span style="color: #00f7ff; font-weight: bold; font-family: 'Orbitron', sans-serif; font-size: 10px; margin-right: 8px;">◈</span>
-              <span style="color: #00f7ff; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">SENDER:</span> ${form.value.clientName}
+              <span style="color: #00f7ff; font-weight: bold; font-family: 'Orbitron', sans-serif; font-size: 14px; margin-right: 10px;">⌬</span>
+              <span style="color: #00f7ff; font-weight: bold; font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 2px; font-size: 11px;">SENDER:</span> 
+              <span style="margin-left: 5px;">${form.value.clientName}</span>
             </p>
             
             <p style="margin: 0 0 25px 0; color: #ffffff; font-size: 16px;">
-              <span style="color: #00f7ff; font-weight: bold; font-family: 'Orbitron', sans-serif; font-size: 10px; margin-right: 8px;">◈</span>
-              <span style="color: #00f7ff; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">SUBJECT:</span> ${form.value.subject}
+              <span style="color: #00f7ff; font-weight: bold; font-family: 'Orbitron', sans-serif; font-size: 14px; margin-right: 10px;">⌬</span>
+              <span style="color: #00f7ff; font-weight: bold; font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 2px; font-size: 11px;">SUBJECT:</span> 
+              <span style="margin-left: 5px;">${form.value.subject}</span>
             </p>
             
             <div style="border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 20px;">
-              <p style="color: #00f7ff; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 15px 0;">
-                <span style="color: #00f7ff; font-weight: bold; font-family: 'Orbitron', sans-serif; font-size: 10px; margin-right: 8px;">◈</span>
+              <p style="color: #00f7ff; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 15px 0; font-family: 'Orbitron', sans-serif; font-size: 11px;">
+                <span style="color: #00f7ff; font-weight: bold; font-family: 'Orbitron', sans-serif; font-size: 14px; margin-right: 10px;">⌬</span>
                 MESSAGE:
               </p>
-              <div style="color: #cbd5e1; line-height: 1.8; font-size: 16px; text-align: justify;">
+              <div style="color: #cbd5e1; line-height: 1.8; font-size: 16px; text-align: justify; padding: 0 5px;">
                 ${form.value.message.replace(/\n/g, '<br>')}
               </div>
             </div>
@@ -58,7 +60,7 @@ const sendEmail = async () => {
           
           <!-- Footer -->
           <div style="margin-top: 40px; text-align: center; border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 20px;">
-            <p style="color: #5b6ea3; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin: 0;">NAVY TECH DESIGN - SECURITY BRIDGE v2.0</p>
+            <p style="color: #5b6ea3; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin: 0; font-family: 'Orbitron', sans-serif;">NAVY TECH DESIGN - SECURITY BRIDGE v2.0</p>
             <p style="color: #33446b; font-size: 10px; margin-top: 8px;">Encryption: AES-256 | Source: mailer.felipemiramontesr.net</p>
           </div>
         </div>
