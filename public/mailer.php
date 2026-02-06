@@ -102,6 +102,11 @@ if ($action === 'send') {
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
 
+        // Custom Trust Headers
+        $mail->Priority = 3; // Normal
+        $mail->addCustomHeader('X-Priority', '3');
+        $mail->addCustomHeader('X-Mailer', 'Professional Mail Connector');
+
         // Recipients
         $mail->setFrom(SMTP_USER, 'B. Eng. Felipe de Jesús Miramontes Romero');
         $mail->addAddress($to_email);
