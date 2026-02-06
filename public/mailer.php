@@ -89,7 +89,9 @@ if ($action === 'send') {
     $headers = "MIME-Version: 1.0" . "\r\n";
     $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
     $headers .= "Content-Transfer-Encoding: quoted-printable" . "\r\n";
-    $headers .= "From: AI Secure Mailer <" . SMTP_USER . ">" . "\r\n";
+    $headers .= "From: B. Eng. Felipe de Jesús Miramontes Romero <" . SMTP_USER . ">" . "\r\n";
+    $headers .= "Reply-To: " . SMTP_USER . "\r\n";
+    $headers .= "X-Mailer: Navy Tech Mailer/V2.5" . "\r\n";
 
     // quoted_printable_encode handles long HTML lines perfectly for SMTP filters
     $final_body = quoted_printable_encode($body);
