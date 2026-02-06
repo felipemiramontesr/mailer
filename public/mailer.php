@@ -84,28 +84,44 @@ if ($action === 'send') {
         exit;
     }
 
-    // Prepare headers for Quoted-Printable (High-end stability for HTML)
-    $encoded_subject = "=?UTF-8?B?" . base64_encode($subject) . "?=";
-    $headers = "MIME-Version: 1.0" . "\r\n";
-    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-    $headers .= "Content-Transfer-Encoding: quoted-printable" . "\r\n";
-    $headers .= "From: B. Eng. Felipe de Jesús Miramontes Romero <" . SMTP_USER . ">" . "\r\n";
-    $headers .= "Reply-To: " . SMTP_USER . "\r\n";
-    $headers .= "X-Mailer: Navy Tech Mailer/V2.5" . "\r\n";
+    // --- V2.6: SMTP Authentication via PHPMailer ---
+    require 'PHPMailer/Exception.php';
+    require 'PHPMailer/PHPMailer.php';
+    require 'PHPMailer/SMTP.php';
 
-    // quoted_printable_encode handles long HTML lines perfectly for SMTP filters
-    $final_body = quoted_printable_encode($body);
+    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
 
-    // Diagnostic Logging
-    $log_entry = "[" . date("Y-m-d H:i:s") . "] To: $to_email | Subject: $subject | Size: " . strlen($body) . " bytes\n";
-    file_put_contents(__DIR__ . "/mailer_debug.log", $log_entry, FILE_APPEND);
+    try {
+        // Server settings
+        $mail->isSMTP();
+        $mail->Host = SMTP_HOST;
+        $mail->SMTPAuth = true;
+        $mail->Username = SMTP_USER;
+        $mail->Password = SMTP_PASS;
+        $mail->SMTPSecure = (SMTP_SECURE === 'ssl') ? PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS : PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = SMTP_PORT;
+        $mail->CharSet = 'UTF-8';
 
-    if (mail($to_email, $encoded_subject, $final_body, $headers)) {
-        echo json_encode(['success' => true, 'message' => 'Email sent via Secure Node (V2.4)']);
-    } else {
-        $error = error_get_last();
-        file_put_contents(__DIR__ . "/mailer_debug.log", "FAILED: " . print_r($error, true) . "\n", FILE_APPEND);
-        echo json_encode(['error' => 'Server failed to send email. Check mailer_debug.log on server.']);
+        // Recipients
+        $mail->setFrom(SMTP_USER, 'B. Eng. Felipe de Jesús Miramontes Romero');
+        $mail->addAddress($to_email);
+        $mail->addReplyTo(SMTP_USER, 'B. Eng. Felipe de Jesús Miramontes Romero');
+
+        // Content
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body = $body;
+        $mail->AltBody = strip_tags($body);
+
+        // Diagnostic Logging
+        $log_entry = "[" . date("Y-m-d H:i:s") . "] To: $to_email | Subject: $subject | Size: " . strlen($body) . " bytes\n";
+        file_put_contents(__DIR__ . "/mailer_debug.log", $log_entry, FILE_APPEND);
+
+        $mail->send();
+        echo json_encode(['success' => true, 'message' => 'Email sent via Secure Node (Authenticated V2.6)']);
+    } catch (Exception $e) {
+        file_put_contents(__DIR__ . "/mailer_debug.log", "FAILED: " . $mail->ErrorInfo . "\n", FILE_APPEND);
+        echo json_encode(['error' => 'SMTP Authentication failed. Check credentials in config.php. Details recorded in log.']);
     }
     exit;
 }
