@@ -1,0 +1,43 @@
+name: Build and Deploy Navy Tech Mailer
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Project
+        run: npm run build
+        env:
+          VITE_GEMINI_API_KEY: ${{ secrets.VITE_GEMINI_API_KEY }}
+
+      - name: Inject Secrets into Config
+        run: |
+          sed -i "s/__GEMINI_API_KEY__/${{ secrets.VITE_GEMINI_API_KEY }}/g" dist/config.php
+          sed -i "s/__SMTP_PASS__/${{ secrets.SMTP_PASSWORD }}/g" dist/config.php
+
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/
+          server-dir: /domains/felipemiramontesr.net/public_html/mailer/
+          protocol: ftp
+          port: 21

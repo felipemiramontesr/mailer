@@ -1,0 +1,107 @@
+:root {
+  --bg-main: #080b1a;
+  --bg-card: #111633;
+  --accent: #00f7ff;
+  --accent-glow: rgba(0, 247, 255, 0.4);
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0c0;
+  --border-color: rgba(0, 247, 255, 0.1);
+  --border-glow: rgba(0, 247, 255, 0.2);
+
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: dark;
+  color: var(--text-primary);
+  background-color: var(--bg-main);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-main);
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(0, 247, 255, 0.05) 0%, transparent 50%),
+    linear-gradient(rgba(8, 11, 26, 0.8) 0%, rgba(8, 11, 26, 0.9) 100%);
+}
+
+#app {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+input,
+textarea,
+button {
+  font-family: inherit;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.tech-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.tech-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+.glow-text {
+  text-shadow: 0 0 10px var(--accent-glow);
+}
+
+.cyan-btn {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 0.8rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.cyan-btn:hover {
+  background: var(--accent);
+  color: var(--bg-main);
+  box-shadow: 0 0 20px var(--accent-glow);
+}
