@@ -27,42 +27,42 @@ const sendEmail = async () => {
       to_email: form.value.clientEmail,
       subject: form.value.subject,
       body: `
-        <div style="background-color: #080b1a; color: #ffffff; padding: 40px; font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 40px auto; border: 1px solid #00f7ff33; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 247, 255, 0.1);">
-          <!-- Header -->
-          <div style="border-bottom: 2px solid #00f7ff; padding-bottom: 20px; margin-bottom: 30px; text-align: center;">
-            <h1 style="color: #00f7ff; font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 4px; margin: 0; font-size: 22px;">Secure Transmission</h1>
+        <div style="background-color: #080b1a; color: #ffffff; padding: 40px; font-family: 'Orbitron', 'Inter', Arial, sans-serif; max-width: 600px; margin: 40px auto; border: 1px solid #00f7ff33; border-radius: 16px; box-shadow: 0 0 40px rgba(0, 247, 255, 0.1);">
+          <!-- Futuristic Header -->
+          <div style="border-bottom: 2px solid #00f7ff; padding-bottom: 25px; margin-bottom: 35px; text-align: center;">
+            <p style="color: #00f7ff; font-family: 'Orbitron', sans-serif; letter-spacing: 6px; margin: 0; font-size: 20px; text-transform: uppercase; text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);">🛰️ Secure Transmission</p>
           </div>
           
-          <!-- Content Case -->
-          <div style="background: rgba(17, 22, 51, 0.6); padding: 30px; border-radius: 8px; border-left: 4px solid #00f7ff;">
+          <!-- Interface Chassis -->
+          <div style="background: rgba(17, 22, 51, 0.6); padding: 35px; border-radius: 12px; border-left: 4px solid #00f7ff; border-right: 1px solid rgba(0, 247, 255, 0.1);">
             
-            <!-- Sender Chip -->
-            <p style="margin: 0 0 20px 0; color: #ffffff; font-size: 15px; line-height: 1.5;">
-              <span style="display: inline-block; padding: 2px 8px; border: 1px solid #00f7ff; color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 1px; margin-right: 12px; border-radius: 3px; font-weight: bold; background: rgba(0, 247, 255, 0.05);">SENDER</span>
-              <span style="color: #e0e0f0;">${form.value.clientName}</span>
-            </p>
+            <!-- Origin Chip -->
+            <div style="margin-bottom: 25px;">
+              <span style="display: inline-block; padding: 3px 10px; border: 1px solid #00f7ff; color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 2px; border-radius: 4px; background: rgba(0, 247, 255, 0.1); margin-bottom: 10px; font-weight: bold;">ORIGIN_ID</span>
+              <p style="margin: 0; color: #ffffff; font-size: 16px; font-weight: 500;">B. Eng. Felipe de Jesús Miramontes Romero</p>
+            </div>
             
             <!-- Subject Chip -->
-            <p style="margin: 0 0 30px 0; color: #ffffff; font-size: 16px; line-height: 1.5;">
-              <span style="display: inline-block; padding: 2px 8px; border: 1px solid #00f7ff; color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 1px; margin-right: 12px; border-radius: 3px; font-weight: bold; background: rgba(0, 247, 255, 0.05);">SUBJECT</span>
-              <span style="color: #ffffff; font-weight: 600;">${form.value.subject}</span>
-            </p>
+            <div style="margin-bottom: 35px;">
+              <span style="display: inline-block; padding: 3px 10px; border: 1px solid #00f7ff; color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 2px; border-radius: 4px; background: rgba(0, 247, 255, 0.1); margin-bottom: 10px; font-weight: bold;">COMMS_RE</span>
+              <p style="margin: 0; color: #00f7ff; font-size: 18px; font-weight: 600;">${form.value.subject}</p>
+            </div>
             
-            <!-- Message Area -->
-            <div style="border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 25px;">
+            <!-- Data Stream -->
+            <div style="border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 30px;">
               <div style="margin-bottom: 15px;">
-                <span style="display: inline-block; padding: 2px 8px; border: 1px solid #00f7ff; color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 1px; border-radius: 3px; font-weight: bold; background: rgba(0, 247, 255, 0.05);">MESSAGE BODY</span>
+                <span style="display: inline-block; color: #5b6ea3; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px;">[ DECRYPTED_DATA_STREAM ]</span>
               </div>
-              <div style="color: #cbd5e1; line-height: 1.8; font-size: 16px; text-align: justify; border-left: 2px solid rgba(0, 247, 255, 0.2); padding-left: 15px;">
+              <div style="color: #cbd5e1; line-height: 1.8; font-size: 16px; text-align: left; padding: 20px; background: rgba(0, 0, 0, 0.2); border-radius: 8px; border: 1px dashed rgba(0, 247, 255, 0.2);">
                 ${form.value.message.replace(/\n/g, '<br>')}
               </div>
             </div>
           </div>
           
-          <!-- Footer -->
-          <div style="margin-top: 40px; text-align: center; border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 20px;">
-            <p style="color: #5b6ea3; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; margin: 0; font-family: 'Orbitron', sans-serif;">NAVY TECH DESIGN - SECURITY BRIDGE v2.1</p>
-            <p style="color: #273452; font-size: 9px; margin-top: 8px;">Encryption: AES-256 | Source: mailer.felipemiramontesr.net</p>
+          <!-- Neural Footer -->
+          <div style="margin-top: 45px; text-align: center; border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 25px;">
+            <p style="color: #00f7ff; font-size: 10px; letter-spacing: 3px; margin: 0; font-family: 'Orbitron', sans-serif; opacity: 0.8;">FELIPEMIRAMONTESR.NET | V2.9 ELITE</p>
+            <p style="color: #273452; font-size: 9px; margin-top: 10px; font-family: 'Orbitron', sans-serif;">Protocol: SMTP_AUTH_SSL | Cipher: RSA_2048</p>
           </div>
         </div>
       `
