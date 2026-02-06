@@ -84,18 +84,26 @@ if ($action === 'send') {
         exit;
     }
 
+    // Prepare headers for Quoted-Printable (High-end stability for HTML)
+    $encoded_subject = "=?UTF-8?B?" . base64_encode($subject) . "?=";
     $headers = "MIME-Version: 1.0" . "\r\n";
     $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-    $headers .= "Content-Transfer-Encoding: base64" . "\r\n";
+    $headers .= "Content-Transfer-Encoding: quoted-printable" . "\r\n";
     $headers .= "From: AI Secure Mailer <" . SMTP_USER . ">" . "\r\n";
 
-    // Base64 encoding prevents HTML corruption and handles long messages perfectly
-    $encoded_body = chunk_split(base64_encode($body));
+    // quoted_printable_encode handles long HTML lines perfectly for SMTP filters
+    $final_body = quoted_printable_encode($body);
 
-    if (mail($to_email, $subject, $encoded_body, $headers)) {
-        echo json_encode(['success' => true, 'message' => 'Email sent via Hostinger SMTP Proxy']);
+    // Diagnostic Logging
+    $log_entry = "[" . date("Y-m-d H:i:s") . "] To: $to_email | Subject: $subject | Size: " . strlen($body) . " bytes\n";
+    file_put_contents(__DIR__ . "/mailer_debug.log", $log_entry, FILE_APPEND);
+
+    if (mail($to_email, $encoded_subject, $final_body, $headers)) {
+        echo json_encode(['success' => true, 'message' => 'Email sent via Secure Node (V2.4)']);
     } else {
-        echo json_encode(['error' => 'Server failed to send email. Check SMTP setup in config.php.']);
+        $error = error_get_last();
+        file_put_contents(__DIR__ . "/mailer_debug.log", "FAILED: " . print_r($error, true) . "\n", FILE_APPEND);
+        echo json_encode(['error' => 'Server failed to send email. Check mailer_debug.log on server.']);
     }
     exit;
 }
