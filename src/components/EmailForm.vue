@@ -4,19 +4,13 @@ import { Mail, Send, User, AtSign, Type, Loader2 } from 'lucide-vue-next';
 import { sendEmailViaProxy } from '../services/aiService';
 
 const form = ref({
-  clientName: '',
-  clientEmail: '',
+  clientName: 'B. Eng. Felipe de Jesús Miramontes Romero',
+  clientEmail: 'info@felipemiramontesr.net',
   subject: '',
   message: '',
 });
 
 const isSending = ref(false);
-
-onMounted(() => {
-  // Explicit re-fill on mount to beat aggressive browser state
-  form.value.clientName = 'B. Eng. Felipe de Jesús Miramontes Romero';
-  form.value.clientEmail = 'info@felipemiramontesr.net';
-});
 
 const sendEmail = async () => {
   if (!form.value.message || !form.value.subject) {
