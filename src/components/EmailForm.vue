@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Mail, Send, User, AtSign, Type, Loader2, CheckCircle2, AlertCircle } from 'lucide-vue-next';
+import { Mail, Send, ShieldCheck, Satellite, Type, Loader2, CheckCircle2, AlertCircle } from 'lucide-vue-next';
 import { sendEmailViaProxy } from '../services/aiService';
 
 const form = ref({
@@ -95,7 +95,7 @@ const sendEmail = async () => {
 <template>
   <div class="tech-card email-form-container">
     <div class="form-header">
-      <h2 class="glow-text">Secure Mailer</h2>
+      <h2 class="glow-text">felipemiramontesr.net</h2>
       <div class="status-indicator">
         <span class="dot"></span> SECURE CONNECTION
       </div>
@@ -103,13 +103,13 @@ const sendEmail = async () => {
 
     <form @submit.prevent="sendEmail" class="main-form" autocomplete="off">
       <div class="input-row">
-        <div class="input-group">
-          <label><User :size="14" /> Sender Name</label>
-          <input v-model="form.clientName" type="text" placeholder="Your Name" required autocomplete="off" />
+        <div class="input-group icon-inside">
+          <ShieldCheck :size="16" class="inner-icon" />
+          <input v-model="form.clientName" type="text" readonly autocomplete="off" />
         </div>
-        <div class="input-group">
-          <label><AtSign :size="14" /> Sender Email</label>
-          <input v-model="form.clientEmail" type="email" placeholder="your@email.com" required autocomplete="off" />
+        <div class="input-group icon-inside">
+          <Satellite :size="16" class="inner-icon" />
+          <input v-model="form.clientEmail" type="email" placeholder="Destinatario (Email)" required autocomplete="off" />
         </div>
       </div>
 
@@ -246,6 +246,31 @@ input:focus, textarea:focus {
   border-color: var(--accent);
   box-shadow: 0 0 15px rgba(0, 247, 255, 0.15);
   background: rgba(17, 22, 51, 0.8);
+}
+
+.icon-inside {
+  position: relative;
+}
+
+.icon-inside .inner-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--accent);
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.icon-inside input {
+  padding-left: 38px;
+  cursor: default;
+}
+
+input[readonly] {
+  opacity: 0.7;
+  border-style: dashed;
+  background: rgba(8, 11, 26, 0.3);
 }
 
 .send-btn {

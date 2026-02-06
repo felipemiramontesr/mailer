@@ -86,12 +86,13 @@ if ($action === 'send') {
 
     $headers = "MIME-Version: 1.0" . "\r\n";
     $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+    $headers .= "Content-Transfer-Encoding: base64" . "\r\n";
     $headers .= "From: AI Secure Mailer <" . SMTP_USER . ">" . "\r\n";
 
-    // Wrap lines safely (900 chars is close to RFC limit but safe for HTML tags)
-    $final_body = wordwrap($body, 900, "\r\n");
+    // Base64 encoding prevents HTML corruption and handles long messages perfectly
+    $encoded_body = chunk_split(base64_encode($body));
 
-    if (mail($to_email, $subject, $final_body, $headers)) {
+    if (mail($to_email, $subject, $encoded_body, $headers)) {
         echo json_encode(['success' => true, 'message' => 'Email sent via Hostinger SMTP Proxy']);
     } else {
         echo json_encode(['error' => 'Server failed to send email. Check SMTP setup in config.php.']);

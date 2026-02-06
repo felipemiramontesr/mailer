@@ -13,7 +13,7 @@ import EmailForm from './components/EmailForm.vue'
     </main>
 
     <footer class="main-footer">
-      <p>&copy; 2025 Felipe Miramontes. Navy Tech Design.</p>
+      <p>&copy; 2026 Copyright | B. Eng. Felipe de Jesús Miramontes Romero</p>
     </footer>
   </div>
 </template>
