@@ -5,8 +5,7 @@ import EmailForm from './components/EmailForm.vue'
 <template>
   <div class="app-container">
     <header class="main-header">
-      <h1 class="glow-text">AI Emailer <span class="accent-text">Pro</span></h1>
-      <p class="subtitle">Quickly compose, refine, and translate emails for your clients.</p>
+      <h1 class="glow-text">Secure <span class="accent-text">Mailer</span></h1>
     </header>
 
     <main>
