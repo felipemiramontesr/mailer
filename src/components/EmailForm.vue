@@ -35,24 +35,24 @@ const sendEmail = async () => {
           
           <!-- Content Case -->
           <div style="background: rgba(17, 22, 51, 0.6); padding: 25px; border-radius: 8px; border-left: 4px solid #00f7ff;">
-            <p style="margin: 0 0 15px 0; color: #e0e0f0; font-size: 15px;">
-              <span style="color: #00f7ff; font-weight: bold; font-family: 'Orbitron', sans-serif; font-size: 14px; margin-right: 10px;">⌬</span>
+            <p style="margin: 0 0 15px 0; color: #e0e0f0; font-size: 15px; display: block;">
+              <span style="color: #00f7ff; font-weight: bold; font-family: 'Orbitron', sans-serif; font-size: 14px; margin-right: 10px;">⬢</span>
               <span style="color: #00f7ff; font-weight: bold; font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 2px; font-size: 11px;">SENDER:</span> 
-              <span style="margin-left: 5px;">${form.value.clientName}</span>
+              <span style="color: #ffffff; margin-left: 5px;">${form.value.clientName}</span>
             </p>
             
-            <p style="margin: 0 0 25px 0; color: #ffffff; font-size: 16px;">
+            <p style="margin: 0 0 25px 0; color: #ffffff; font-size: 16px; display: block;">
               <span style="color: #00f7ff; font-weight: bold; font-family: 'Orbitron', sans-serif; font-size: 14px; margin-right: 10px;">⌬</span>
               <span style="color: #00f7ff; font-weight: bold; font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 2px; font-size: 11px;">SUBJECT:</span> 
-              <span style="margin-left: 5px;">${form.value.subject}</span>
+              <span style="color: #ffffff; margin-left: 5px; font-weight: 600;">${form.value.subject}</span>
             </p>
             
             <div style="border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 20px;">
               <p style="color: #00f7ff; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 15px 0; font-family: 'Orbitron', sans-serif; font-size: 11px;">
-                <span style="color: #00f7ff; font-weight: bold; font-family: 'Orbitron', sans-serif; font-size: 14px; margin-right: 10px;">⌬</span>
+                <span style="color: #00f7ff; font-weight: bold; font-family: 'Orbitron', sans-serif; font-size: 14px; margin-right: 10px;">⎘</span>
                 MESSAGE:
               </p>
-              <div style="color: #cbd5e1; line-height: 1.8; font-size: 16px; text-align: justify; padding: 0 5px;">
+              <div style="color: #cbd5e1; line-height: 1.8; font-size: 16px; text-align: justify; padding: 5px; border-left: 1px solid rgba(0, 247, 255, 0.1); background: rgba(0, 247, 255, 0.02); border-radius: 4px;">
                 ${form.value.message.replace(/\n/g, '<br>')}
               </div>
             </div>
