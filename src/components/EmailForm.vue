@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Mail, Send, User, AtSign, Type, Loader2 } from 'lucide-vue-next';
+import { Mail, Send, User, AtSign, Type, Loader2, CheckCircle2, AlertCircle } from 'lucide-vue-next';
 import { sendEmailViaProxy } from '../services/aiService';
 
 const form = ref({
@@ -11,6 +11,7 @@ const form = ref({
 });
 
 const isSending = ref(false);
+const sendStatus = ref<'idle' | 'sending' | 'success' | 'error'>('idle');
 
 const sendEmail = async () => {
   if (!form.value.message || !form.value.subject) {
@@ -18,6 +19,7 @@ const sendEmail = async () => {
   }
 
   isSending.value = true;
+  sendStatus.value = 'sending';
   
   try {
     const templateParams = {
@@ -25,30 +27,52 @@ const sendEmail = async () => {
       to_email: form.value.clientEmail,
       subject: form.value.subject,
       body: `
-        <div style="background-color: #080b1a; color: #ffffff; padding: 20px; font-family: 'Inter', sans-serif;">
-          <h2 style="color: #00f7ff; border-bottom: 1px solid rgba(0,247,255,0.2); padding-bottom: 10px;">Security Mailer - Message</h2>
-          <p><strong>From:</strong> ${form.value.clientName}</p>
-          <p><strong>Subject:</strong> ${form.value.subject}</p>
-          <hr style="border: 0; border-top: 1px solid rgba(0,247,255,0.1); margin: 20px 0;">
-          <div style="background: rgba(17, 22, 51, 0.8); padding: 15px; border-radius: 6px;">
-            <p>${form.value.message}</p>
+        <div style="background-color: #080b1a; color: #ffffff; padding: 40px; font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #00f7ff33; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 247, 255, 0.1);">
+          <!-- Header -->
+          <div style="border-bottom: 2px solid #00f7ff; padding-bottom: 20px; margin-bottom: 30px; text-align: center;">
+            <h1 style="color: #00f7ff; font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 4px; margin: 0; font-size: 24px;">Secure Transmission</h1>
           </div>
-          <footer style="margin-top: 30px; font-size: 0.8rem; color: #a0a0c0; border-top: 1px solid rgba(0,247,255,0.1); padding-top: 15px;">
-            Navy Tech Design - Secure Transmission Initialized
-          </footer>
+          
+          <!-- Content Case -->
+          <div style="background: rgba(17, 22, 51, 0.6); padding: 25px; border-radius: 8px; border-left: 4px solid #00f7ff;">
+            <p style="margin-top: 0; color: #00f7ff; font-weight: bold; font-size: 14px; text-transform: uppercase;">[ Sender Identified ]</p>
+            <p style="color: #e0e0f0; font-size: 16px; margin: 5px 0 20px 0;">${form.value.clientName}</p>
+            
+            <p style="color: #00f7ff; font-weight: bold; font-size: 14px; text-transform: uppercase;">[ Subject ]</p>
+            <p style="color: #ffffff; font-size: 18px; font-weight: 600; margin: 5px 0 25px 0;">${form.value.subject}</p>
+            
+            <div style="color: #cbd5e1; line-height: 1.7; font-size: 16px; border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 20px;">
+              ${form.value.message.replace(/\n/g, '<br>')}
+            </div>
+          </div>
+          
+          <!-- Footer -->
+          <div style="margin-top: 40px; text-align: center; border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 20px;">
+            <p style="color: #5b6ea3; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin: 0;">NAVY TECH DESIGN - SECURITY BRIDGE v2.0</p>
+            <p style="color: #33446b; font-size: 10px; margin-top: 8px;">Encryption: AES-256 | Source: mailer.felipemiramontesr.net</p>
+          </div>
         </div>
       `
     };
 
-    const response = await sendEmailViaProxy(templateParams);
-    alert(response.message || 'Message sent successfully!');
-    // Keep name and email, just clear subject and message
+    await sendEmailViaProxy(templateParams);
+    
+    // Success Phase
+    sendStatus.value = 'success';
     form.value.subject = '';
     form.value.message = '';
+
+    // Reset button after feedback
+    setTimeout(() => {
+      sendStatus.value = 'idle';
+    }, 4000);
+
   } catch (error) {
     console.error('Email send failed:', error);
-    // No more intrusive alerts, just log it. 
-    // If the user wants an error feedback, we can add it to the UI later.
+    sendStatus.value = 'error';
+    setTimeout(() => {
+      sendStatus.value = 'idle';
+    }, 4000);
   } finally {
     isSending.value = false;
   }
@@ -91,10 +115,31 @@ const sendEmail = async () => {
         ></textarea>
       </div>
 
-      <button type="submit" class="cyan-btn send-btn" :disabled="isSending">
-        <Loader2 v-if="isSending" :size="20" class="spin" />
-        <Send v-else :size="20" /> 
-        {{ isSending ? 'DECRYPTING & SENDING...' : 'INITIALIZE SEND SEQUENCE' }}
+      <button 
+        type="submit" 
+        class="cyan-btn send-btn" 
+        :class="sendStatus"
+        :disabled="isSending || sendStatus === 'success'"
+      >
+        <template v-if="sendStatus === 'idle'">
+          <Send :size="20" /> 
+          INITIALIZE SEND SEQUENCE
+        </template>
+        
+        <template v-else-if="sendStatus === 'sending'">
+          <Loader2 :size="20" class="spin" />
+          DECRYPTING & SENDING...
+        </template>
+        
+        <template v-else-if="sendStatus === 'success'">
+          <CheckCircle2 :size="20" />
+          TRANSMISSION COMPLETE ✅
+        </template>
+        
+        <template v-else-if="sendStatus === 'error'">
+          <AlertCircle :size="20" />
+          TRANSMISSION ERROR ⚠️
+        </template>
       </button>
     </form>
   </div>
@@ -195,6 +240,19 @@ input:focus, textarea:focus {
   margin-top: 1rem;
   padding: 1.2rem;
   font-size: 1rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.send-btn.success {
+  background: rgba(0, 247, 255, 0.1);
+  border-color: #00ff88;
+  color: #00ff88;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+}
+
+.send-btn.error {
+  border-color: #ff4444;
+  color: #ff4444;
 }
 
 .spin {
