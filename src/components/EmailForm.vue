@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { Mail, Send, User, AtSign, Type, Loader2 } from 'lucide-vue-next';
 import { sendEmailViaProxy } from '../services/aiService';
 
