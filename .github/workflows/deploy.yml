@@ -28,8 +28,9 @@ jobs:
 
       - name: Inject Secrets into Config
         run: |
-          sed -i "s/__GEMINI_API_KEY__/${{ secrets.VITE_GEMINI_API_KEY }}/g" dist/config.php
-          sed -i "s/__SMTP_PASS__/${{ secrets.SMTP_PASSWORD }}/g" dist/config.php
+          cp public/config.php.template dist/config.php
+          sed -i "s|__GEMINI_API_KEY__|${{ secrets.VITE_GEMINI_API_KEY }}|g" dist/config.php
+          sed -i "s|__SMTP_PASS__|${{ secrets.SMTP_PASSWORD }}|g" dist/config.php
 
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4

@@ -1,0 +1,19 @@
+<?php
+/**
+ * AI Secure Mailer - Secure Configuration
+ * 
+ * IMPORTANT: This file should be excluded from Git (added to .gitignore)
+ * and populated via GitHub Actions secrets during deployment.
+ */
+
+define('GEMINI_API_KEY', '__GEMINI_API_KEY__');
+
+define('SMTP_HOST', 'smtp.hostinger.com');
+define('SMTP_PORT', 465);
+define('SMTP_USER', 'info@felipemiramontesr.net');
+define('SMTP_PASS', '__SMTP_PASS__');
+define('SMTP_SECURE', 'ssl');
+
+// Allowed Origins for CORS (Your domain)
+define('ALLOWED_ORIGIN', 'https://mailer.felipemiramontes.net');
+?>
