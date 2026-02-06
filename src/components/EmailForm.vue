@@ -35,14 +35,19 @@ const sendEmail = async () => {
           
           <!-- Content Case -->
           <div style="background: rgba(17, 22, 51, 0.6); padding: 25px; border-radius: 8px; border-left: 4px solid #00f7ff;">
-            <p style="margin-top: 0; color: #00f7ff; font-weight: bold; font-size: 14px; text-transform: uppercase;">[ Sender Identified ]</p>
-            <p style="color: #e0e0f0; font-size: 16px; margin: 5px 0 20px 0;">${form.value.clientName}</p>
+            <p style="margin: 0 0 15px 0; color: #e0e0f0; font-size: 15px;">
+              <span style="color: #00f7ff; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">⚡ SENDER:</span> ${form.value.clientName}
+            </p>
             
-            <p style="color: #00f7ff; font-weight: bold; font-size: 14px; text-transform: uppercase;">[ Subject ]</p>
-            <p style="color: #ffffff; font-size: 18px; font-weight: 600; margin: 5px 0 25px 0;">${form.value.subject}</p>
+            <p style="margin: 0 0 25px 0; color: #ffffff; font-size: 16px;">
+              <span style="color: #00f7ff; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">🛰️ SUBJECT:</span> ${form.value.subject}
+            </p>
             
-            <div style="color: #cbd5e1; line-height: 1.7; font-size: 16px; border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 20px;">
-              ${form.value.message.replace(/\n/g, '<br>')}
+            <div style="border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 20px;">
+              <p style="color: #00f7ff; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 15px 0;">✉️ MESSAGE:</p>
+              <div style="color: #cbd5e1; line-height: 1.8; font-size: 16px; text-align: justify;">
+                ${form.value.message.replace(/\n/g, '<br>')}
+              </div>
             </div>
           </div>
           
