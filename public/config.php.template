@@ -15,5 +15,5 @@ define('SMTP_PASS', '__SMTP_PASS__');
 define('SMTP_SECURE', 'ssl');
 
 // Allowed Origins for CORS (Your domain)
-define('ALLOWED_ORIGIN', 'https://mailer.felipemiramontes.net');
+define('ALLOWED_ORIGIN', 'https://mailer.felipemiramontesr.net');
 ?>
