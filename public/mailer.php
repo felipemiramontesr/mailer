@@ -88,7 +88,10 @@ if ($action === 'send') {
     $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
     $headers .= "From: AI Secure Mailer <" . SMTP_USER . ">" . "\r\n";
 
-    if (mail($to_email, $subject, $body, $headers)) {
+    // Wrap lines to stay within RFC limits (Hostinger/SMTP stability)
+    $final_body = wordwrap($body, 70, "\r\n");
+
+    if (mail($to_email, $subject, $final_body, $headers)) {
         echo json_encode(['success' => true, 'message' => 'Email sent via Hostinger SMTP Proxy']);
     } else {
         echo json_encode(['error' => 'Server failed to send email. Check SMTP setup in config.php.']);

@@ -30,29 +30,30 @@ const sendEmail = async () => {
         <div style="background-color: #080b1a; color: #ffffff; padding: 40px; font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #00f7ff33; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 247, 255, 0.1);">
           <!-- Header -->
           <div style="border-bottom: 2px solid #00f7ff; padding-bottom: 20px; margin-bottom: 30px; text-align: center;">
-            <h1 style="color: #00f7ff; font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 4px; margin: 0; font-size: 24px;">Secure Transmission</h1>
+            <h1 style="color: #00f7ff; font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 4px; margin: 0; font-size: 22px;">Secure Transmission</h1>
           </div>
           
           <!-- Content Case -->
-          <div style="background: rgba(17, 22, 51, 0.6); padding: 25px; border-radius: 8px; border-left: 4px solid #00f7ff;">
-            <p style="margin: 0 0 15px 0; color: #e0e0f0; font-size: 15px; display: block;">
-              <span style="color: #00f7ff; font-weight: bold; font-family: 'Orbitron', sans-serif; font-size: 14px; margin-right: 10px;">⬢</span>
-              <span style="color: #00f7ff; font-weight: bold; font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 2px; font-size: 11px;">SENDER:</span> 
-              <span style="color: #ffffff; margin-left: 5px;">${form.value.clientName}</span>
+          <div style="background: rgba(17, 22, 51, 0.6); padding: 30px; border-radius: 8px; border-left: 4px solid #00f7ff;">
+            
+            <!-- Sender Chip -->
+            <p style="margin: 0 0 20px 0; color: #ffffff; font-size: 15px; line-height: 1.5;">
+              <span style="display: inline-block; padding: 2px 8px; border: 1px solid #00f7ff; color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 1px; margin-right: 12px; border-radius: 3px; font-weight: bold; background: rgba(0, 247, 255, 0.05);">SENDER</span>
+              <span style="color: #e0e0f0;">${form.value.clientName}</span>
             </p>
             
-            <p style="margin: 0 0 25px 0; color: #ffffff; font-size: 16px; display: block;">
-              <span style="color: #00f7ff; font-weight: bold; font-family: 'Orbitron', sans-serif; font-size: 14px; margin-right: 10px;">⌬</span>
-              <span style="color: #00f7ff; font-weight: bold; font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 2px; font-size: 11px;">SUBJECT:</span> 
-              <span style="color: #ffffff; margin-left: 5px; font-weight: 600;">${form.value.subject}</span>
+            <!-- Subject Chip -->
+            <p style="margin: 0 0 30px 0; color: #ffffff; font-size: 16px; line-height: 1.5;">
+              <span style="display: inline-block; padding: 2px 8px; border: 1px solid #00f7ff; color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 1px; margin-right: 12px; border-radius: 3px; font-weight: bold; background: rgba(0, 247, 255, 0.05);">SUBJECT</span>
+              <span style="color: #ffffff; font-weight: 600;">${form.value.subject}</span>
             </p>
             
-            <div style="border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 20px;">
-              <p style="color: #00f7ff; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 15px 0; font-family: 'Orbitron', sans-serif; font-size: 11px;">
-                <span style="color: #00f7ff; font-weight: bold; font-family: 'Orbitron', sans-serif; font-size: 14px; margin-right: 10px;">⎘</span>
-                MESSAGE:
-              </p>
-              <div style="color: #cbd5e1; line-height: 1.8; font-size: 16px; text-align: justify; padding: 5px; border-left: 1px solid rgba(0, 247, 255, 0.1); background: rgba(0, 247, 255, 0.02); border-radius: 4px;">
+            <!-- Message Area -->
+            <div style="border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 25px;">
+              <div style="margin-bottom: 15px;">
+                <span style="display: inline-block; padding: 2px 8px; border: 1px solid #00f7ff; color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 1px; border-radius: 3px; font-weight: bold; background: rgba(0, 247, 255, 0.05);">MESSAGE BODY</span>
+              </div>
+              <div style="color: #cbd5e1; line-height: 1.8; font-size: 16px; text-align: justify; border-left: 2px solid rgba(0, 247, 255, 0.2); padding-left: 15px;">
                 ${form.value.message.replace(/\n/g, '<br>')}
               </div>
             </div>
@@ -60,8 +61,8 @@ const sendEmail = async () => {
           
           <!-- Footer -->
           <div style="margin-top: 40px; text-align: center; border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 20px;">
-            <p style="color: #5b6ea3; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin: 0; font-family: 'Orbitron', sans-serif;">NAVY TECH DESIGN - SECURITY BRIDGE v2.0</p>
-            <p style="color: #33446b; font-size: 10px; margin-top: 8px;">Encryption: AES-256 | Source: mailer.felipemiramontesr.net</p>
+            <p style="color: #5b6ea3; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; margin: 0; font-family: 'Orbitron', sans-serif;">NAVY TECH DESIGN - SECURITY BRIDGE v2.1</p>
+            <p style="color: #273452; font-size: 9px; margin-top: 8px;">Encryption: AES-256 | Source: mailer.felipemiramontesr.net</p>
           </div>
         </div>
       `
