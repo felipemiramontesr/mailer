@@ -31,6 +31,9 @@ jobs:
         run: |
           cp public/config.php.template dist/config.php
           sed -i "s|__GEMINI_API_KEY__|${{ secrets.VITE_GEMINI_API_KEY }}|g" dist/config.php
+          sed -i "s|__SMTP_HOST__|${{ secrets.SMTP_HOST }}|g" dist/config.php
+          sed -i "s|__SMTP_PORT__|${{ secrets.SMTP_PORT }}|g" dist/config.php
+          sed -i "s|__SMTP_USER__|${{ secrets.SMTP_USER }}|g" dist/config.php
           sed -i "s|__SMTP_PASS__|${{ secrets.SMTP_PASSWORD }}|g" dist/config.php
 
       - name: Deploy via FTP

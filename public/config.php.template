@@ -8,9 +8,9 @@
 
 define('GEMINI_API_KEY', '__GEMINI_API_KEY__');
 
-define('SMTP_HOST', 'smtp.hostinger.com');
-define('SMTP_PORT', 465);
-define('SMTP_USER', 'info@felipemiramontesr.net');
+define('SMTP_HOST', '__SMTP_HOST__');
+define('SMTP_PORT', '__SMTP_PORT__');
+define('SMTP_USER', '__SMTP_USER__');
 define('SMTP_PASS', '__SMTP_PASS__');
 define('SMTP_SECURE', 'ssl');
 
