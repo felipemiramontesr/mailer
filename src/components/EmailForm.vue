@@ -46,9 +46,9 @@ const sendEmail = async () => {
             <!-- Link Origin -->
             <div style="margin-bottom: 30px;">
               <div style="margin-bottom: 8px;">
-                <span style="display: inline-block; color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px;">👤 LINK_ORIGIN_VERIFIED</span>
+                <span style="display: inline-block; color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px;">👤 From:</span>
               </div>
-              <p style="margin: 0; color: #ffffff; font-size: 17px; font-weight: 500; border-left: 2px solid #00f7ff; padding-left: 15px;">
+              <p style="margin: 0; color: #00f7ff; font-size: 20px; font-weight: 600; text-shadow: 0 0 10px rgba(0, 247, 255, 0.3); border-left: 2px solid #00f7ff; padding-left: 15px;">
                 B. Eng. Felipe de Jesús Miramontes Romero
               </p>
             </div>
@@ -56,7 +56,7 @@ const sendEmail = async () => {
             <!-- Transceiver Subject -->
             <div style="margin-bottom: 40px;">
               <div style="margin-bottom: 8px;">
-                <span style="display: inline-block; color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px;">🛰️ TRANSCEIVER_SUBJECT</span>
+                <span style="display: inline-block; color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px;">🛰️ Subject:</span>
               </div>
               <p style="margin: 0; color: #00f7ff; font-size: 20px; font-weight: 600; text-shadow: 0 0 10px rgba(0, 247, 255, 0.3); border-left: 2px solid #00f7ff; padding-left: 15px;">
                 ${form.value.subject}
@@ -138,7 +138,7 @@ const sendEmail = async () => {
       </div>
 
       <div class="input-group">
-        <label><Type :size="14" /> SUBJECT_ID</label>
+        <label><Type :size="14" /> SUBJECT</label>
         <input v-model="form.subject" type="text" placeholder="Insert a massage subject" required />
       </div>
 
