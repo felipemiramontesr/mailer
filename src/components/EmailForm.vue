@@ -38,7 +38,7 @@ const sendEmail = async () => {
               <span style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 600; text-decoration: none;">felipemiramontesr&zwnj;.net</span>
             </div>
             <div style="display: table-cell; text-align: right; vertical-align: middle; color: #5b6ea3; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 1px;">
-              TIMESTAMP: ${new Date().toISOString().split('T')[0]} | V6.0
+              TIMESTAMP: ${new Date().toISOString().split('T')[0]} | V6.1
             </div>
           </div>
 
@@ -68,7 +68,7 @@ const sendEmail = async () => {
             <!-- Data Stream Section -->
             <div style="border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 35px;">
               <div style="margin-bottom: 20px;">
-                <span style="display: inline-block; color: #5b6ea3; font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 3px;">📥 DECRYPTED_DATA_PACKETS</span>
+                <span style="display: inline-block; color: #5b6ea3; font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 1px;">📥 Decrypted data packets</span>
               </div>
               <div style="color: #cbd5e1; line-height: 1.8; font-size: 16px; padding: 40px; background: rgba(0, 0, 0, 0.3); border-radius: 12px; border: 1px solid rgba(0, 247, 255, 0.15); box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);">
                 <div style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 8px; margin-bottom: 15px; opacity: 0.5;">[ START_ENVELOPE ]</div>
