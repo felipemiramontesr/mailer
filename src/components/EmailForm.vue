@@ -27,15 +27,15 @@ const sendEmail = async () => {
       to_email: form.value.clientEmail,
       subject: form.value.subject,
       body: `
-        <div style="background-color: #080b1a; color: #ffffff; padding: 40px; font-family: 'Inter', Arial, sans-serif; width: 95%; max-width: 1000px; margin: 40px auto; border: 1px solid #00f7ff33; border-radius: 16px; box-shadow: 0 0 50px rgba(0, 247, 255, 0.15);">
+        <div style="background-color: #080b1a; color: #ffffff; padding: 40px; font-family: 'Inter', Arial, sans-serif; width: 100%; margin: 0 auto; border: 1px solid #00f7ff33; box-sizing: border-box;">
           
           <!-- HUD System Header -->
           <div style="border-bottom: 1px solid rgba(0, 247, 255, 0.3); padding-bottom: 20px; margin-bottom: 40px; display: table; width: 100%;">
             <div style="display: table-cell; vertical-align: middle;">
-              <span style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 14px; letter-spacing: 4px; font-weight: bold; text-transform: uppercase;">felipemiramontesr.net</span>
+              <span style="color: #ffffff; font-family: 'Orbitron', sans-serif; font-size: 20px; letter-spacing: normal; font-weight: 600; text-decoration: none;">felipemiramontesr.net</span>
             </div>
             <div style="display: table-cell; text-align: right; vertical-align: middle; color: #5b6ea3; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 1px;">
-              TIMESTAMP: ${new Date().toISOString().split('T')[0]} | V3.8
+              TIMESTAMP: ${new Date().toISOString().split('T')[0]} | V4.1
             </div>
           </div>
 
@@ -67,7 +67,7 @@ const sendEmail = async () => {
               <div style="margin-bottom: 20px;">
                 <span style="display: inline-block; color: #5b6ea3; font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 3px;">📥 DECRYPTED_DATA_PACKETS</span>
               </div>
-              <div style="color: #cbd5e1; line-height: 1.8; font-size: 16px; padding: 60px; background: rgba(0, 0, 0, 0.3); border-radius: 12px; border: 1px solid rgba(0, 247, 255, 0.15); box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);">
+              <div style="color: #cbd5e1; line-height: 1.8; font-size: 16px; padding: 40px; background: rgba(0, 0, 0, 0.3); border-radius: 12px; border: 1px solid rgba(0, 247, 255, 0.15); box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);">
                 <div style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 8px; margin-bottom: 15px; opacity: 0.5;">[ START_ENVELOPE ]</div>
                 ${form.value.message.replace(/\n/g, '<br>')}
                 <div style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 8px; margin-top: 25px; opacity: 0.5;">[ END_ENVELOPE ]</div>
@@ -79,8 +79,8 @@ const sendEmail = async () => {
           <div style="margin-top: 50px; border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 30px;">
             <div style="display: table; width: 100%;">
               <div style="display: table-cell; vertical-align: middle;">
-                <p style="color: #00f7ff; font-size: 10px; letter-spacing: 4px; margin: 0; font-family: 'Orbitron', sans-serif; text-transform: uppercase;">🛡️ System Integrity Verified</p>
-                <p style="color: #273452; font-size: 8px; margin-top: 8px; font-family: 'Orbitron', sans-serif;">Auth: SMTP_TLS_V1.3 | Node: mailer.felipemiramontesr.net</p>
+                <p style="color: #00f7ff; font-size: 10px; margin: 0; font-family: 'Orbitron', sans-serif;">🛡️ System integrity verified</p>
+                <p style="color: #ffffff; font-size: 10px; margin-top: 5px; font-family: 'Orbitron', sans-serif;">Auth: SMTP_TLS_V1.3</p>
               </div>
               <div style="display: table-cell; text-align: right; vertical-align: middle;">
                 <div style="width: 8px; height: 8px; background: #00f7ff; border-radius: 50%; display: inline-block; box-shadow: 0 0 10px #00f7ff;"></div>
