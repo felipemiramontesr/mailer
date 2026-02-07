@@ -30,15 +30,15 @@ const sendEmail = async () => {
         <div style="display:none; max-height:0px; max-width:0px; opacity:0; overflow:hidden; font-size:1px; line-height:1px; color:#080b1a;">
           ${form.value.subject} &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
         </div>
-        <div style="background-color: #080b1a; color: #ffffff; padding: 20px; font-family: 'Inter', Arial, sans-serif; max-width: 800px; width: 95%; margin: 10px auto; border: 1px solid #00f7ff33; box-sizing: border-box; border-radius: 4px;">
+        <div style="background-color: #080b1a; color: #ffffff; padding: 15px; font-family: 'Inter', Arial, sans-serif; max-width: 900px; width: 95%; margin: 10px auto; border: 1px solid #00f7ff33; box-sizing: border-box; border-radius: 4px;">
           
           <!-- HUD System Header -->
-          <div style="border-bottom: 1px solid rgba(0, 247, 255, 0.3); padding-bottom: 10px; margin-bottom: 15px; display: table; width: 100%;">
+          <div style="border-bottom: 1px solid rgba(0, 247, 255, 0.3); padding-bottom: 10px; margin-bottom: 10px; display: table; width: 100%;">
             <div style="display: table-cell; vertical-align: middle;">
               <span style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 600; text-decoration: none;">felipemiramontesr&zwnj;.net</span>
             </div>
             <div style="display: table-cell; text-align: right; vertical-align: middle; color: #5b6ea3; font-family: 'Orbitron', sans-serif; font-size: 8px; letter-spacing: 1px;">
-              TIMESTAMP: ${new Date().toISOString().split('T')[0]} | V8.0
+              TIMESTAMP: ${new Date().toISOString().split('T')[0]} | V9.0
             </div>
           </div>
 
@@ -68,7 +68,7 @@ const sendEmail = async () => {
             <!-- Data Stream Section -->
             <div style="border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 15px;">
               <div style="margin-bottom: 10px;">
-                <span style="display: inline-block; color: #5b6ea3; font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 400; letter-spacing: 0.5px;">📥 Decrypted data packets</span>
+                <span style="display: inline-block; color: #5b6ea3; font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 400; letter-spacing: 0.5px;">📥&nbsp;&nbsp;Decrypted data packets</span>
               </div>
               <div style="color: #cbd5e1; line-height: 1.5; font-size: 14px; padding: 20px; background: rgba(0, 0, 0, 0.3); border-radius: 12px; border: 1px solid rgba(0, 247, 255, 0.15); box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5); text-align: justify;">
                 <div style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 7px; margin-bottom: 10px; opacity: 0.5;">[ START_ENVELOPE ]</div>
@@ -79,7 +79,7 @@ const sendEmail = async () => {
           </div>
           
           <!-- Neural Link Footer -->
-          <div style="margin-top: 15px; border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 15px;">
+          <div style="margin-top: 15px; border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 10px;">
             <div style="display: table; width: 100%;">
               <div style="display: table-cell; vertical-align: middle;">
                 <p style="color: #00f7ff; font-size: 9px; margin: 0; font-family: 'Orbitron', sans-serif;">🛡️ System integrity verified</p>
