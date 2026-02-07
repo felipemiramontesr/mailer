@@ -139,7 +139,7 @@ const sendEmail = async () => {
 
       <div class="input-group">
         <label><Type :size="14" /> SUBJECT_ID</label>
-        <input v-model="form.subject" type="text" placeholder="[ INSERT_MESSAGE_SUBJECT ]" required />
+        <input v-model="form.subject" type="text" placeholder="Insert a massage subject" required />
       </div>
 
       <div class="message-section">
