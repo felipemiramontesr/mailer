@@ -32,10 +32,10 @@ const sendEmail = async () => {
           <!-- HUD System Header -->
           <div style="border-bottom: 1px solid rgba(0, 247, 255, 0.3); padding-bottom: 20px; margin-bottom: 40px; display: table; width: 100%;">
             <div style="display: table-cell; vertical-align: middle;">
-              <span style="color: #ffffff; font-family: 'Orbitron', sans-serif; font-size: 20px; letter-spacing: normal; font-weight: 600; text-decoration: none;">felipemiramontesr.net</span>
+              <span style="color: #00f7ff !important; font-family: 'Orbitron', sans-serif; font-size: 20px; letter-spacing: normal; font-weight: 600; text-decoration: none !important;">felipemiramontesr.net</span>
             </div>
             <div style="display: table-cell; text-align: right; vertical-align: middle; color: #5b6ea3; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 1px;">
-              TIMESTAMP: ${new Date().toISOString().split('T')[0]} | V4.1
+              TIMESTAMP: ${new Date().toISOString().split('T')[0]} | V4.2
             </div>
           </div>
 
