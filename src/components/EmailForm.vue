@@ -11,7 +11,12 @@ const form = ref({
 });
 
 const isSending = ref(false);
-const sendStatus = ref<'idle' | 'sending' | 'success' | 'error'>('idle');
+const sendStatus = ref<'idle' | 'sending' | 'success' | 'error' | 'awaiting_2fa'>('idle');
+const security = ref({
+  password: '',
+  authCode: '',
+  showPinField: false
+});
 
 const sendEmail = async () => {
   if (!form.value.message || !form.value.subject) {
@@ -31,7 +36,6 @@ const sendEmail = async () => {
           ${form.value.subject} &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
         </div>
         <div style="background-color: #080b1a; color: #ffffff; padding: 15px; font-family: 'Inter', Arial, sans-serif; max-width: 1000px; width: 95%; margin: 10px auto; border: 1px solid #00f7ff33; box-sizing: border-box; border-radius: 4px;">
-          
           <!-- HUD System Header -->
           <div style="border-bottom: 1px solid rgba(0, 247, 255, 0.3); padding-bottom: 10px; margin-bottom: 10px; display: table; width: 100%;">
             <div style="display: table-cell; vertical-align: middle;">
@@ -44,8 +48,6 @@ const sendEmail = async () => {
 
           <!-- Component Interface -->
           <div style="background: rgba(17, 22, 51, 0.4); padding: 20px; border-radius: 12px; border: 1px solid rgba(0, 247, 255, 0.1); position: relative;">
-            
-            <!-- Link Origin -->
             <div style="margin-bottom: 15px;">
               <div style="margin-bottom: 4px;">
                 <span style="display: inline-block; color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 8px; letter-spacing: 2px;">👤 From:</span>
@@ -55,7 +57,6 @@ const sendEmail = async () => {
               </p>
             </div>
             
-            <!-- Transceiver Subject -->
             <div style="margin-bottom: 15px;">
               <div style="margin-bottom: 4px;">
                 <span style="display: inline-block; color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 8px; letter-spacing: 2px;">🛰️ Subject:</span>
@@ -65,7 +66,6 @@ const sendEmail = async () => {
               </p>
             </div>
             
-            <!-- Data Stream Section -->
             <div style="border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 15px;">
               <div style="margin-bottom: 10px;">
                 <span style="display: inline-block; color: #5b6ea3; font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 400; letter-spacing: 0.5px;">📥&nbsp;&nbsp;Decrypted data packets</span>
@@ -78,7 +78,6 @@ const sendEmail = async () => {
             </div>
           </div>
           
-          <!-- Neural Link Footer -->
           <div style="margin-top: 15px; border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 10px;">
             <div style="display: table; width: 100%;">
               <div style="display: table-cell; vertical-align: middle;">
@@ -94,14 +93,22 @@ const sendEmail = async () => {
       `
     };
 
-    await sendEmailViaProxy(templateParams);
+    const result = await sendEmailViaProxy(templateParams, security.value.password, security.value.authCode);
     
+    if (result.status === '2fa_required') {
+      security.value.showPinField = true;
+      sendStatus.value = 'awaiting_2fa';
+      return;
+    }
+
     // Success Phase
     sendStatus.value = 'success';
     form.value.subject = '';
     form.value.message = '';
+    security.value.password = '';
+    security.value.authCode = '';
+    security.value.showPinField = false;
 
-    // Reset button after feedback
     setTimeout(() => {
       sendStatus.value = 'idle';
     }, 4000);
@@ -154,6 +161,31 @@ const sendEmail = async () => {
         ></textarea>
       </div>
 
+      <!-- Security Shield Layer -->
+      <div class="security-layer tech-card">
+        <div v-if="!security.showPinField" class="input-group">
+          <label><ShieldCheck :size="14" /> Master Access Key</label>
+          <input 
+            v-model="security.password" 
+            type="password" 
+            placeholder="Enter secure password" 
+            required 
+          />
+        </div>
+        
+        <div v-else class="input-group 2fa-group animate-in">
+          <label><AlertCircle :size="14" color="#00f7ff" /> Verification PIN (Sent to Gmail)</label>
+          <input 
+            v-model="security.authCode" 
+            type="text" 
+            placeholder="000000" 
+            maxlength="6"
+            required 
+            class="pin-input"
+          />
+        </div>
+      </div>
+
       <button 
         type="submit" 
         class="cyan-btn send-btn" 
@@ -168,6 +200,11 @@ const sendEmail = async () => {
         <template v-else-if="sendStatus === 'sending'">
           <Loader2 :size="20" class="spin" />
           DECRYPTING & SENDING...
+        </template>
+
+        <template v-else-if="sendStatus === 'awaiting_2fa'">
+          <ShieldCheck :size="20" />
+          VERIFY PIN & AUTHORIZE
         </template>
         
         <template v-else-if="sendStatus === 'success'">
@@ -297,6 +334,29 @@ input[readonly] {
   opacity: 0.7;
   border-style: dashed;
   background: rgba(8, 11, 26, 0.3);
+}
+
+.security-layer {
+  background: rgba(0, 247, 255, 0.03);
+  padding: 1.5rem;
+  border: 1px solid rgba(0, 247, 255, 0.1);
+}
+
+.pin-input {
+  font-size: 1.5rem;
+  letter-spacing: 0.5rem;
+  text-align: center;
+  color: var(--accent);
+  font-family: 'Orbitron', sans-serif;
+}
+
+.animate-in {
+  animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 .send-btn {

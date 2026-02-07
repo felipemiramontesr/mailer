@@ -15,5 +15,11 @@ define('SMTP_PASS', '__SMTP_PASS__');
 define('SMTP_SECURE', 'ssl');
 
 // Allowed Origins for CORS (Your domain)
-define('ALLOWED_ORIGIN', 'https://mailer.felipemiramontesr.net');
+define('ALLOWED_ORIGIN', 'https://mailer.felipemiramontes.net');
+
+/**
+ * 2FA & Security Configuration
+ */
+define('MASTER_AUTH_EMAIL', 'felipemiramontesr@gmail.com');
+define('AUTH_CODE_EXPIRATION', 300); // 5 minutos
 ?>

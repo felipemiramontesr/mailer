@@ -1,0 +1,11 @@
+<?php
+if (!defined('SECURE_PATH')) {
+    header('HTTP/1.0 403 Forbidden');
+    exit('Acceso denegado.');
+}
+
+/**
+ * Hash Bcrypt de la contraseña maestra del mailer.
+ */
+define('MAILER_PASSWORD_HASH', '__MAILER_PASSWORD_HASH__');
+?>

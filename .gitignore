@@ -29,3 +29,6 @@ dist-ssr
 config.php
 public/config.php
 !public/config.php.template
+hash_tool.php
+public/access_hash.php
+!public/access_hash.php.template
