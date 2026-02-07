@@ -12,6 +12,7 @@ const form = ref({
 
 const isSending = ref(false);
 const sendStatus = ref<'idle' | 'sending' | 'success' | 'error' | 'awaiting_2fa'>('idle');
+const errorMessage = ref('');
 const security = ref({
   password: '',
   authCode: '',
@@ -113,12 +114,14 @@ const sendEmail = async () => {
       sendStatus.value = 'idle';
     }, 4000);
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Email send failed:', error);
     sendStatus.value = 'error';
+    errorMessage.value = error.response?.data?.error || error.message || 'Transmission failed';
     setTimeout(() => {
       sendStatus.value = 'idle';
-    }, 4000);
+      errorMessage.value = '';
+    }, 6000);
   } finally {
     isSending.value = false;
   }
@@ -214,7 +217,7 @@ const sendEmail = async () => {
         
         <template v-else-if="sendStatus === 'error'">
           <AlertCircle :size="20" />
-          TRANSMISSION ERROR ⚠️
+          {{ errorMessage || 'TRANSMISSION ERROR ⚠️' }}
         </template>
       </button>
     </form>
