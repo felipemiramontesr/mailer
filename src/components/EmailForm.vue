@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Mail, Send, ShieldCheck, Satellite, Type, Loader2, CheckCircle2, AlertCircle } from 'lucide-vue-next';
+import { Mail, Send, ShieldCheck, Satellite, Type, Loader2, CheckCircle2, AlertCircle, Eye, EyeOff } from 'lucide-vue-next';
 import { sendEmailViaProxy } from '../services/aiService';
 
 const form = ref({
@@ -13,6 +13,7 @@ const form = ref({
 const isSending = ref(false);
 const sendStatus = ref<'idle' | 'sending' | 'success' | 'error' | 'awaiting_2fa'>('idle');
 const errorMessage = ref('');
+const showPassword = ref(false);
 const security = ref({
   password: '',
   authCode: '',
@@ -168,12 +169,18 @@ const sendEmail = async () => {
       <div class="security-layer tech-card">
         <div v-if="!security.showPinField" class="input-group">
           <label><ShieldCheck :size="14" /> Master Access Key</label>
-          <input 
-            v-model="security.password" 
-            type="password" 
-            placeholder="Enter secure password" 
-            required 
-          />
+          <div class="input-with-eye">
+            <input 
+              v-model="security.password" 
+              :type="showPassword ? 'text' : 'password'" 
+              placeholder="Enter secure password" 
+              required 
+            />
+            <button type="button" class="eye-btn" @click="showPassword = !showPassword">
+              <Eye v-if="!showPassword" :size="18" />
+              <EyeOff v-else :size="18" />
+            </button>
+          </div>
         </div>
         
         <div v-else class="input-group 2fa-group animate-in">
@@ -343,6 +350,30 @@ input[readonly] {
   background: rgba(0, 247, 255, 0.03);
   padding: 1.5rem;
   border: 1px solid rgba(0, 247, 255, 0.1);
+}
+
+.input-with-eye {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.eye-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eye-btn:hover {
+  opacity: 1;
 }
 
 .pin-input {

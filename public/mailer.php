@@ -21,7 +21,16 @@ require_once 'access_hash.php';
 
 if (!password_verify($submitted_pass, MAILER_PASSWORD_HASH)) {
     header('HTTP/1.1 401 Unauthorized');
-    echo json_encode(['error' => 'Contraseña incorrecta o no proporcionada.']);
+    $hash_status = (defined('MAILER_PASSWORD_HASH') && strlen(MAILER_PASSWORD_HASH) > 10) ? 'Loaded' : 'Missing/Short';
+    $hash_type = (strpos(MAILER_PASSWORD_HASH, '$2y$') === 0) ? 'Bcrypt' : 'Unknown';
+    echo json_encode([
+        'error' => 'Contraseña incorrecta.',
+        'debug' => [
+            'hash_status' => $hash_status,
+            'hash_format' => $hash_type,
+            'received_len' => strlen($submitted_pass)
+        ]
+    ]);
     exit;
 }
 
