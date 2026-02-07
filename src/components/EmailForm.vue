@@ -138,8 +138,8 @@ const sendEmail = async () => {
       </div>
 
       <div class="input-group">
-        <label><Type :size="14" /> Subject</label>
-        <input v-model="form.subject" type="text" placeholder="Project Alpha - Phase 1" required />
+        <label><Type :size="14" /> SUBJECT_ID</label>
+        <input v-model="form.subject" type="text" placeholder="[ INSERT_MESSAGE_SUBJECT ]" required />
       </div>
 
       <div class="message-section">
