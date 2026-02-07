@@ -27,6 +27,9 @@ const sendEmail = async () => {
       to_email: form.value.clientEmail,
       subject: form.value.subject,
       body: `
+        <div style="display:none; max-height:0px; max-width:0px; opacity:0; overflow:hidden; font-size:1px; line-height:1px; color:#080b1a;">
+          ${form.value.subject} &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+        </div>
         <div style="background-color: #080b1a; color: #ffffff; padding: 40px; font-family: 'Inter', Arial, sans-serif; width: 100%; margin: 0 auto; border: 1px solid #00f7ff33; box-sizing: border-box;">
           
           <!-- HUD System Header -->
@@ -35,7 +38,7 @@ const sendEmail = async () => {
               <span style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 600; text-decoration: none;">felipemiramontesr&zwnj;.net</span>
             </div>
             <div style="display: table-cell; text-align: right; vertical-align: middle; color: #5b6ea3; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 1px;">
-              TIMESTAMP: ${new Date().toISOString().split('T')[0]} | V4.4
+              TIMESTAMP: ${new Date().toISOString().split('T')[0]} | V5.0
             </div>
           </div>
 
