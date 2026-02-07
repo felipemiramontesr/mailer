@@ -28,7 +28,7 @@ jobs:
           VITE_GEMINI_API_KEY: ${{ secrets.VITE_GEMINI_API_KEY }}
 
       - name: Inject Secrets into Config (Professional Sequence)
-        run: node scripts/inject-secrets.js
+        run: node scripts/inject-secrets.cjs
         env:
           VITE_GEMINI_API_KEY: ${{ secrets.VITE_GEMINI_API_KEY }}
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
