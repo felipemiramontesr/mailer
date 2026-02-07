@@ -50,11 +50,18 @@ if (empty($auth_code_input)) {
         $mail->SMTPSecure = (SMTP_SECURE === 'ssl') ? PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS : PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
-        $mail->setFrom(SMTP_USER, 'felipemiramontesr.net Security');
+        $mail->setFrom(SMTP_USER, 'Secure PIN');
         $mail->addAddress(MASTER_AUTH_EMAIL);
         $mail->Subject = "AUTHORIZATION REQUIRED: $new_code";
 
-        $html_body = "
+        // Preheader to control inbox preview snippet (hidden in email client body)
+        $preheader = "<div style=\"display: none; max-height: 0px; overflow: hidden;\">
+            Security authorization required. Please use the PIN to proceed.
+            &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;
+            &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;
+        </div>";
+
+        $html_body = $preheader . "
         <div style=\"background-color: #080b1a; color: #ffffff; padding: 20px; font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #00f7ff33; border-radius: 8px;\">
             <div style=\"border-bottom: 1px solid rgba(0, 247, 255, 0.2); padding-bottom: 10px; margin-bottom: 20px;\">
                 <span style=\"color: #00f7ff; font-size: 14px; letter-spacing: 2px;\">SECURITY PROTOCOL v9.1</span>
