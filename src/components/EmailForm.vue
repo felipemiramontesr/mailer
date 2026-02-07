@@ -188,7 +188,7 @@ const sendEmail = async () => {
           <input 
             v-model="security.authCode" 
             type="text" 
-            placeholder="000000" 
+            placeholder="••••••" 
             maxlength="6"
             required 
             class="pin-input"
@@ -378,10 +378,18 @@ input[readonly] {
 
 .pin-input {
   font-size: 1.5rem;
-  letter-spacing: 0.5rem;
+  letter-spacing: 0.8rem;
   text-align: center;
   color: var(--accent);
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Orbitron', monospace;
+  background: rgba(0, 0, 0, 0.2) !important;
+  text-transform: uppercase;
+}
+
+.pin-input::placeholder {
+  font-family: sans-serif;
+  letter-spacing: 0.4rem;
+  opacity: 0.3;
 }
 
 .animate-in {

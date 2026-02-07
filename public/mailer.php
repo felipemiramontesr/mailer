@@ -50,9 +50,9 @@ if (empty($auth_code_input)) {
         $mail->SMTPSecure = (SMTP_SECURE === 'ssl') ? PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS : PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
-        $mail->setFrom(SMTP_USER, 'Seguridad felipemiramontesr.net');
+        $mail->setFrom(SMTP_USER, 'felipemiramontesr.net Security');
         $mail->addAddress(MASTER_AUTH_EMAIL);
-        $mail->Subject = "AUTORIZACIÓN REQUERIDA: $new_code";
+        $mail->Subject = "AUTHORIZATION REQUIRED: $new_code";
 
         $html_body = "
         <div style=\"background-color: #080b1a; color: #ffffff; padding: 20px; font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #00f7ff33; border-radius: 8px;\">
@@ -67,9 +67,9 @@ if (empty($auth_code_input)) {
                     <span style=\"font-size: 32px; font-weight: bold; color: #00f7ff; letter-spacing: 8px; text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);\">$new_code</span>
                 </div>
                 
-                <p style=\"color: #cbd5e1; font-size: 12px; margin-top: 25px; line-height: 1.6;\">
-                    Se ha detectado un intento de acceso al Mailer.<br>
-                    Introduce este PIN en la consola de control para autorizar la transmisión.
+                <p style=\"color: #cbd5e1; font-size: 13px; margin-top: 25px; line-height: 1.6;\">
+                    Advanced access authentication required.<br>
+                    Insert this PIN on your control console to authorize transmission.
                 </p>
             </div>
             
@@ -81,13 +81,13 @@ if (empty($auth_code_input)) {
         </div>";
 
         $mail->Body = $html_body;
-        $mail->AltBody = "Tu código de seguridad es: $new_code (Expira en 5 minutos)";
+        $mail->AltBody = "Your security PIN is: $new_code (Expires in 5 minutes)";
         $mail->isHTML(true);
         $mail->send();
 
-        echo json_encode(['status' => '2fa_required', 'message' => 'Código enviado a tu email maestro.']);
+        echo json_encode(['status' => '2fa_required', 'message' => 'Security PIN sent to Gmail.']);
     } catch (Exception $e) {
-        echo json_encode(['error' => 'Error al enviar código 2FA.', 'details' => $mail->ErrorInfo]);
+        echo json_encode(['error' => '2FA Dispatch Error.', 'details' => $mail->ErrorInfo]);
     }
     exit;
 } else {
