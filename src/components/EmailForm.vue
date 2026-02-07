@@ -30,60 +30,60 @@ const sendEmail = async () => {
         <div style="display:none; max-height:0px; max-width:0px; opacity:0; overflow:hidden; font-size:1px; line-height:1px; color:#080b1a;">
           ${form.value.subject} &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
         </div>
-        <div style="background-color: #080b1a; color: #ffffff; padding: 40px; font-family: 'Inter', Arial, sans-serif; max-width: 800px; width: 95%; margin: 20px auto; border: 1px solid #00f7ff33; box-sizing: border-box; border-radius: 4px;">
+        <div style="background-color: #080b1a; color: #ffffff; padding: 30px; font-family: 'Inter', Arial, sans-serif; max-width: 800px; width: 95%; margin: 10px auto; border: 1px solid #00f7ff33; box-sizing: border-box; border-radius: 4px;">
           
           <!-- HUD System Header -->
-          <div style="border-bottom: 1px solid rgba(0, 247, 255, 0.3); padding-bottom: 20px; margin-bottom: 40px; display: table; width: 100%;">
+          <div style="border-bottom: 1px solid rgba(0, 247, 255, 0.3); padding-bottom: 15px; margin-bottom: 25px; display: table; width: 100%;">
             <div style="display: table-cell; vertical-align: middle;">
               <span style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 600; text-decoration: none;">felipemiramontesr&zwnj;.net</span>
             </div>
             <div style="display: table-cell; text-align: right; vertical-align: middle; color: #5b6ea3; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 1px;">
-              TIMESTAMP: ${new Date().toISOString().split('T')[0]} | V6.1
+              TIMESTAMP: ${new Date().toISOString().split('T')[0]} | V7.0
             </div>
           </div>
 
           <!-- Component Interface -->
-          <div style="background: rgba(17, 22, 51, 0.4); padding: 35px; border-radius: 12px; border: 1px solid rgba(0, 247, 255, 0.1); position: relative;">
+          <div style="background: rgba(17, 22, 51, 0.4); padding: 25px; border-radius: 12px; border: 1px solid rgba(0, 247, 255, 0.1); position: relative;">
             
             <!-- Link Origin -->
-            <div style="margin-bottom: 30px;">
-              <div style="margin-bottom: 8px;">
+            <div style="margin-bottom: 20px;">
+              <div style="margin-bottom: 6px;">
                 <span style="display: inline-block; color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px;">👤 From:</span>
               </div>
-              <p style="margin: 0; color: #00f7ff; font-size: 20px; font-weight: 600; text-shadow: 0 0 10px rgba(0, 247, 255, 0.3); border-left: 2px solid #00f7ff; padding-left: 15px;">
+              <p style="margin: 0; color: #00f7ff; font-size: 18px; font-weight: 600; text-shadow: 0 0 10px rgba(0, 247, 255, 0.3); border-left: 2px solid #00f7ff; padding-left: 15px;">
                 B. Eng. Felipe de Jesús Miramontes Romero
               </p>
             </div>
             
             <!-- Transceiver Subject -->
-            <div style="margin-bottom: 40px;">
-              <div style="margin-bottom: 8px;">
+            <div style="margin-bottom: 25px;">
+              <div style="margin-bottom: 6px;">
                 <span style="display: inline-block; color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px;">🛰️ Subject:</span>
               </div>
-              <p style="margin: 0; color: #00f7ff; font-size: 20px; font-weight: 600; text-shadow: 0 0 10px rgba(0, 247, 255, 0.3); border-left: 2px solid #00f7ff; padding-left: 15px;">
+              <p style="margin: 0; color: #00f7ff; font-size: 18px; font-weight: 600; text-shadow: 0 0 10px rgba(0, 247, 255, 0.3); border-left: 2px solid #00f7ff; padding-left: 15px;">
                 ${form.value.subject}
               </p>
             </div>
             
             <!-- Data Stream Section -->
-            <div style="border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 35px;">
-              <div style="margin-bottom: 20px;">
-                <span style="display: inline-block; color: #5b6ea3; font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 1px;">📥 Decrypted data packets</span>
+            <div style="border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 25px;">
+              <div style="margin-bottom: 15px;">
+                <span style="display: inline-block; color: #5b6ea3; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 400; letter-spacing: 0.5px;">📥 Decrypted data packets</span>
               </div>
-              <div style="color: #cbd5e1; line-height: 1.8; font-size: 16px; padding: 40px; background: rgba(0, 0, 0, 0.3); border-radius: 12px; border: 1px solid rgba(0, 247, 255, 0.15); box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);">
-                <div style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 8px; margin-bottom: 15px; opacity: 0.5;">[ START_ENVELOPE ]</div>
+              <div style="color: #cbd5e1; line-height: 1.6; font-size: 15px; padding: 25px; background: rgba(0, 0, 0, 0.3); border-radius: 12px; border: 1px solid rgba(0, 247, 255, 0.15); box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);">
+                <div style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 8px; margin-bottom: 12px; opacity: 0.5;">[ START_ENVELOPE ]</div>
                 ${form.value.message.replace(/\n/g, '<br>')}
-                <div style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 8px; margin-top: 25px; opacity: 0.5;">[ END_ENVELOPE ]</div>
+                <div style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 8px; margin-top: 20px; opacity: 0.5;">[ END_ENVELOPE ]</div>
               </div>
             </div>
           </div>
           
           <!-- Neural Link Footer -->
-          <div style="margin-top: 50px; border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 30px;">
+          <div style="margin-top: 25px; border-top: 1px solid rgba(0, 247, 255, 0.1); padding-top: 20px;">
             <div style="display: table; width: 100%;">
               <div style="display: table-cell; vertical-align: middle;">
                 <p style="color: #00f7ff; font-size: 10px; margin: 0; font-family: 'Orbitron', sans-serif;">🛡️ System integrity verified</p>
-                <p style="color: #ffffff; font-size: 10px; margin-top: 5px; font-family: 'Orbitron', sans-serif;">Auth: SMTP_TLS_V1.3</p>
+                <p style="color: #ffffff; font-size: 10px; margin-top: 4px; font-family: 'Orbitron', sans-serif;">Auth: SMTP_TLS_V1.3</p>
               </div>
               <div style="display: table-cell; text-align: right; vertical-align: middle;">
                 <div style="width: 8px; height: 8px; background: #00f7ff; border-radius: 50%; display: inline-block; box-shadow: 0 0 10px #00f7ff;"></div>
