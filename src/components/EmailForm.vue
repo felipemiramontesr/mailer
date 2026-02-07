@@ -27,7 +27,7 @@ const sendEmail = async () => {
       to_email: form.value.clientEmail,
       subject: form.value.subject,
       body: `
-        <div style="background-color: #080b1a; color: #ffffff; padding: 40px; font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 40px auto; border: 1px solid #00f7ff33; border-radius: 16px; box-shadow: 0 0 50px rgba(0, 247, 255, 0.15);">
+        <div style="background-color: #080b1a; color: #ffffff; padding: 40px; font-family: 'Inter', Arial, sans-serif; max-width: 650px; margin: 40px auto; border: 1px solid #00f7ff33; border-radius: 16px; box-shadow: 0 0 50px rgba(0, 247, 255, 0.15);">
           
           <!-- HUD System Header -->
           <div style="border-bottom: 1px solid rgba(0, 247, 255, 0.3); padding-bottom: 20px; margin-bottom: 40px; display: table; width: 100%;">
@@ -36,7 +36,7 @@ const sendEmail = async () => {
               <span style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 11px; letter-spacing: 2px; font-weight: bold; margin-left: 15px; opacity: 0.7;">[ ● SECURE_AUTH ]</span>
             </div>
             <div style="display: table-cell; text-align: right; vertical-align: middle; color: #5b6ea3; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 1px;">
-              TIMESTAMP: ${new Date().toISOString().split('T')[0]} | V3.0
+              TIMESTAMP: ${new Date().toISOString().split('T')[0]} | V3.6
             </div>
           </div>
 
@@ -68,7 +68,7 @@ const sendEmail = async () => {
               <div style="margin-bottom: 20px;">
                 <span style="display: inline-block; color: #5b6ea3; font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 3px;">📥 DECRYPTED_DATA_PACKETS</span>
               </div>
-              <div style="color: #cbd5e1; line-height: 1.8; font-size: 16px; padding: 25px; background: rgba(0, 0, 0, 0.3); border-radius: 12px; border: 1px solid rgba(0, 247, 255, 0.15); box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);">
+              <div style="color: #cbd5e1; line-height: 1.8; font-size: 16px; padding: 20px 40px; background: rgba(0, 0, 0, 0.3); border-radius: 12px; border: 1px solid rgba(0, 247, 255, 0.15); box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);">
                 <div style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 8px; margin-bottom: 15px; opacity: 0.5;">[ START_ENVELOPE ]</div>
                 ${form.value.message.replace(/\n/g, '<br>')}
                 <div style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 8px; margin-top: 25px; opacity: 0.5;">[ END_ENVELOPE ]</div>
