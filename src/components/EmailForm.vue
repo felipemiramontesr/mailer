@@ -5,7 +5,7 @@ import { sendEmailViaProxy } from '../services/aiService';
 
 const form = ref({
   clientName: 'B. Eng. Felipe de Jesús Miramontes Romero',
-  clientEmail: 'info@felipemiramontesr.net',
+  clientEmail: '',
   subject: '',
   message: '',
 });
@@ -133,7 +133,7 @@ const sendEmail = async () => {
         </div>
         <div class="input-group icon-inside">
           <Satellite :size="16" class="inner-icon" />
-          <input v-model="form.clientEmail" type="email" placeholder="Destinatario (Email)" required autocomplete="off" />
+          <input v-model="form.clientEmail" type="email" placeholder="felipemiramontesr@gmail.com" required autocomplete="off" />
         </div>
       </div>
 
