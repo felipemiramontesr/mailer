@@ -147,7 +147,7 @@ const sendEmail = async () => {
         <textarea 
           v-model="form.message" 
           rows="8" 
-          placeholder="Escribe tu mensaje aquí..." 
+          placeholder="Input your message here..." 
           required
         ></textarea>
       </div>
