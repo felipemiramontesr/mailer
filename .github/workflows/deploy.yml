@@ -27,23 +27,15 @@ jobs:
         env:
           VITE_GEMINI_API_KEY: ${{ secrets.VITE_GEMINI_API_KEY }}
 
-      - name: Inject Secrets into Config
-        run: |
-          # Inject config.php
-          cp public/config.php.template dist/config.php
-          sed -i "s|__GEMINI_API_KEY__|${{ secrets.VITE_GEMINI_API_KEY }}|g" dist/config.php
-          sed -i "s|__SMTP_HOST__|${{ secrets.SMTP_HOST }}|g" dist/config.php
-          sed -i "s|__SMTP_PORT__|${{ secrets.SMTP_PORT }}|g" dist/config.php
-          sed -i "s|__SMTP_USER__|${{ secrets.SMTP_USER }}|g" dist/config.php
-          sed -i "s|__SMTP_PASS__|${{ secrets.SMTP_PASSWORD }}|g" dist/config.php
-
-          # Inject access_hash.php
-          cp public/access_hash.php.template dist/access_hash.php
-          sed -i "s|__MAILER_PASSWORD_HASH__|${{ secrets.MAILER_PASSWORD_HASH }}|g" dist/access_hash.php
-          
-          # Create auth_codes dir in dist if not copied automatically (Vite usually copies public content)
-          mkdir -p dist/auth_codes
-          cp public/auth_codes/.htaccess dist/auth_codes/.htaccess || true
+      - name: Inject Secrets into Config (Professional Sequence)
+        run: node scripts/inject-secrets.js
+        env:
+          VITE_GEMINI_API_KEY: ${{ secrets.VITE_GEMINI_API_KEY }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          MAILER_PASSWORD_HASH: ${{ secrets.MAILER_PASSWORD_HASH }}
 
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
