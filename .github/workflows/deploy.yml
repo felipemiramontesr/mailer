@@ -50,4 +50,5 @@ jobs:
           server-dir: ./
           protocol: ftp
           port: 21
-          timeout: 60000 # Increased timeout to 60s for better stability
+          timeout: 300000 # Increased to 5 minutes for stability
+          log-level: verbose
