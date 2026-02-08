@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
@@ -6,5 +7,14 @@ export default defineConfig({
   plugins: [vue()],
   build: {
     assetsDir: '', // No assets subfolder
+  },
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    server: {
+      deps: {
+        inline: ['lucide-vue-next']
+      }
+    }
   }
 })
