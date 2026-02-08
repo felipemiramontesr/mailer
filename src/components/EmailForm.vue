@@ -32,10 +32,10 @@ const emailTemplateHTML = computed(() => `
     <div style="padding: 25px 40px;">
       <!-- HUD System Header -->
       <div style="border-bottom: 1px solid rgba(0, 247, 255, 0.3); padding-bottom: 12px; margin-bottom: 20px; display: table; width: 100%;">
-        <div style="display: table-cell; vertical-align: middle;">
-          <span style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);">felipemiramontesr&zwnj;.net</span>
+        <div style="display: table-cell; vertical-align: middle; width: 70%;">
+          <span style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 4px; text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);">felipemiramontesr&zwnj;.net</span>
         </div>
-        <div style="display: table-cell; text-align: right; vertical-align: middle; color: #7e8ec2; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px;">
+        <div style="display: table-cell; text-align: right; vertical-align: middle; width: 30%; color: #7e8ec2; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px;">
           LOG_STREAM // ${new Date().toISOString().split('T')[0]}
         </div>
       </div>
