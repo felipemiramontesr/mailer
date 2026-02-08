@@ -21,11 +21,16 @@ const security = ref({
   showPinField: false
 });
 
+const formatSentenceCase = (str: string) => {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};
+
 const emailTemplateHTML = computed(() => `
   <div style="display:none; max-height:0px; max-width:0px; opacity:0; overflow:hidden; font-size:1px; line-height:1px; color:#080b2a;">
     ${form.value.subject || 'Subject Preview'} &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
   </div>
-  <div style="background: radial-gradient(circle at 50% 0%, #1a224d 0%, #080b2a 100%); color: #ffffff; padding: 0; font-family: 'Inter', Arial, sans-serif; max-width: 1000px; width: 95%; margin: 20px auto; border: 1px solid rgba(0, 247, 255, 0.25); box-sizing: border-box; border-radius: 12px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.7);">
+  <div style="background: radial-gradient(circle at 50% 0%, #1a224d 0%, #080b2a 100%); color: #ffffff; padding: 0; font-family: 'Inter', Arial, sans-serif; width: 1000px; margin: 20px auto; border: 1px solid rgba(0, 247, 255, 0.25); box-sizing: border-box; border-radius: 12px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.7);">
     <!-- Glowing Top Bar -->
     <div style="height: 4px; background: linear-gradient(90deg, transparent, #00f7ff, transparent); box-shadow: 0 0 15px #00f7ff;"></div>
     
@@ -61,8 +66,8 @@ const emailTemplateHTML = computed(() => `
             <span style="color: #7e8ec2; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase;">🛰️ TRANSMISSION_SUBJECT</span>
           </div>
           <div style="background: rgba(0, 247, 255, 0.1); border-left: 4px solid #00f7ff; padding: 10px 15px; border-radius: 0 8px 8px 0; box-shadow: 0 0 25px rgba(0, 247, 255, 0.1);">
-            <p style="margin: 0; color: #00f7ff; font-size: 18px; font-weight: 700; text-shadow: 0 0 20px rgba(0, 247, 255, 0.5); letter-spacing: 1px;">
-              ${form.value.subject || '[ SUBJECT_MISSING ]'}
+            <p style="margin: 0; color: #00f7ff; font-size: 18px; font-weight: 500; font-family: 'Inter', sans-serif; text-shadow: 0 0 20px rgba(0, 247, 255, 0.3); letter-spacing: 0.5px;">
+              ${formatSentenceCase(form.value.subject) || '[ Subject missing ]'}
             </p>
           </div>
         </div>
@@ -403,7 +408,7 @@ const sendEmail = async () => {
 
 .preview-scroll-area {
   flex: 1;
-  overflow-y: auto;
+  overflow: auto;
   padding: 20px;
   scrollbar-width: thin;
   scrollbar-color: var(--accent) transparent;
@@ -419,10 +424,10 @@ const sendEmail = async () => {
 }
 
 .email-canvas {
-  width: 100%;
+  width: 1000px;
   background: transparent;
-  transform: scale(0.9);
-  transform-origin: top center;
+  transform: scale(0.85);
+  transform-origin: top left;
 }
 
 .input-row {
