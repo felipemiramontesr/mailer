@@ -385,10 +385,10 @@ const sendEmail = async () => {
   border-radius: 12px;
   position: relative;
   overflow: hidden;
-  height: 600px;
   display: flex;
   flex-direction: column;
   box-shadow: inset 0 0 40px rgba(0, 247, 255, 0.03);
+  min-height: 500px;
 }
 
 .preview-badge {
@@ -408,10 +408,10 @@ const sendEmail = async () => {
 
 .preview-scroll-area {
   flex: 1;
-  overflow: auto;
-  padding: 20px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--accent) transparent;
+  overflow: hidden;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
 }
 
 .preview-scroll-area::-webkit-scrollbar {
@@ -426,8 +426,9 @@ const sendEmail = async () => {
 .email-canvas {
   width: 1000px;
   background: transparent;
-  transform: scale(0.85);
-  transform-origin: top left;
+  transform: scale(0.55);
+  transform-origin: top center;
+  flex-shrink: 0;
 }
 
 .input-row {
