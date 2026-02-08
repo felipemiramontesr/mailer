@@ -19,11 +19,11 @@ function inject() {
   // 1. Inject config.php
   if (fs.existsSync(paths.configTemplate)) {
     let config = fs.readFileSync(paths.configTemplate, 'utf8');
-    config = config.replace('__GEMINI_API_KEY__', process.env.VITE_GEMINI_API_KEY || '');
-    config = config.replace('__SMTP_HOST__', process.env.SMTP_HOST || '');
-    config = config.replace('__SMTP_PORT__', process.env.SMTP_PORT || '');
-    config = config.replace('__SMTP_USER__', process.env.SMTP_USER || '');
-    config = config.replace('__SMTP_PASS__', process.env.SMTP_PASSWORD || '');
+    config = config.replace('__GEMINI_API_KEY__', () => process.env.VITE_GEMINI_API_KEY || '');
+    config = config.replace('__SMTP_HOST__', () => process.env.SMTP_HOST || '');
+    config = config.replace('__SMTP_PORT__', () => process.env.SMTP_PORT || '');
+    config = config.replace('__SMTP_USER__', () => process.env.SMTP_USER || '');
+    config = config.replace('__SMTP_PASS__', () => process.env.SMTP_PASSWORD || '');
 
     fs.writeFileSync(paths.distConfig, config);
     console.log('✓ Production config.php generated successfully.');
@@ -39,8 +39,8 @@ function inject() {
       process.exit(1);
     }
 
-    // Use string replacement which is literal and safe for characters like $
-    hashFile = hashFile.replace('__MAILER_PASSWORD_HASH__', secretHash);
+    // Use function replacement to avoid interpretation of characters like $
+    hashFile = hashFile.replace('__MAILER_PASSWORD_HASH__', () => secretHash);
 
     fs.writeFileSync(paths.distHash, hashFile);
     console.log('✓ Secure access_hash.php generated successfully (Atomic Injection).');
