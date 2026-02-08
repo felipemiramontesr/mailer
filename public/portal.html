@@ -67,8 +67,9 @@
 
         .hud-wrapper {
             width: 100%;
-            max-width: 900px;
-            padding: 20px;
+            max-width: 1400px;
+            /* Expansive desktop width */
+            padding: 15px;
             z-index: 10;
             transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
         }
@@ -80,17 +81,25 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            min-height: 400px;
+            min-height: 50vh;
         }
 
         .decipher-ring {
-            width: 120px;
-            height: 120px;
+            width: 80px;
+            height: 80px;
             border: 2px solid var(--hud-border);
             border-radius: 50%;
             position: relative;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             animation: ring-pulse 2s ease-in-out infinite;
+        }
+
+        @media (min-width: 768px) {
+            .decipher-ring {
+                width: 120px;
+                height: 120px;
+                margin-bottom: 30px;
+            }
         }
 
         .decipher-ring::after {
@@ -130,7 +139,7 @@
         .reveal-stage {
             display: none;
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(20px);
             transition: all 1s ease;
         }
 
@@ -146,34 +155,58 @@
 
         .portal-header {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
+            flex-direction: column;
+            gap: 15px;
             border-bottom: 1px solid var(--hud-border);
-            padding-bottom: 5px;
+            padding-bottom: 15px;
             margin-bottom: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .portal-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-end;
+                padding-bottom: 10px;
+                margin-bottom: 30px;
+            }
         }
 
         .brand-text {
             font-family: 'Outfit', sans-serif;
-            font-size: 1.5rem;
+            font-size: 1.1rem;
             font-weight: 600;
-            letter-spacing: 4px;
+            letter-spacing: 2px;
             color: var(--hud-cyan);
             text-shadow: 0 0 15px rgba(0, 247, 255, 0.4);
+            text-transform: uppercase;
+        }
+
+        @media (min-width: 768px) {
+            .brand-text {
+                font-size: 1.5rem;
+                letter-spacing: 4px;
+            }
         }
 
         .tech-metadata {
             font-family: 'Fira Code', monospace;
-            font-size: 10px;
+            font-size: 9px;
             color: rgba(255, 255, 255, 0.4);
             text-transform: uppercase;
-            text-align: right;
+        }
+
+        @media (min-width: 768px) {
+            .tech-metadata {
+                font-size: 10px;
+                text-align: right;
+            }
         }
 
         .document-viewer {
-            background: rgba(13, 17, 28, 0.8);
+            background: rgba(13, 17, 28, 0.85);
             border: 1px solid var(--hud-border);
-            border-radius: 8px;
+            border-radius: 4px;
             overflow: hidden;
             position: relative;
             box-shadow: 0 20px 80px rgba(0, 0, 0, 0.6);
@@ -181,7 +214,7 @@
 
         .viewer-controls {
             background: rgba(0, 247, 255, 0.05);
-            padding: 12px 20px;
+            padding: 8px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -189,20 +222,27 @@
         }
 
         .control-dot {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             background: var(--hud-border);
             display: inline-block;
-            margin-right: 5px;
+            margin-right: 4px;
         }
 
         .msg-container {
-            padding: 30px 40px;
-            min-height: 200px;
+            padding: 20px;
+            min-height: 300px;
             position: relative;
             scrollbar-width: none;
-            /* Hide scrollbar for HUD feel */
+            overflow-x: hidden;
+        }
+
+        @media (min-width: 768px) {
+            .msg-container {
+                padding: 40px;
+                min-height: 400px;
+            }
         }
 
         .msg-container::-webkit-scrollbar {
@@ -211,14 +251,22 @@
 
         .terminal-log-dock {
             font-family: 'Fira Code', monospace;
-            font-size: 10px;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 10px 20px;
-            color: rgba(0, 247, 255, 0.5);
+            font-size: 9px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px 15px;
+            color: rgba(0, 247, 255, 0.4);
             border-top: 1px solid var(--hud-border);
-            max-height: 120px;
+            max-height: 100px;
             overflow-y: auto;
             scrollbar-width: none;
+        }
+
+        @media (min-width: 768px) {
+            .terminal-log-dock {
+                font-size: 10px;
+                padding: 15px 20px;
+                max-height: 120px;
+            }
         }
 
         .terminal-log-dock::-webkit-scrollbar {
@@ -227,12 +275,13 @@
 
         .status-badge {
             display: inline-block;
-            padding: 4px 12px;
+            padding: 3px 10px;
             border: 1px solid var(--hud-cyan);
             color: var(--hud-cyan);
-            font-size: 10px;
+            font-size: 8px;
             letter-spacing: 1px;
             border-radius: 20px;
+            margin-top: 5px;
         }
 
         /* --- UTILS --- */
@@ -246,25 +295,15 @@
             }
 
             1% {
-                transform: translate(-2px, 2px);
+                transform: translate(-1px, 1px);
             }
 
             2% {
-                transform: translate(2px, -2px);
+                transform: translate(1px, -1px);
             }
 
             3% {
                 transform: translate(0);
-            }
-        }
-
-        @media (max-width: 600px) {
-            .msg-container {
-                padding: 20px;
-            }
-
-            .brand-text {
-                font-size: 1.1rem;
             }
         }
 
