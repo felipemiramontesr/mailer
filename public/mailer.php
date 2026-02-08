@@ -152,16 +152,25 @@ if (empty($authCode)) {
         $mail->addAddress(MASTER_AUTH_EMAIL);
         $mail->Subject = "VERIFICATION PIN: $newPIN";
 
-        // Elite HUD v4 2FA Template
+        // Elite HUD v4.5 2FA Template (Final Calibration)
         $mail->isHTML(true);
         $currentDate = date('Y-m-d');
         $mail->Body = "
+        <style>
+            @keyframes data-flow {
+                0% { opacity: 0.3; width: 10%; }
+                50% { opacity: 1; width: 100%; }
+                100% { opacity: 0.3; width: 10%; }
+            }
+        </style>
         <div style=\"background: radial-gradient(circle at 50% 0%, #1a224d 0%, #080b2a 100%); color: #ffffff; padding: 0; font-family: 'Inter', Arial, sans-serif; width: 600px; margin: 20px auto; border: 1px solid rgba(0, 247, 255, 0.25); border-radius: 12px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.7);\">
             <div style=\"height: 4px; background: linear-gradient(90deg, transparent, #00f7ff, transparent);\"></div>
             
             <div style=\"padding: 30px;\">
                 <div style=\"border-bottom: 1px solid rgba(0, 247, 255, 0.3); padding-bottom: 10px; margin-bottom: 20px;\">
-                    <span style=\"color: #00f7ff !important; text-decoration: none !important; font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 3px;\">felipemiramontesr.net</span>
+                    <span style=\"color: #00f7ff !important; text-decoration: none !important; font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 3px;\">
+                        felipe<span style=\"display:none;\">_</span>miramontesr.net
+                    </span>
                     <span style=\"float: right; color: #7e8ec2; font-size: 9px; letter-spacing: 1px;\">LOG_STREAM // $currentDate</span>
                 </div>
 
@@ -170,7 +179,7 @@ if (empty($authCode)) {
                         <span style=\"color: #7e8ec2; font-size: 9px; letter-spacing: 2px; text-transform: uppercase;\">🛡️ SECURITY_AUTHORIZATION_REQUIRED</span>
                     </div>
                     
-                    <h2 style=\"color: #ffffff; font-size: 12px; margin-bottom: 25px; letter-spacing: 1px; opacity: 0.8;\">INTENT: EXTERNAL_TRANSMISSION</h2>
+                    <h2 style=\"color: #00f7ff; font-size: 12px; margin-bottom: 25px; letter-spacing: 1px; font-weight: bold; text-shadow: 0 0 10px rgba(0, 247, 255, 0.3);\">INTENT: EXTERNAL_TRANSMISSION</h2>
 
                     <div style=\"background: #000; border: 1px solid #00f7ff; padding: 25px; border-radius: 8px; display: block; margin-bottom: 25px; box-shadow: 0 0 20px rgba(0, 247, 255, 0.2);\">
                         <div style=\"color: rgba(0, 247, 255, 0.4); font-size: 8px; margin-bottom: 15px; letter-spacing: 2px; text-align: left;\">// [ START_PIN ]</div>
@@ -178,14 +187,21 @@ if (empty($authCode)) {
                         <div style=\"color: rgba(0, 247, 255, 0.4); font-size: 8px; margin-top: 15px; letter-spacing: 2px; text-align: left;\">// [ END_PIN ]</div>
                     </div>
 
-                    <p style=\"color: #a0a0c0; font-size: 12px; line-height: 1.5; margin: 0;\">
+                    <p style=\"color: #a0a0c0; font-size: 11px; line-height: 1.5; margin: 0; opacity: 0.8;\">
                         This sequence expires in 5 minutes. <br>
                         Input the authorization code into the secure node to proceed.
                     </p>
                 </div>
 
-                <div style=\"margin-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 15px;\">
-                    <span style=\"color: #00f7ff; font-size: 9px; letter-spacing: 1px;\">🛡️ SHIELD: ACTIVE // PROTO: 2FA_V4</span>
+                <div style=\"margin-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 15px; display: table; width: 100%;\">
+                    <div style=\"display: table-cell; vertical-align: middle; width: 50%;\">
+                        <span style=\"color: #00f7ff; font-size: 9px; letter-spacing: 1px;\">🛡️ SHIELD: ACTIVE // PROTO: 2FA_V4</span>
+                    </div>
+                    <div style=\"display: table-cell; vertical-align: middle; width: 50%; text-align: right;\">
+                        <div style=\"display: inline-block; width: 80px; height: 3px; background: rgba(0, 247, 255, 0.1); border-radius: 2px; overflow: hidden; position: relative;\">
+                            <div style=\"position: absolute; top: 0; left: 0; height: 100%; background: #00f7ff; box-shadow: 0 0 10px #00f7ff; animation: data-flow 2s infinite ease-in-out;\"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>";
