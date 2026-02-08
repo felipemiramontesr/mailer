@@ -9,9 +9,9 @@ describe('Email Template Utility', () => {
     message: 'Hello World',
   };
 
-  it('should include the sender name in the template', () => {
+  it('should include the professional commander name in the template', () => {
     const html = generateEmailTemplate(mockForm);
-    expect(html).toContain('Felipe Romero');
+    expect(html).toContain('B. Eng. Felipe de Jesús Miramontes Romero');
   });
 
   it('should include the raw subject provided by the user', () => {
@@ -34,9 +34,9 @@ describe('Email Template Utility', () => {
     expect(html).toContain('width: 100%');
   });
 
-  it('should contain the current date in the LOG_STREAM', () => {
+  it('should contain the current date in the DATA_STREAM', () => {
     const html = generateEmailTemplate(mockForm);
     const currentDate = new Date().toISOString().split('T')[0];
-    expect(html).toContain(`LOG_STREAM // ${currentDate}`);
+    expect(html).toContain(`DATA_STREAM // ${currentDate}`);
   });
 });
