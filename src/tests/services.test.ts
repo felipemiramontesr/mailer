@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { sendEmailViaProxy } from '../services/aiService';
 
 vi.mock('axios');
-const mockedAxios = vi.mocked(axios);
+const mockedAxios = vi.mocked(axios) as any;
 
 describe('aiService - sendEmailViaProxy', () => {
   beforeEach(() => {

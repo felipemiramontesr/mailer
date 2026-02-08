@@ -57,7 +57,6 @@ describe('EmailForm.vue', () => {
 
   it('enables send button when form is filled', async () => {
     const wrapper = mount(EmailForm);
-    const inputs = wrapper.findAll('input, textarea');
 
     // Fill subject and message (usually indices 2 and 3 based on structure)
     // Using v-model bindings via wrapper.setValue
