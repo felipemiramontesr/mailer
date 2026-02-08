@@ -150,15 +150,17 @@ const sendEmail = async () => {
   <div class="tech-card email-form-container" :class="{ 'with-preview': showPreview }">
     <div class="form-header">
       <h2 class="glow-text">felipemiramontesr.net</h2>
-      <div class="header-actions">
-        <button type="button" class="preview-toggle" @click="showPreview = !showPreview" :class="{ active: showPreview }">
-          <Layout v-if="!showPreview" :size="16" />
-          <EyeOff v-else :size="16" />
-          {{ showPreview ? 'HIDE PREVIEW' : 'LIVE PREVIEW' }}
-        </button>
+      
+      <div class="header-status-area">
         <div class="status-indicator">
           <span class="dot"></span> SECURE_CONNECTION
         </div>
+        
+        <button type="button" class="preview-toggle" @click="showPreview = !showPreview" :class="{ active: showPreview }">
+          <Layout v-if="!showPreview" :size="14" />
+          <EyeOff v-else :size="14" />
+          LP
+        </button>
       </div>
     </div>
 
@@ -291,30 +293,36 @@ const sendEmail = async () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
-  padding-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
   border-bottom: 1px solid var(--border-color);
 }
 
-.header-actions {
+.header-status-area {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
+  flex-shrink: 0;
 }
 
 .preview-toggle {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background: rgba(0, 247, 255, 0.05);
   border: 1px solid rgba(0, 247, 255, 0.2);
   color: var(--accent);
-  padding: 6px 14px;
+  padding: 4px 10px;
   border-radius: 4px;
   font-family: 'Orbitron', sans-serif;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
+  min-width: 50px;
+  justify-content: center;
 }
 
 .preview-toggle:hover {
