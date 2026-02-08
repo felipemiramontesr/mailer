@@ -161,7 +161,7 @@ if (empty($authCode)) {
             
             <div style=\"padding: 30px;\">
                 <div style=\"border-bottom: 1px solid rgba(0, 247, 255, 0.3); padding-bottom: 10px; margin-bottom: 20px;\">
-                    <span style=\"color: #00f7ff; font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 3px;\">felipemiramontesr.net</span>
+                    <span style=\"color: #00f7ff !important; text-decoration: none !important; font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 3px;\">felipemiramontesr.net</span>
                     <span style=\"float: right; color: #7e8ec2; font-size: 9px; letter-spacing: 1px;\">LOG_STREAM // $currentDate</span>
                 </div>
 
@@ -172,10 +172,10 @@ if (empty($authCode)) {
                     
                     <h2 style=\"color: #ffffff; font-size: 12px; margin-bottom: 25px; letter-spacing: 1px; opacity: 0.8;\">INTENT: EXTERNAL_TRANSMISSION</h2>
 
-                    <div style=\"background: #000; border: 1px solid #00f7ff; padding: 25px; border-radius: 8px; display: inline-block; margin-bottom: 25px; box-shadow: 0 0 20px rgba(0, 247, 255, 0.2);\">
-                        <div style=\"color: rgba(0, 247, 255, 0.4); font-size: 8px; margin-bottom: 10px; letter-spacing: 2px;\">// [ START_PIN ]</div>
+                    <div style=\"background: #000; border: 1px solid #00f7ff; padding: 25px; border-radius: 8px; display: block; margin-bottom: 25px; box-shadow: 0 0 20px rgba(0, 247, 255, 0.2);\">
+                        <div style=\"color: rgba(0, 247, 255, 0.4); font-size: 8px; margin-bottom: 15px; letter-spacing: 2px; text-align: left;\">// [ START_PIN ]</div>
                         <span style=\"font-size: 38px; font-weight: bold; letter-spacing: 15px; color: #00f7ff; text-shadow: 0 0 15px rgba(0, 247, 255, 0.6); padding-left: 15px;\">$newPIN</span>
-                        <div style=\"color: rgba(0, 247, 255, 0.4); font-size: 8px; margin-top: 15px; letter-spacing: 2px;\">// [ END_PIN ]</div>
+                        <div style=\"color: rgba(0, 247, 255, 0.4); font-size: 8px; margin-top: 15px; letter-spacing: 2px; text-align: left;\">// [ END_PIN ]</div>
                     </div>
 
                     <p style=\"color: #a0a0c0; font-size: 12px; line-height: 1.5; margin: 0;\">
