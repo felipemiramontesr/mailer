@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import EmailForm from './components/EmailForm.vue'
+import EmailForm from './components/EmailForm.vue';
 </script>
 
 <template>

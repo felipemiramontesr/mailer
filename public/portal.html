@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SECURE_PORTAL // INCOMING_SIGNAL</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&family=Inter:wght@300;400;600&family=Outfit:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --hud-cyan: #00f7ff;
+            --hud-bg: #030a16;
+            --hud-glass: rgba(0, 247, 255, 0.05);
+            --hud-border: rgba(0, 247, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--hud-bg);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .hud-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+        }
+
+        .tech-card {
+            background: var(--hud-glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--hud-border);
+            padding: 40px;
+            border-radius: 4px;
+            position: relative;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .tech-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--hud-cyan), transparent);
+        }
+
+        .status-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .glow-text {
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--hud-cyan);
+            text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
+            font-size: 1.2rem;
+        }
+
+        .terminal-output {
+            font-family: 'Fira Code', monospace;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 247, 255, 0.1);
+            padding: 20px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            height: 250px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .decrypted-msg {
+            display: none;
+            animation: fadeIn 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 2px solid var(--hud-border);
+            border-top-color: var(--hud-cyan);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .scan-line {
+            width: 100%;
+            height: 2px;
+            background: var(--hud-cyan);
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0.2;
+            animation: scan 3s ease-in-out infinite;
+        }
+
+        @keyframes scan {
+
+            0%,
+            100% {
+                top: 0;
+            }
+
+            50% {
+                top: 100%;
+            }
+        }
+
+        .signal-id {
+            position: absolute;
+            bottom: -25px;
+            right: 0;
+            font-size: 10px;
+            color: rgba(0, 247, 255, 0.4);
+            font-family: 'Fira Code', monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="hud-wrapper">
+        <div class="tech-card">
+            <div class="scan-line"></div>
+            <div class="status-container">
+                <div class="loader" id="loader"></div>
+                <h2 class="glow-text" id="statusTitle">DESCRAMBLING_SIGNAL</h2>
+            </div>
+
+            <div class="terminal-output" id="console">
+                [SYSTEM] INITIALIZING SECURE_PORTAL_V4...<br>
+                [SYSTEM] NODE: FELIPE-MIRAMONTES-B_ENG<br>
+                [AUTH] DETECTING URL_FRAGMENT_KEY...<br>
+            </div>
+
+            <div class="decrypted-msg" id="msgBody">
+                <!-- Data packets will stay here -->
+            </div>
+
+            <div class="signal-id" id="sigId">SIGNAL_ID: NULL</div>
+        </div>
+    </div>
+
+    <script type="module">
+        const consoleEl = document.getElementById('console');
+        const statusTitle = document.getElementById('statusTitle');
+        const loader = document.getElementById('loader');
+        const msgBody = document.getElementById('msgBody');
+        const sigIdEl = document.getElementById('sigId');
+
+        function log(msg, type = 'SYSTEM') {
+            const time = new Date().toLocaleTimeString();
+            consoleEl.innerHTML += `[${time}] [${type}] ${msg}<br>`;
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+        }
+
+        async function decryptData(ciphertext, ivHex, keyHex) {
+            const keyBytes = new Uint8Array(keyHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+            const key = await window.crypto.subtle.importKey('raw', keyBytes, 'AES-GCM', true, ['decrypt']);
+
+            const iv = new Uint8Array(ivHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+            const binary = atob(ciphertext);
+            const encrypted = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) encrypted[i] = binary.charCodeAt(i);
+
+            const decrypted = await window.crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, encrypted);
+            return new TextDecoder().decode(decrypted);
+        }
+
+        async function init() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const key = window.location.hash.substring(1);
+
+            if (!id || !key) {
+                log('ACCESS_DENIED: MISSING_CRITICAL_PACKETS', 'ERROR');
+                statusTitle.innerText = 'SIGNAL_VOID';
+                loader.style.borderColor = 'red';
+                return;
+            }
+
+            sigIdEl.innerText = `SIGNAL_ID: ${id.toUpperCase()}`;
+            log('FETCHING_ENCRYPTED_BLOB...');
+
+            try {
+                const response = await fetch('mailer.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'fetch_signal', id })
+                });
+
+                const data = await response.json();
+                if (data.error) throw new Error(data.error);
+
+                log('BLOB_RETRIEVED. STARTING_AES_GCM_PROTOCOL...', 'CRYPTO');
+
+                setTimeout(async () => {
+                    try {
+                        const plainText = await decryptData(data.blob, data.iv, key);
+                        log('SIGNAL_DECRYPTED. INTEGRITY_VERIFIED.', 'SUCCESS');
+
+                        statusTitle.innerText = 'SIGNAL_ACQUIRED';
+                        loader.style.display = 'none';
+                        msgBody.style.display = 'block';
+                        msgBody.innerHTML = plainText;
+
+                        // Shred Signal
+                        log('INITIATING_SHRED_PROTOCOL...', 'SHRED');
+                        await fetch('mailer.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ action: 'shred_signal', id })
+                        });
+                        log('SERVER_STORAGE_SHREDDED. ZERO_RESIDUE.', 'SHRED');
+                    } catch (e) {
+                        log('DECRYPTION_FAILED: KEY_MISMATCH', 'ERROR');
+                        statusTitle.innerText = 'SIGNAL_CORRUPTED';
+                    }
+                }, 1500);
+
+            } catch (e) {
+                log(`SIGNAL_LOST: ${e.message}`, 'ERROR');
+                statusTitle.innerText = 'NO_SIGNAL';
+            }
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

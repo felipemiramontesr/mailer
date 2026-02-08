@@ -1,0 +1,8 @@
+/dist
+/node_modules
+*.php
+.env*
+package-lock.json
+/brain
+/Knowledge
+/logs

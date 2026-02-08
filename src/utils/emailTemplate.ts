@@ -1,14 +1,14 @@
-export interface EmailFormData {
-    clientName: string;
-    clientEmail: string;
-    subject: string;
-    message: string;
-}
+import type { EmailFormData } from '../types';
 
+/**
+ * Generates the professional HUD-themed HTML email template.
+ * @param form - The data containing sender name, subject, and message.
+ * @returns A complete HTML string formatted for email clients.
+ */
 export const generateEmailTemplate = (form: EmailFormData): string => {
-    const currentDate = new Date().toISOString().split('T')[0];
+  const currentDate = new Date().toISOString().split('T')[0];
 
-    return `
+  return `
   <div style="display:none; max-height:0px; max-width:0px; opacity:0; overflow:hidden; font-size:1px; line-height:1px; color:#080b2a;">
     ${form.subject || 'Subject Preview'} &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
   </div>

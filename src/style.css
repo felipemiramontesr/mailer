@@ -7,6 +7,10 @@
   --text-secondary: #a0a0c0;
   --border-color: rgba(0, 247, 255, 0.1);
   --border-glow: rgba(0, 247, 255, 0.2);
+  --glass-bg: rgba(255, 255, 255, 0.07);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --hud-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --hud-inner-glow: inset 0 0 50px rgba(0, 247, 255, 0.05);
 
   font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -70,7 +74,7 @@ p {
 }
 
 .tech-card::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;

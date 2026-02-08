@@ -1,91 +1,83 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { Mail, Send, ShieldCheck, Satellite, Type, Loader2, CheckCircle2, AlertCircle, Eye, EyeOff, Layout } from 'lucide-vue-next';
-import { sendEmailViaProxy } from '../services/aiService';
-import { generateEmailTemplate } from '../utils/emailTemplate';
+import { nextTick, ref, watch } from 'vue';
+/**
+ * EmailForm Component
+ * Main interface for composing and sending encrypted signal transmissions (emails).
+ * Utilizes a HUD v4 design aesthetic and modular composable logic.
+ */
+import {
+  AlertCircle,
+  CheckCircle2,
+  Eye,
+  EyeOff,
+  Layout,
+  Loader2,
+  Mail,
+  Satellite,
+  Send,
+  ShieldAlert,
+  ShieldCheck,
+  Type,
+  X,
+} from 'lucide-vue-next';
+import { useEmailForm } from '../composables/useEmailForm';
 
-const form = ref({
-  clientName: 'B. Eng. Felipe de Jesús Miramontes Romero',
-  clientEmail: '',
-  subject: '',
-  message: '',
-});
+const {
+  form,
+  security,
+  isSending,
+  sendStatus,
+  errorMessage,
+  showPassword,
+  showPreview,
+  emailTemplateHTML,
+  isFormValid,
+  handleSubmit,
+  toasts,
+  removeToast,
+  logs,
+} = useEmailForm();
 
-const isSending = ref(false);
-const sendStatus = ref<'idle' | 'sending' | 'success' | 'error' | 'awaiting_2fa'>('idle');
-const errorMessage = ref('');
-const showPassword = ref(false);
-const showPreview = ref(false);
-const security = ref({
-  password: '',
-  authCode: '',
-  showPinField: false
-});
+const terminalBody = ref<HTMLElement | null>(null);
 
-
-const emailTemplateHTML = computed(() => generateEmailTemplate(form.value));
-
-const sendEmail = async () => {
-  if (!form.value.message || !form.value.subject) {
-    return;
-  }
-
-  isSending.value = true;
-  sendStatus.value = 'sending';
-  
-  try {
-    const templateParams = {
-      to_name: form.value.clientName,
-      to_email: form.value.clientEmail,
-      subject: form.value.subject,
-      body: emailTemplateHTML.value
-    };
-
-    const result = await sendEmailViaProxy(templateParams, security.value.password, security.value.authCode);
-    
-    if (result.status === '2fa_required') {
-      security.value.showPinField = true;
-      sendStatus.value = 'awaiting_2fa';
-      return;
-    }
-
-    // Success Phase
-    sendStatus.value = 'success';
-    form.value.subject = '';
-    form.value.message = '';
-    security.value.password = '';
-    security.value.authCode = '';
-    security.value.showPinField = false;
-
-    setTimeout(() => {
-      sendStatus.value = 'idle';
-    }, 4000);
-
-  } catch (error: any) {
-    console.error('Email send failed:', error);
-    sendStatus.value = 'error';
-    errorMessage.value = error.response?.data?.error || error.message || 'Transmission failed';
-    setTimeout(() => {
-      sendStatus.value = 'idle';
-      errorMessage.value = '';
-    }, 6000);
-  } finally {
-    isSending.value = false;
-  }
-};
+watch(
+  logs,
+  () => {
+    nextTick(() => {
+      if (terminalBody.value) {
+        terminalBody.value.scrollTop = terminalBody.value.scrollHeight;
+      }
+    });
+  },
+  { deep: true }
+);
 </script>
 
 <template>
   <div class="tech-card email-form-container" :class="{ 'with-preview': showPreview }">
+    <!-- Toast System -->
+    <div class="toast-container">
+      <TransitionGroup name="toast">
+        <div v-for="toast in toasts" :key="toast.id" class="hud-toast" :class="toast.type">
+          <div class="toast-content">{{ toast.message }}</div>
+          <button @click="removeToast(toast.id)" class="toast-close">
+            <X :size="14" />
+          </button>
+        </div>
+      </TransitionGroup>
+    </div>
     <div class="form-header">
       <h2 class="glow-text">felipemiramontesr.net</h2>
-      
+
       <div class="header-status-area">
-        <div class="status-indicator">
-          <span class="dot"></span> SECURE_CONNECTION
-        </div>
-        
-        <button type="button" class="preview-toggle" @click="showPreview = !showPreview" :class="{ active: showPreview }">
+        <div class="status-indicator"><span class="dot"></span> SECURE_CONNECTION</div>
+
+        <button
+          type="button"
+          class="preview-toggle"
+          @click="showPreview = !showPreview"
+          :class="{ active: showPreview }"
+        >
           <Layout v-if="!showPreview" :size="14" />
           <EyeOff v-else :size="14" />
           LP
@@ -94,7 +86,7 @@ const sendEmail = async () => {
     </div>
 
     <div class="form-layout">
-      <form @submit.prevent="sendEmail" class="main-form" autocomplete="off">
+      <form @submit.prevent="handleSubmit" class="main-form" autocomplete="off">
         <div class="input-row">
           <div class="input-group icon-inside">
             <ShieldCheck :size="16" class="inner-icon" />
@@ -102,21 +94,52 @@ const sendEmail = async () => {
           </div>
           <div class="input-group icon-inside">
             <Satellite :size="16" class="inner-icon" />
-            <input v-model="form.clientEmail" type="email" placeholder="felipemiramontesr@gmail.com" required autocomplete="off" />
+            <input
+              v-model="form.clientEmail"
+              type="email"
+              placeholder="felipemiramontesr@gmail.com"
+              required
+              autocomplete="off"
+            />
           </div>
         </div>
 
         <div class="input-group">
           <label><Type :size="14" /> SUBJECT</label>
-          <input v-model="form.subject" type="text" placeholder="Insert a massage subject" required />
+          <input
+            v-model="form.subject"
+            type="text"
+            placeholder="Insert a massage subject"
+            required
+          />
+        </div>
+
+        <!-- Black-Ops Toggle (Phase 6) -->
+        <div class="black-ops-field">
+          <div class="black-ops-card" @click="security.blackOpsMode = !security.blackOpsMode">
+            <div class="black-ops-info">
+              <ShieldAlert
+                class="field-icon"
+                :size="20"
+                :class="{ active: security.blackOpsMode }"
+              />
+              <div class="black-ops-text">
+                <span class="black-ops-label">BLACK_OPS_ENCRYPTION (ZCSD)</span>
+                <span class="black-ops-hint">Zero-Knowledge Secure Delivery Protocol Active</span>
+              </div>
+            </div>
+            <div class="black-ops-switch" :class="{ active: security.blackOpsMode }">
+              <div class="switch-handle"></div>
+            </div>
+          </div>
         </div>
 
         <div class="message-section">
           <label><Mail :size="14" /> MESSAGE CONTENT</label>
-          <textarea 
-            v-model="form.message" 
-            rows="8" 
-            placeholder="Input your message here..." 
+          <textarea
+            v-model="form.message"
+            rows="8"
+            placeholder="Input your message here..."
             required
           ></textarea>
         </div>
@@ -126,11 +149,11 @@ const sendEmail = async () => {
           <div v-if="!security.showPinField" class="input-group">
             <label><ShieldCheck :size="14" /> Master Access Key</label>
             <div class="input-with-eye">
-              <input 
-                v-model="security.password" 
-                :type="showPassword ? 'text' : 'password'" 
-                placeholder="Enter secure password" 
-                required 
+              <input
+                v-model="security.password"
+                :type="showPassword ? 'text' : 'password'"
+                placeholder="Enter secure password"
+                required
               />
               <button type="button" class="eye-btn" @click="showPassword = !showPassword">
                 <Eye v-if="!showPassword" :size="18" />
@@ -138,31 +161,31 @@ const sendEmail = async () => {
               </button>
             </div>
           </div>
-          
+
           <div v-else class="input-group 2fa-group animate-in">
             <label><AlertCircle :size="14" color="#00f7ff" /> Insert a verification PIN</label>
-            <input 
-              v-model="security.authCode" 
-              type="text" 
-              placeholder="••••••" 
+            <input
+              v-model="security.authCode"
+              type="text"
+              placeholder="••••••"
               maxlength="6"
-              required 
+              required
               class="pin-input"
             />
           </div>
         </div>
 
-        <button 
-          type="submit" 
-          class="cyan-btn send-btn" 
+        <button
+          type="submit"
+          class="cyan-btn send-btn"
           :class="sendStatus"
-          :disabled="isSending || sendStatus === 'success' || !form.message || !form.subject || (sendStatus === 'awaiting_2fa' && !security.authCode)"
+          :disabled="!isFormValid"
         >
           <template v-if="sendStatus === 'idle'">
-            <Send :size="20" /> 
+            <Send :size="20" />
             INITIALIZE SEND SEQUENCE
           </template>
-          
+
           <template v-else-if="sendStatus === 'sending'">
             <Loader2 :size="20" class="spin" />
             DECRYPTING & SENDING...
@@ -172,12 +195,12 @@ const sendEmail = async () => {
             <ShieldCheck :size="20" />
             VERIFY PIN & AUTHORIZE
           </template>
-          
+
           <template v-else-if="sendStatus === 'success'">
             <CheckCircle2 :size="20" />
             TRANSMISSION COMPLETE ✅
           </template>
-          
+
           <template v-else-if="sendStatus === 'error'">
             <AlertCircle :size="20" />
             {{ errorMessage || 'TRANSMISSION ERROR ⚠️' }}
@@ -191,7 +214,29 @@ const sendEmail = async () => {
           <div class="preview-badge">HUD_LIVE_FEED</div>
         </div>
         <div class="preview-scroll-area">
+          <!-- Skeleton Shimmer Loader -->
+          <div v-if="isSending" class="skeleton-overlay">
+            <div class="skeleton-item skeleton-header"></div>
+            <div class="skeleton-item skeleton-line"></div>
+            <div class="skeleton-item skeleton-line mid"></div>
+            <div class="skeleton-item skeleton-box"></div>
+          </div>
           <div class="email-canvas" v-html="emailTemplateHTML"></div>
+        </div>
+
+        <!-- Integrated Technical Terminal -->
+        <div class="hud-terminal">
+          <div class="terminal-header">
+            <span class="terminal-title">TERMINAL_LOG // EVENT_STREAM</span>
+            <span class="terminal-status">LIVE_RELAY</span>
+          </div>
+          <div class="terminal-body" ref="terminalBody">
+            <div v-for="log in logs" :key="log.id" class="log-entry">
+              <span class="log-time">[{{ log.timestamp }}]</span>
+              <span class="log-level" :class="log.level.toLowerCase()">{{ log.level }}</span>
+              <span class="log-msg">{{ log.message }}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -297,12 +342,6 @@ const sendEmail = async () => {
   animation: pulse 2s infinite;
 }
 
-@keyframes pulse {
-  0% { opacity: 0.4; }
-  50% { opacity: 1; }
-  100% { opacity: 0.4; }
-}
-
 /* Preview Styles */
 .live-preview-container {
   flex: 1.5;
@@ -388,7 +427,8 @@ label {
   letter-spacing: 1px;
 }
 
-input, textarea {
+input,
+textarea {
   width: 100%;
   background: rgba(8, 11, 26, 0.5);
   border: 1px solid var(--border-color);
@@ -399,11 +439,13 @@ input, textarea {
   font-family: 'Inter', sans-serif;
 }
 
-input:focus, textarea:focus {
+input:focus,
+textarea:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 15px rgba(0, 247, 255, 0.15);
-  background: rgba(17, 22, 51, 0.8);
+  box-shadow: 0 0 15px rgba(0, 247, 255, 0.25);
+  background: rgba(17, 22, 51, 0.9);
+  transform: translateY(-1px);
 }
 
 .icon-inside {
@@ -477,15 +519,6 @@ input[readonly] {
   opacity: 0.3;
 }
 
-.animate-in {
-  animation: slideIn 0.4s ease-out;
-}
-
-@keyframes slideIn {
-  from { transform: translateY(10px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
 .send-btn {
   width: 100%;
   margin-top: 1rem;
@@ -506,13 +539,203 @@ input[readonly] {
   color: #ff4444;
 }
 
-.spin {
-  animation: spin 1s linear infinite;
+/* Skeleton & Shimmer */
+.skeleton-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(8, 11, 26, 0.8);
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  gap: 20px;
+  z-index: 10;
 }
 
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.skeleton-item {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.05) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-header {
+  height: 40px;
+  width: 60%;
+}
+.skeleton-line {
+  height: 20px;
+  width: 100%;
+}
+.skeleton-line.mid {
+  width: 80%;
+}
+.skeleton-box {
+  height: 150px;
+  width: 100%;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Toast System */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hud-toast {
+  background: rgba(8, 11, 26, 0.9);
+  border-left: 4px solid var(--accent);
+  border-right: 1px solid rgba(0, 247, 255, 0.1);
+  border-top: 1px solid rgba(0, 247, 255, 0.1);
+  border-bottom: 1px solid rgba(0, 247, 255, 0.1);
+  padding: 12px 20px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-width: 250px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+}
+
+.hud-toast.success {
+  border-left-color: #00ff88;
+}
+.hud-toast.error {
+  border-left-color: #ff4444;
+}
+.hud-toast.warning {
+  border-left-color: #ffcc00;
+}
+
+.toast-close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  opacity: 0.6;
+}
+
+.toast-close:hover {
+  opacity: 1;
+}
+
+.toast-enter-active,
+.toast-leave-active {
+  transition: all 0.4s ease;
+}
+.toast-enter-from {
+  transform: translateX(100%);
+  opacity: 0;
+}
+.toast-leave-to {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+/* HUD Terminal */
+.hud-terminal {
+  background: rgba(0, 0, 0, 0.8);
+  border-top: 1px solid rgba(0, 247, 255, 0.2);
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+}
+
+.terminal-header {
+  padding: 4px 12px;
+  background: rgba(0, 247, 255, 0.05);
+  border-bottom: 1px solid rgba(0, 247, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.terminal-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 1.5px;
+  color: var(--text-secondary);
+}
+
+.terminal-status {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.55rem;
+  color: var(--accent);
+  opacity: 0.8;
+}
+
+.terminal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 12px;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 0.65rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.terminal-body::-webkit-scrollbar {
+  width: 3px;
+}
+.terminal-body::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  opacity: 0.3;
+}
+
+.log-entry {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 2px;
+  white-space: nowrap;
+}
+
+.log-time {
+  color: #5b6ea3;
+}
+.log-level {
+  font-weight: bold;
+  min-width: 50px;
+}
+.log-level.system {
+  color: #00f7ff;
+}
+.log-level.network {
+  color: #bb86fc;
+}
+.log-level.auth {
+  color: #ffcc00;
+}
+.log-level.ai {
+  color: #00ff88;
+}
+.log-msg {
+  color: #cbd5e1;
 }
 
 @media (max-width: 1000px) {
@@ -525,5 +748,191 @@ input[readonly] {
   .input-row {
     grid-template-columns: 1fr;
   }
+}
+
+.black-ops-field {
+  margin: 20px 0;
+}
+
+.black-ops-card {
+  background: rgba(255, 60, 0, 0.05);
+  border: 1px solid rgba(255, 60, 0, 0.1);
+  padding: 15px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.black-ops-card:hover {
+  background: rgba(255, 60, 0, 0.08);
+  border-color: rgba(255, 60, 0, 0.3);
+}
+
+.black-ops-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.black-ops-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.black-ops-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ff3c00;
+  letter-spacing: 1px;
+}
+
+.black-ops-hint {
+  font-size: 0.7rem;
+  color: rgba(255, 60, 0, 0.6);
+  text-transform: uppercase;
+}
+
+.field-icon.active {
+  filter: drop-shadow(0 0 8px #ff3c00);
+}
+
+.black-ops-switch {
+  width: 44px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.black-ops-switch.active {
+  background: #ff3c00;
+  box-shadow: 0 0 15px rgba(255, 60, 0, 0.4);
+}
+
+.switch-handle {
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  transition: all 0.3s;
+}
+
+.black-ops-switch.active .switch-handle {
+  left: 25px;
+}
+
+.black-ops-field {
+  margin: 18px 0;
+}
+
+.black-ops-card {
+  background: rgba(255, 60, 0, 0.05);
+  border: 1px solid rgba(255, 60, 0, 0.15);
+  padding: 14px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.black-ops-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 60, 0, 0.1), transparent);
+  transition: 0.5s;
+}
+
+.black-ops-card:hover::after {
+  left: 100%;
+}
+
+.black-ops-card:hover {
+  background: rgba(255, 60, 0, 0.08);
+  border-color: rgba(255, 60, 0, 0.4);
+  box-shadow: 0 0 15px rgba(255, 60, 0, 0.1);
+}
+
+.black-ops-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.black-ops-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.black-ops-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #ff3c00;
+  letter-spacing: 2px;
+}
+
+.black-ops-hint {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.field-icon {
+  color: rgba(255, 60, 0, 0.3);
+  transition: all 0.3s;
+}
+
+.field-icon.active {
+  color: #ff3c00;
+  filter: drop-shadow(0 0 8px #ff3c00);
+}
+
+.black-ops-switch {
+  width: 38px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  position: relative;
+  transition: all 0.4s;
+}
+
+.black-ops-switch.active {
+  background: rgba(255, 60, 0, 0.2);
+  border-color: #ff3c00;
+}
+
+.switch-handle {
+  width: 14px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 3px;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.black-ops-switch.active .switch-handle {
+  left: 19px;
+  background: #ff3c00;
+  box-shadow: 0 0 10px #ff3c00;
 }
 </style>

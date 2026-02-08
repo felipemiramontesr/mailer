@@ -32,3 +32,12 @@ public/config.php
 hash_tool.php
 public/access_hash.php
 !public/access_hash.php.template
+
+# Logs & Runtime Authorization Data
+public/auth_codes/*.json
+public/logs/*.log
+public/mailer_debug.log
+
+# Black-Ops Ephemeral Node
+public/signals/*
+!public/signals/.htaccess

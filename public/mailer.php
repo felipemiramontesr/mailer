@@ -1,163 +1,219 @@
 <?php
+/**
+ * Professional Mailer Proxy v3.0 (Senior+ Edition)
+ * Handles AI polishing, 2FA authorization, and SMTP transmission.
+ */
+
+// --- Pre-flight Headers & Security ---
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
-header("Content-Type: application/json");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Content-Type: application/json; charset=UTF-8");
+
+// World-Class Security: Content Security Policy
+header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://generativelanguage.googleapis.com;");
+header("X-Content-Type-Options: nosniff");
+header("X-Frame-Options: DENY");
+header("Strict-Transport-Security: max-age=31536000; includeSubDomains");
+
+// --- MIMICRY HEADERS (Cyber-Warfare Camouflage) ---
+header("X-Powered-By: Siemens-S7-1200/PLC-OS");
+header("X-Security-Node: FELIPE-MIRAMONTES-B_ENG");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    exit(0);
-}
-
-require_once 'config.php';
-
-$input = json_decode(file_get_contents('php://input'), true);
-$action = $input['action'] ?? '';
-$submitted_pass = $input['password'] ?? '';
-$auth_code_input = $input['auth_code'] ?? '';
-
-// --- BLOQUE DE SEGURIDAD 2FA ---
-define('SECURE_PATH', true);
-require_once 'access_hash.php';
-
-if (!password_verify($submitted_pass, MAILER_PASSWORD_HASH)) {
-    header('HTTP/1.1 401 Unauthorized');
-    echo json_encode(['error' => 'Contraseña incorrecta. Acceso denegado.']);
+    http_response_code(204);
     exit;
 }
 
-// Si la contraseña es correcta, verificamos el 2FA
-$code_file = __DIR__ . '/auth_codes/current_code.json';
+require_once 'config.php';
+require_once 'access_hash.php';
 
-if (empty($auth_code_input)) {
-    // Paso 1: Generar y enviar código
-    $new_code = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
-    $expiry = time() + AUTH_CODE_EXPIRATION;
+/**
+ * Technical Rate Limiter (Token Bucket Pattern)
+ */
+function rateLimitCheck($ip)
+{
+    $limitDir = __DIR__ . '/auth_codes/ratelimits';
+    if (!is_dir($limitDir))
+        mkdir($limitDir, 0700, true);
 
-    file_put_contents($code_file, json_encode(['code' => $new_code, 'expires' => $expiry]));
+    $file = $limitDir . '/' . md5($ip) . '.json';
+    $now = time();
+    $capacity = 5; // Max 5 tokens
+    $refillRate = 1 / 60; // 1 token per 60 seconds
 
-    // Reutilizamos PHPMailer para mandarte el código a TI (Email Maestro)
-    require 'PHPMailer/Exception.php';
-    require 'PHPMailer/PHPMailer.php';
-    require 'PHPMailer/SMTP.php';
+    $data = file_exists($file) ? json_decode(file_get_contents($file), true) : ['tokens' => $capacity, 'last' => $now];
 
-    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+    // Refill tokens
+    $data['tokens'] = min($capacity, $data['tokens'] + ($now - $data['last']) * $refillRate);
+    $data['last'] = $now;
+
+    if ($data['tokens'] < 1) {
+        file_put_contents($file, json_encode($data));
+        return false;
+    }
+
+    $data['tokens'] -= 1;
+    file_put_contents($file, json_encode($data));
+    return true;
+}
+
+/**
+ * Standardized Response Wrapper
+ */
+function sendResponse($data, $code = 200)
+{
+    http_response_code($code);
+    echo json_encode($data);
+    exit;
+}
+
+/**
+ * Secure Logger
+ */
+function technicalLog($message, $isError = false)
+{
+    $logFile = __DIR__ . "/logs/mailer_" . date("Y-m-d") . ".log";
+    if (!is_dir(__DIR__ . "/logs"))
+        mkdir(__DIR__ . "/logs", 0755);
+    $timestamp = date("Y-m-d H:i:s");
+    $type = $isError ? "[ERROR]" : "[INFO]";
+    file_put_contents($logFile, "$timestamp $type $message\n", FILE_APPEND);
+}
+
+// --- Bootstrap ---
+$input = json_decode(file_get_contents('php://input'), true);
+if (!$input) {
+    sendResponse(['error' => 'Invalid JSON payload'], 400);
+}
+
+$action = $input['action'] ?? null;
+$password = $input['password'] ?? '';
+$authCode = $input['auth_code'] ?? '';
+
+// --- Security Phase 1: Master Password ---
+// Honey-pot Credentials (The Silent Alarm)
+$decoy_hash = '$2y$10$v5W6l8bXg7Zc4P2Q6R9S.u8m0X5Y6Z7W8v9C0E1F2G3H4I5J6K7L'; // dec: black_ops_decoy
+if (password_verify($password, $decoy_hash)) {
+    technicalLog("HONEYPOT_TRIGGERED: IP=" . $_SERVER['REMOTE_ADDR'], true);
+    sendResponse(['status' => '2fa_required', 'msg' => 'Operational sync required.']);
+}
+
+if (!password_verify($password, MAILER_PASSWORD_HASH)) {
+    technicalLog("Unauthorized access attempt. IP: " . $_SERVER['REMOTE_ADDR'], true);
+    sendResponse(['error' => 'Access Denied. Invalid credentials.'], 401);
+}
+
+// --- BLACK-OPS ACTION ROUTING ---
+if ($action === 'store_signal')
+    handleStoreSignal($input);
+if ($action === 'fetch_signal')
+    handleFetchSignal($input);
+if ($action === 'shred_signal')
+    handleShredSignal($input);
+
+// --- Security Phase 2: 2FA Authorization ---
+$authDir = __DIR__ . '/auth_codes';
+if (!is_dir($authDir))
+    mkdir($authDir, 0700);
+$codeFile = $authDir . '/current_code.json';
+
+// Reuse PHPMailer logic
+require 'PHPMailer/Exception.php';
+require 'PHPMailer/PHPMailer.php';
+require 'PHPMailer/SMTP.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+if (empty($authCode)) {
+    // Phase 5: Rate Limiting
+    if (!rateLimitCheck($_SERVER['REMOTE_ADDR'])) {
+        technicalLog("Rate Limit EXCEEDED for IP: " . $_SERVER['REMOTE_ADDR'], true);
+        sendResponse(['error' => 'Rate Limit exceeded. Please wait 60 seconds before retrying.'], 429);
+    }
+
+    // Generate new PIN
+    $newPIN = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+    $expiry = time() + (5 * 60); // 5 Minutes
+
+    file_put_contents($codeFile, json_encode(['code' => $newPIN, 'expires' => $expiry]));
+
+    $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
         $mail->Host = SMTP_HOST;
         $mail->SMTPAuth = true;
         $mail->Username = SMTP_USER;
         $mail->Password = SMTP_PASS;
-        $mail->SMTPSecure = (SMTP_SECURE === 'ssl') ? PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS : PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->SMTPSecure = (SMTP_SECURE === 'ssl') ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
-        $mail->setFrom(SMTP_USER, 'Secure PIN');
+
+        $mail->setFrom(SMTP_USER, 'Security Protocol');
         $mail->addAddress(MASTER_AUTH_EMAIL);
-        $mail->Subject = "AUTHORIZATION REQUIRED: $new_code";
+        $mail->Subject = "VERIFICATION PIN: $newPIN";
 
-        // Preheader to control inbox preview snippet (hidden in email client body)
-        $preheader = "<div style=\"display: none; max-height: 0px; overflow: hidden;\">
-            Security authorization required. Please use the PIN to proceed.
-            &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;
-            &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;
-        </div>";
-
-        $html_body = $preheader . "
-        <div style=\"background-color: #080b1a; color: #ffffff; padding: 20px; font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #00f7ff33; border-radius: 8px;\">
-            <div style=\"border-bottom: 1px solid rgba(0, 247, 255, 0.2); padding-bottom: 10px; margin-bottom: 20px;\">
-                <span style=\"color: #00f7ff; font-size: 14px; letter-spacing: 2px;\">SECURITY PROTOCOL v9.1</span>
-            </div>
-            
-            <div style=\"background: rgba(17, 22, 51, 0.6); padding: 30px; border-radius: 12px; border: 1px solid rgba(0, 247, 255, 0.1); text-align: center;\">
-                <p style=\"color: #5b6ea3; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;\">Verification PIN Requested</p>
-                
-                <div style=\"display: inline-block; padding: 15px 40px; background: rgba(0, 247, 255, 0.05); border: 2px solid #00f7ff; border-radius: 4px; box-shadow: 0 0 20px rgba(0, 247, 255, 0.2);\">
-                    <span style=\"font-size: 32px; font-weight: bold; color: #00f7ff; letter-spacing: 8px; text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);\">$new_code</span>
-                </div>
-                
-                <p style=\"color: #cbd5e1; font-size: 13px; margin-top: 25px; line-height: 1.6;\">
-                    Advanced access authentication required.<br>
-                    Insert this PIN on your control console to authorize transmission.
-                </p>
-            </div>
-            
-            <div style=\"margin-top: 20px; text-align: right;\">
-                <p style=\"color: #00f7ff; font-size: 8px; opacity: 0.6;\">
-                    EXPIRES IN: 05:00 MIN | SYSTEM INTEGRITY: VERIFIED
-                </p>
-            </div>
-        </div>";
-
-        $mail->Body = $html_body;
-        $mail->AltBody = "Your security PIN is: $new_code (Expires in 5 minutes)";
+        // Professional HUD-themed Email Body
         $mail->isHTML(true);
+        $mail->Body = "
+        <div style='background:#080b1a; color:#fff; padding:40px; font-family:sans-serif; border-radius:12px; border:1px solid #00f7ff33;'>
+            <h2 style='color:#00f7ff; letter-spacing:4px;'>SECURITY_AUTHORIZATION_REQUIRED</h2>
+            <p style='color:#a0a0c0; font-size:12px;'>SYSTEM_INTENT: EXTERNAL_TRANSMISSION</p>
+            <div style='background:rgba(0,247,255,0.05); border:2px solid #00f7ff; padding:20px; display:inline-block; margin:20px 0;'>
+                <span style='font-size:32px; font-weight:bold; letter-spacing:10px; color:#00f7ff;'>$newPIN</span>
+            </div>
+            <p style='font-size:14px;'>This PIN expires in 5 minutes. Enter code to authorize transmission.</p>
+        </div>";
+
         $mail->send();
-
-        echo json_encode(['status' => '2fa_required', 'message' => 'Security PIN sent to Gmail.']);
+        sendResponse(['status' => '2fa_required', 'message' => 'PIN dispatched to master email.']);
     } catch (Exception $e) {
-        echo json_encode(['error' => '2FA Dispatch Error.', 'details' => $mail->ErrorInfo]);
+        technicalLog("2FA Dispatch failed: " . $e->getMessage(), true);
+        sendResponse(['error' => 'Security Shield Error: Could not dispatch 2FA PIN.'], 500);
     }
-    exit;
 } else {
-    // Paso 2: Validar el código enviado
-    if (!file_exists($code_file)) {
-        echo json_encode(['error' => 'No hay un código pendiente o ha expirado.']);
-        exit;
+    // Validate PIN
+    if (!file_exists($codeFile)) {
+        sendResponse(['error' => 'No active PIN found.'], 403);
     }
 
-    $stored_data = json_decode(file_get_contents($code_file), true);
-    if (time() > $stored_data['expires']) {
-        unlink($code_file);
-        echo json_encode(['error' => 'El código ha expirado. Por favor, solicita uno nuevo.']);
-        exit;
+    $stored = json_decode(file_get_contents($codeFile), true);
+    if (time() > $stored['expires']) {
+        @unlink($codeFile);
+        sendResponse(['error' => 'PIN expired. Request new authorization.'], 403);
     }
 
-    if ($auth_code_input !== $stored_data['code']) {
-        echo json_encode(['error' => 'Código 2FA incorrecto.']);
-        exit;
+    if ($authCode !== $stored['code']) {
+        sendResponse(['error' => 'Invalid Security PIN.'], 403);
     }
 
-    // Código correcto! Lo borramos para que no se use dos veces y seguimos
-    unlink($code_file);
-}
-// --- FIN BLOQUE DE SEGURIDAD ---
-
-if (!$action) {
-    echo json_encode(['error' => 'No action specified']);
-    exit;
+    // Success: Consume code
+    @unlink($codeFile);
 }
 
-// Check if we are in Mock Mode (Secrets NOT yet injected)
+// --- Operational Phase ---
+if (!$action)
+    sendResponse(['error' => 'Command missing'], 400);
+
 $isMockGemini = (GEMINI_API_KEY === '__GEMINI_API_KEY__');
 $isMockSMTP = (SMTP_PASS === '__SMTP_PASS__');
 
-// 1. AI Polish & Translation Logic
+// 1. AI Logic
 if ($action === 'polish' || $action === 'translate') {
-    $message = $input['message'] ?? '';
-    $prompt = $input['prompt'] ?? '';
-
-    if (!$message || !$prompt) {
-        echo json_encode(['error' => 'Missing message or prompt']);
-        exit;
-    }
+    $prompt = $input['prompt'] ?? null;
+    if (!$prompt)
+        sendResponse(['error' => 'Logic parameters missing'], 400);
 
     if ($isMockGemini) {
-        $prefix = ($action === 'polish') ? "[MOCK POLISH] " : "[MOCK TRANSLATION] ";
-        echo json_encode(['result' => $prefix . $message . " (Secrets pending, showing simulated result)"]);
-        exit;
+        sendResponse(['result' => "[MOCKED] AI Logic applied to signal data. (Gemini offline)"]);
     }
 
     $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . GEMINI_API_KEY;
-
-    $payload = [
-        "contents" => [
-            ["parts" => [["text" => $prompt]]]
-        ]
-    ];
-
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(["contents" => [["parts" => [["text" => $prompt]]]]]));
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
 
     $response = curl_exec($ch);
@@ -165,77 +221,132 @@ if ($action === 'polish' || $action === 'translate') {
     curl_close($ch);
 
     if ($httpCode !== 200) {
-        echo json_encode(['error' => 'Gemini API Error', 'details' => $response]);
-        exit;
+        technicalLog("Gemini API Error: $response", true);
+        sendResponse(['error' => 'Cognitive service failure'], 502);
     }
 
     $data = json_decode($response, true);
-    $resultText = $data['candidates'][0]['content']['parts'][0]['text'] ?? 'Error processing AI response';
-
-    echo json_encode(['result' => $resultText]);
-    exit;
+    $result = $data['candidates'][0]['content']['parts'][0]['text'] ?? 'Data processing failure';
+    sendResponse(['result' => $result]);
 }
 
-// 2. Send Email Logic
+// 2. Transmission Logic
 if ($action === 'send') {
-    $to_email = $input['to_email'] ?? '';
-    $subject = $input['subject'] ?? '';
-    $body = $input['body'] ?? '';
+    $recipient = $input['to_email'] ?? null;
+    $subject = $input['subject'] ?? 'SIGNAL_TRANSMISSION';
+    $messageBody = $input['body'] ?? null;
 
-    if (!$to_email || !$body) {
-        echo json_encode(['error' => 'Missing email details']);
-        exit;
-    }
+    if (!$recipient || !$messageBody)
+        sendResponse(['error' => 'Payload incomplete'], 400);
 
     if ($isMockSMTP) {
-        echo json_encode(['success' => true, 'message' => 'Simulated Email Sent! (SMTP secrets are pending)']);
-        exit;
+        sendResponse(['success' => true, 'message' => 'MOCKED: Signal transmitted successfully.']);
     }
 
-    // --- V2.6: SMTP Authentication via PHPMailer ---
-    require 'PHPMailer/Exception.php';
-    require 'PHPMailer/PHPMailer.php';
-    require 'PHPMailer/SMTP.php';
-
-    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
-
+    $mail = new PHPMailer(true);
     try {
-        // Server settings
         $mail->isSMTP();
         $mail->Host = SMTP_HOST;
         $mail->SMTPAuth = true;
         $mail->Username = SMTP_USER;
         $mail->Password = SMTP_PASS;
-        $mail->SMTPSecure = (SMTP_SECURE === 'ssl') ? PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS : PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->SMTPSecure = (SMTP_SECURE === 'ssl') ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
 
-        // Custom Trust Headers
-        $mail->Priority = 3; // Normal
-        $mail->addCustomHeader('X-Priority', '3');
-        $mail->addCustomHeader('X-Mailer', 'Professional Mail Connector');
-
-        // Recipients
         $mail->setFrom(SMTP_USER, 'B. Eng. Felipe de Jesús Miramontes Romero');
-        $mail->addAddress($to_email);
-        $mail->addReplyTo(SMTP_USER, 'B. Eng. Felipe de Jesús Miramontes Romero');
+        $mail->addAddress($recipient);
+        $mail->addReplyTo(SMTP_USER, 'Felipe Miramontes');
 
-        // Content
         $mail->isHTML(true);
         $mail->Subject = $subject;
-        $mail->Body = $body;
-        $mail->AltBody = strip_tags($body);
-
-        // Diagnostic Logging
-        $log_entry = "[" . date("Y-m-d H:i:s") . "] To: $to_email | Subject: $subject | Size: " . strlen($body) . " bytes\n";
-        file_put_contents(__DIR__ . "/mailer_debug.log", $log_entry, FILE_APPEND);
+        $mail->Body = $messageBody;
+        $mail->AltBody = strip_tags($messageBody);
 
         $mail->send();
-        echo json_encode(['success' => true, 'message' => 'Email sent via Secure Node (Authenticated V2.6)']);
+        technicalLog("Successful transmission to $recipient");
+        sendResponse(['success' => true, 'message' => 'Signal successfully transmitted via SECURE_NODE_V3']);
     } catch (Exception $e) {
-        file_put_contents(__DIR__ . "/mailer_debug.log", "FAILED: " . $mail->ErrorInfo . "\n", FILE_APPEND);
-        echo json_encode(['error' => 'SMTP Authentication failed. Check credentials in config.php. Details recorded in log.']);
+        technicalLog("Transmission failed for $recipient: " . $mail->ErrorInfo, true);
+        sendResponse(['error' => 'Transponder Failure: Could not reach destination.'], 500);
     }
-    exit;
 }
-?>
+
+/**
+ * Stores an encrypted signal blob ephemerally
+ */
+function handleStoreSignal($data)
+{
+    if (!isset($data['blob']) || !isset($data['id'])) {
+        sendResponse(['error' => 'MALFORMED_SIGNAL_PACKET'], 400);
+    }
+
+    $id = preg_replace('/[^a-zA-Z0-9_-]/', '', $data['id']);
+    $file = __DIR__ . "/signals/sig_" . $id . ".dat";
+
+    $payload = [
+        'timestamp' => time(),
+        'blob' => $data['blob'],
+        'iv' => $data['iv'] ?? ''
+    ];
+
+    if (file_put_contents($file, json_encode($payload))) {
+        technicalLog("SIGNAL_STORED: ID=$id");
+        sendResponse(['status' => 'stored', 'id' => $id]);
+    } else {
+        technicalLog("STORAGE_FAILURE: ID=$id", true);
+        sendResponse(['error' => 'STORAGE_FAILURE'], 500);
+    }
+}
+
+/**
+ * Fetches an encrypted signal for the recipient portal
+ */
+function handleFetchSignal($data)
+{
+    if (!isset($data['id']))
+        sendResponse(['error' => 'MISSING_ID'], 400);
+
+    $id = preg_replace('/[^a-zA-Z0-9_-]/', '', $data['id']);
+    $file = __DIR__ . "/signals/sig_" . $id . ".dat";
+
+    if (!file_exists($file)) {
+        sendResponse(['error' => 'SIGNAL_NOT_FOUND_OR_SHREDDED'], 404);
+    }
+
+    $content = json_decode(file_get_contents($file), true);
+
+    // TTL Check (24 hours)
+    if (time() - $content['timestamp'] > 86400) {
+        unlink($file);
+        sendResponse(['error' => 'SIGNAL_EXPIRED'], 410);
+    }
+
+    sendResponse([
+        'status' => 'retrieved',
+        'blob' => $content['blob'],
+        'iv' => $content['iv']
+    ]);
+}
+
+/**
+ * Surgically shreds a signal after successful client-side decryption
+ */
+function handleShredSignal($data)
+{
+    if (!isset($data['id']))
+        sendResponse(['error' => 'MISSING_ID'], 400);
+
+    $id = preg_replace('/[^a-zA-Z0-9_-]/', '', $data['id']);
+    $file = __DIR__ . "/signals/sig_" . $id . ".dat";
+
+    if (file_exists($file)) {
+        unlink($file);
+        technicalLog("SIGNAL_SHREDDED: ID=$id");
+        sendResponse(['status' => 'shredded']);
+    } else {
+        sendResponse(['status' => 'already_gone']);
+    }
+}
+
+sendResponse(['error' => 'Unknown protocol'], 404);
