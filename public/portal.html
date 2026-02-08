@@ -16,6 +16,8 @@
             --hud-bg: #030a16;
             --hud-glass: rgba(0, 247, 255, 0.05);
             --hud-border: rgba(0, 247, 255, 0.2);
+            --hud-red: #ff3e3e;
+            --hud-green: #37ff8d;
         }
 
         * {
@@ -28,92 +30,94 @@
             background: var(--hud-bg);
             color: #fff;
             font-family: 'Inter', sans-serif;
-            overflow: hidden;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(circle at 50% 50%, rgba(0, 247, 255, 0.05) 0%, transparent 70%),
+                linear-gradient(rgba(0, 247, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 247, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 30px 30px, 30px 30px;
         }
 
-        .hud-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            padding: 20px;
-        }
-
-        .tech-card {
-            background: var(--hud-glass);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--hud-border);
-            padding: 40px;
-            border-radius: 4px;
-            position: relative;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
-        }
-
-        .tech-card::before {
-            content: '';
-            position: absolute;
+        /* --- IMMERSIVE OVERLAYS --- */
+        .scanline {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--hud-cyan), transparent);
+            height: 4px;
+            background: rgba(0, 247, 255, 0.1);
+            z-index: 1000;
+            pointer-events: none;
+            animation: scanline 8s linear infinite;
         }
 
-        .status-container {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .glow-text {
-            font-family: 'Outfit', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            color: var(--hud-cyan);
-            text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
-            font-size: 1.2rem;
-        }
-
-        .terminal-output {
-            font-family: 'Fira Code', monospace;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(0, 247, 255, 0.1);
-            padding: 20px;
-            font-size: 0.9rem;
-            line-height: 1.6;
-            height: 250px;
-            overflow-y: auto;
-            margin-bottom: 20px;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .decrypted-msg {
-            display: none;
-            animation: fadeIn 1s forwards;
-        }
-
-        @keyframes fadeIn {
+        @keyframes scanline {
             from {
-                opacity: 0;
-                transform: translateY(10px);
+                top: -5%;
             }
 
             to {
-                opacity: 1;
-                transform: translateY(0);
+                top: 105%;
             }
         }
 
-        .loader {
-            width: 50px;
-            height: 50px;
+        .hud-wrapper {
+            width: 100%;
+            max-width: 900px;
+            padding: 20px;
+            z-index: 10;
+            transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        /* --- STAGE 1: THE INTERCEPTION (LOADING) --- */
+        .interception-stage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 400px;
+        }
+
+        .decipher-ring {
+            width: 120px;
+            height: 120px;
             border: 2px solid var(--hud-border);
+            border-radius: 50%;
+            position: relative;
+            margin-bottom: 30px;
+            animation: ring-pulse 2s ease-in-out infinite;
+        }
+
+        .decipher-ring::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border: 2px solid transparent;
             border-top-color: var(--hud-cyan);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+        }
+
+        @keyframes ring-pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 rgba(0, 247, 255, 0);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 30px rgba(0, 247, 255, 0.2);
+            }
         }
 
         @keyframes spin {
@@ -122,69 +126,210 @@
             }
         }
 
-        .scan-line {
-            width: 100%;
-            height: 2px;
-            background: var(--hud-cyan);
-            position: absolute;
-            top: 0;
-            left: 0;
-            opacity: 0.2;
-            animation: scan 3s ease-in-out infinite;
+        /* --- STAGE 2: THE REVEAL (DOCUMENT) --- */
+        .reveal-stage {
+            display: none;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
         }
 
-        @keyframes scan {
-
-            0%,
-            100% {
-                top: 0;
-            }
-
-            50% {
-                top: 100%;
-            }
+        .reveal-active .interception-stage {
+            display: none;
         }
 
-        .signal-id {
-            position: absolute;
-            bottom: -25px;
-            right: 0;
-            font-size: 10px;
-            color: rgba(0, 247, 255, 0.4);
+        .reveal-active .reveal-stage {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .portal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 1px solid var(--hud-border);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .brand-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 4px;
+            color: var(--hud-cyan);
+            text-shadow: 0 0 15px rgba(0, 247, 255, 0.4);
+        }
+
+        .tech-metadata {
             font-family: 'Fira Code', monospace;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            text-align: right;
+        }
+
+        .document-viewer {
+            background: rgba(13, 17, 28, 0.8);
+            border: 1px solid var(--hud-border);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.6);
+        }
+
+        .viewer-controls {
+            background: rgba(0, 247, 255, 0.05);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--hud-border);
+        }
+
+        .control-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--hud-border);
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .msg-container {
+            padding: 40px;
+            max-height: 70vh;
+            overflow-y: auto;
+            position: relative;
+            scrollbar-width: thin;
+            scrollbar-color: var(--hud-cyan) transparent;
+        }
+
+        .msg-container::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .msg-container::-webkit-scrollbar-thumb {
+            background: var(--hud-cyan);
+        }
+
+        .terminal-log-dock {
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            background: #000;
+            padding: 15px;
+            color: rgba(0, 247, 255, 0.7);
+            border-top: 1px solid var(--hud-border);
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border: 1px solid var(--hud-cyan);
+            color: var(--hud-cyan);
+            font-size: 10px;
+            letter-spacing: 1px;
+            border-radius: 20px;
+        }
+
+        /* --- UTILS --- */
+        .glitch-text {
+            animation: glitch 3s infinite;
+        }
+
+        @keyframes glitch {
+            0% {
+                transform: translate(0);
+            }
+
+            1% {
+                transform: translate(-2px, 2px);
+            }
+
+            2% {
+                transform: translate(2px, -2px);
+            }
+
+            3% {
+                transform: translate(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .msg-container {
+                padding: 20px;
+            }
+
+            .brand-text {
+                font-size: 1.1rem;
+            }
+        }
+
+        .error-stage {
+            color: var(--hud-red);
+            border-color: var(--hud-red) !important;
+            text-shadow: 0 0 10px rgba(255, 62, 62, 0.3);
         }
     </style>
 </head>
 
 <body>
-    <div class="hud-wrapper">
-        <div class="tech-card">
-            <div class="scan-line"></div>
-            <div class="status-container">
-                <div class="loader" id="loader"></div>
-                <h2 class="glow-text" id="statusTitle">DESCRAMBLING_SIGNAL</h2>
-            </div>
+    <div class="scanline"></div>
 
-            <div class="terminal-output" id="console">
-                [SYSTEM] INITIALIZING SECURE_PORTAL_V4...<br>
-                [SYSTEM] NODE: FELIPE-MIRAMONTES-B_ENG<br>
-                [AUTH] DETECTING URL_FRAGMENT_KEY...<br>
-            </div>
+    <div class="hud-wrapper" id="mainWrapper">
+        <!-- STAGE 1: INTERCEPTION -->
+        <div class="interception-stage" id="stage1">
+            <div class="decipher-ring" id="ring"></div>
+            <h2 class="brand-text glitch-text" id="statusTitle">DECIPHERING_SIGNAL</h2>
+            <p style="font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 15px; font-family: 'Fira Code';">
+                ESTABLISHING_AES_GCM_HANDSHAKE...</p>
+        </div>
 
-            <div class="decrypted-msg" id="msgBody">
-                <!-- Data packets will stay here -->
-            </div>
+        <!-- STAGE 2: REVEAL -->
+        <div class="reveal-stage" id="stage2">
+            <header class="portal-header">
+                <div>
+                    <h1 class="brand-text">SIGNAL_ACQUIRED</h1>
+                    <div class="status-badge">BURN_AFTER_READING_ACTIVE</div>
+                </div>
+                <div class="tech-metadata">
+                    SECURE_NODE: FELIPE-MIRAMONTES-B_ENG<br>
+                    <span id="sigIdStamp">SIGNAL_ID: NULL</span><br>
+                    <span id="timestamp">2026-02-08 // 00:00:00</span>
+                </div>
+            </header>
 
-            <div class="signal-id" id="sigId">SIGNAL_ID: NULL</div>
+            <main class="document-viewer">
+                <div class="viewer-controls">
+                    <div>
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                    </div>
+                    <div style="font-family: 'Fira Code'; font-size: 10px; color: var(--hud-cyan);">
+                        INTEGRITY_VERIFIED_V4</div>
+                </div>
+
+                <div class="msg-container" id="msgBody">
+                    <!-- Decrypted HTML injects here -->
+                </div>
+
+                <div class="terminal-log-dock" id="console">
+                    [SYSTEM] INITIALIZING SECURE_PORTAL_V4...<br>
+                </div>
+            </main>
         </div>
     </div>
 
     <script type="module">
         const consoleEl = document.getElementById('console');
         const statusTitle = document.getElementById('statusTitle');
-        const loader = document.getElementById('loader');
         const msgBody = document.getElementById('msgBody');
-        const sigIdEl = document.getElementById('sigId');
+        const mainWrapper = document.getElementById('mainWrapper');
+        const ring = document.getElementById('ring');
 
         function log(msg, type = 'SYSTEM') {
             const time = new Date().toLocaleTimeString();
@@ -206,19 +351,21 @@
         }
 
         async function init() {
+            document.getElementById('timestamp').innerText = new Date().toISOString().split('T')[0] + ' // ' + new Date().toLocaleTimeString();
+
             const params = new URLSearchParams(window.location.search);
             const id = params.get('id');
             const key = window.location.hash.substring(1);
 
             if (!id || !key) {
                 log('ACCESS_DENIED: MISSING_CRITICAL_PACKETS', 'ERROR');
-                statusTitle.innerText = 'SIGNAL_VOID';
-                loader.style.borderColor = 'red';
+                statusTitle.innerText = 'ACCESS_VOID';
+                ring.classList.add('error-stage');
                 return;
             }
 
-            sigIdEl.innerText = `SIGNAL_ID: ${id.toUpperCase()}`;
-            log('FETCHING_ENCRYPTED_BLOB...');
+            document.getElementById('sigIdStamp').innerText = `SIGNAL_ID: ${id.toUpperCase()}`;
+            log(`DETECTED_SIGNAL: ${id.toUpperCase()}`);
 
             try {
                 const response = await fetch('mailer.php', {
@@ -230,35 +377,36 @@
                 const data = await response.json();
                 if (data.error) throw new Error(data.error);
 
-                log('BLOB_RETRIEVED. STARTING_AES_GCM_PROTOCOL...', 'CRYPTO');
+                log('PACKET_RETRIEVED. CRACKING_ENCRYPTION_SHELL...', 'CRYPTO');
 
                 setTimeout(async () => {
                     try {
                         const plainText = await decryptData(data.blob, data.iv, key);
-                        log('SIGNAL_DECRYPTED. INTEGRITY_VERIFIED.', 'SUCCESS');
+                        log('SIGNAL_DECRYPTED. INTEGRITY_NOMINAL.', 'SUCCESS');
 
-                        statusTitle.innerText = 'SIGNAL_ACQUIRED';
-                        loader.style.display = 'none';
-                        msgBody.style.display = 'block';
+                        // Transition to stage 2
+                        mainWrapper.classList.add('reveal-active');
                         msgBody.innerHTML = plainText;
 
                         // Shred Signal
-                        log('INITIATING_SHRED_PROTOCOL...', 'SHRED');
+                        log('EXECUTING_SHRED_PROTOCOL_V4...', 'SHRED');
                         await fetch('mailer.php', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ action: 'shred_signal', id })
                         });
-                        log('SERVER_STORAGE_SHREDDED. ZERO_RESIDUE.', 'SHRED');
+                        log('REMOTE_DATA_SHREDDED. ZERO_RESIDUE_CONFIRMED.', 'SHRED');
                     } catch (e) {
-                        log('DECRYPTION_FAILED: KEY_MISMATCH', 'ERROR');
-                        statusTitle.innerText = 'SIGNAL_CORRUPTED';
+                        log('DECRYPTION_FAILED: CORRUPTED_KEY_OR_PAYLOAD', 'ERROR');
+                        statusTitle.innerText = 'DATA_CORRUPTED';
+                        ring.classList.add('error-stage');
                     }
-                }, 1500);
+                }, 2000);
 
             } catch (e) {
                 log(`SIGNAL_LOST: ${e.message}`, 'ERROR');
-                statusTitle.innerText = 'NO_SIGNAL';
+                statusTitle.innerText = 'NO_SIGNAL_DETECTED';
+                ring.classList.add('error-stage');
             }
         }
 
