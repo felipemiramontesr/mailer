@@ -89,12 +89,11 @@ const emailTemplateHTML = computed(() => `
       
       <!-- Technical Footer -->
       <div style="margin-top: 15px; display: table; width: 100%; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 15px;">
-        <div style="display: table-cell; vertical-align: middle;">
-          <p style="color: #00f7ff; font-size: 10px; margin: 0; font-family: 'Orbitron', sans-serif; letter-spacing: 2px; font-weight: 600;">🛡️ INTEGRITY: OPTIMAL</p>
-          <p style="color: #7e8ec2; font-size: 9px; margin-top: 4px; font-family: 'Orbitron', sans-serif; opacity: 0.8;">PROTO: AES_256 // TLS_1.3</p>
+        <div style="display: table-cell; vertical-align: middle; text-align: left;">
+          <span style="color: #00f7ff; font-size: 10px; font-family: 'Orbitron', sans-serif; letter-spacing: 2px; font-weight: 600; text-transform: uppercase;">🛡️ INTEGRITY: OPTIMAL</span>
         </div>
-        <div style="display: table-cell; text-align: right; vertical-align: middle;">
-          <div style="width: 10px; height: 10px; background: #00f7ff; border-radius: 50%; display: inline-block; box-shadow: 0 0 20px #00f7ff;"></div>
+        <div style="display: table-cell; vertical-align: middle; text-align: right;">
+          <span style="color: #7e8ec2; font-size: 9px; font-family: 'Orbitron', sans-serif; opacity: 0.8; letter-spacing: 1.5px; text-transform: uppercase;">PROTO: AES_256 // TLS_1.3</span>
         </div>
       </div>
     </div>
@@ -263,7 +262,9 @@ const sendEmail = async () => {
 
       <!-- Live HUD Preview Section -->
       <div v-if="showPreview" class="live-preview-container animate-in">
-        <div class="preview-badge">HUD_LIVE_FEED</div>
+        <div class="preview-header">
+          <div class="preview-badge">HUD_LIVE_FEED</div>
+        </div>
         <div class="preview-scroll-area">
           <div class="email-canvas" v-html="emailTemplateHTML"></div>
         </div>
@@ -391,17 +392,21 @@ const sendEmail = async () => {
   min-height: 500px;
 }
 
+.preview-header {
+  background: rgba(0, 247, 255, 0.05);
+  padding: 8px 15px;
+  border-bottom: 1px solid rgba(0, 247, 255, 0.1);
+  display: flex;
+  justify-content: flex-end;
+}
+
 .preview-badge {
-  position: absolute;
-  top: 10px;
-  right: 15px;
   background: var(--accent);
   color: #080b1a;
   font-family: 'Orbitron', sans-serif;
   font-size: 0.6rem;
   padding: 2px 8px;
   border-radius: 2px;
-  z-index: 10;
   font-weight: 700;
   letter-spacing: 1px;
 }
