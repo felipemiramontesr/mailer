@@ -138,7 +138,7 @@ watch(
           <label><Mail :size="14" /> MESSAGE CONTENT</label>
           <textarea
             v-model="form.message"
-            rows="8"
+            rows="4"
             placeholder="Input your message here..."
             required
           ></textarea>

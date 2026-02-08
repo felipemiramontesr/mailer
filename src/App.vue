@@ -23,7 +23,7 @@ import EmailForm from './components/EmailForm.vue';
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 20px 20px 10px;
+  padding: 40px 20px 10px;
   max-width: 100%;
 }
 
