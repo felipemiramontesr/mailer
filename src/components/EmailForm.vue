@@ -39,69 +39,69 @@ const sendEmail = async () => {
         </div>
         <div style="background: radial-gradient(circle at 50% 0%, #1a224d 0%, #080b2a 100%); color: #ffffff; padding: 0; font-family: 'Inter', Arial, sans-serif; max-width: 1000px; width: 95%; margin: 20px auto; border: 1px solid rgba(0, 247, 255, 0.25); box-sizing: border-box; border-radius: 12px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.7);">
           <!-- Glowing Top Bar -->
-          <div style="height: 6px; background: linear-gradient(90deg, transparent, #00f7ff, transparent); box-shadow: 0 0 20px #00f7ff;"></div>
+          <div style="height: 4px; background: linear-gradient(90deg, transparent, #00f7ff, transparent); box-shadow: 0 0 15px #00f7ff;"></div>
           
-          <div style="padding: 40px;">
+          <div style="padding: 25px 40px;">
             <!-- HUD System Header -->
-            <div style="border-bottom: 1px solid rgba(0, 247, 255, 0.3); padding-bottom: 20px; margin-bottom: 30px; display: table; width: 100%;">
+            <div style="border-bottom: 1px solid rgba(0, 247, 255, 0.3); padding-bottom: 12px; margin-bottom: 20px; display: table; width: 100%;">
               <div style="display: table-cell; vertical-align: middle;">
-                <span style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);">felipemiramontesr&zwnj;.net</span>
+                <span style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);">felipemiramontesr&zwnj;.net</span>
               </div>
-              <div style="display: table-cell; text-align: right; vertical-align: middle; color: #7e8ec2; font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 2px;">
-                SYSTEM_LOG // ${new Date().toISOString().split('T')[0]} // V10.0
+              <div style="display: table-cell; text-align: right; vertical-align: middle; color: #7e8ec2; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px;">
+                LOG_STREAM // ${new Date().toISOString().split('T')[0]}
               </div>
             </div>
 
             <!-- Main Interface Card (Upper Glass) -->
-            <div style="background: rgba(255, 255, 255, 0.07); padding: 30px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.1); position: relative; box-shadow: inset 0 0 50px rgba(0, 247, 255, 0.05); margin-bottom: 25px;">
+            <div style="background: rgba(255, 255, 255, 0.07); padding: 20px 30px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.1); position: relative; box-shadow: inset 0 0 50px rgba(0, 247, 255, 0.05); margin-bottom: 15px;">
               
               <!-- Sender Info (Unified Style) -->
-              <div style="margin-bottom: 25px;">
-                <div style="margin-bottom: 8px;">
-                  <span style="color: #7e8ec2; font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase;">👤 ORIGIN_POINT</span>
+              <div style="margin-bottom: 12px;">
+                <div style="margin-bottom: 4px;">
+                  <span style="color: #7e8ec2; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase;">👤 ORIGIN_POINT</span>
                 </div>
-                <div style="background: rgba(0, 247, 255, 0.08); border-left: 4px solid #00f7ff; padding: 12px 20px; border-radius: 0 8px 8px 0; box-shadow: 0 0 20px rgba(0, 247, 255, 0.1);">
-                  <p style="margin: 0; color: #00f7ff; font-size: 18px; font-weight: 600; text-shadow: 0 0 15px rgba(0, 247, 255, 0.4); text-transform: uppercase; letter-spacing: 1px;">
+                <div style="background: rgba(0, 247, 255, 0.08); border-left: 4px solid #00f7ff; padding: 8px 15px; border-radius: 0 8px 8px 0; box-shadow: 0 0 20px rgba(0, 247, 255, 0.05);">
+                  <p style="margin: 0; color: #00f7ff; font-size: 15px; font-weight: 600; text-shadow: 0 0 15px rgba(0, 247, 255, 0.4); text-transform: uppercase; letter-spacing: 1px;">
                     B. Eng. Felipe de Jesús Miramontes Romero
                   </p>
                 </div>
               </div>
               
               <!-- Subject Info (Unified Style) -->
-              <div style="margin-bottom: 25px;">
-                <div style="margin-bottom: 8px;">
-                  <span style="color: #7e8ec2; font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase;">🛰️ TRANSMISSION_SUBJECT</span>
+              <div style="margin-bottom: 12px;">
+                <div style="margin-bottom: 4px;">
+                  <span style="color: #7e8ec2; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase;">🛰️ TRANSMISSION_SUBJECT</span>
                 </div>
-                <div style="background: rgba(0, 247, 255, 0.1); border-left: 4px solid #00f7ff; padding: 15px 20px; border-radius: 0 8px 8px 0; box-shadow: 0 0 25px rgba(0, 247, 255, 0.15);">
-                  <p style="margin: 0; color: #00f7ff; font-size: 22px; font-weight: 700; text-shadow: 0 0 20px rgba(0, 247, 255, 0.5); letter-spacing: 1.5px;">
+                <div style="background: rgba(0, 247, 255, 0.1); border-left: 4px solid #00f7ff; padding: 10px 15px; border-radius: 0 8px 8px 0; box-shadow: 0 0 25px rgba(0, 247, 255, 0.1);">
+                  <p style="margin: 0; color: #00f7ff; font-size: 18px; font-weight: 700; text-shadow: 0 0 20px rgba(0, 247, 255, 0.5); letter-spacing: 1px;">
                     ${form.value.subject}
                   </p>
                 </div>
               </div>
               
               <!-- Content Section -->
-              <div style="border-top: 1px solid rgba(0, 247, 255, 0.2); padding-top: 25px; margin-top: 10px;">
-                <div style="margin-bottom: 15px;">
-                  <span style="color: #ffffff; font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;">📥 DECRYPTED_SIGNAL_DATA</span>
+              <div style="border-top: 1px solid rgba(0, 247, 255, 0.2); padding-top: 20px; margin-top: 10px;">
+                <div style="margin-bottom: 8px;">
+                  <span style="color: #ffffff; font-family: 'Orbitron', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;">📥 SIGNAL_DATA</span>
                 </div>
-                <div style="color: #ffffff; line-height: 1.8; font-size: 16px; padding: 35px; background: rgba(0, 0, 0, 0.5); border-radius: 12px; border: 1px solid rgba(0, 247, 255, 0.3); box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.8), 0 10px 30px rgba(0,0,0,0.5); position: relative;">
-                  <div style="color: rgba(0, 247, 255, 0.4); font-family: 'Orbitron', sans-serif; font-size: 9px; margin-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 10px; letter-spacing: 4px;">// START_OF_MESSAGE</div>
+                <div style="color: #ffffff; line-height: 1.6; font-size: 15px; padding: 25px; background: rgba(0, 0, 0, 0.5); border-radius: 12px; border: 1px solid rgba(0, 247, 255, 0.3); box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.8), 0 10px 30px rgba(0,0,0,0.5); position: relative;">
+                  <div style="color: rgba(0, 247, 255, 0.4); font-family: 'Orbitron', sans-serif; font-size: 8px; margin-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 8px; letter-spacing: 4px;">// START</div>
                   
                   <div style="white-space: pre-wrap; word-break: break-word;">${form.value.message}</div>
                   
-                  <div style="color: rgba(0, 247, 255, 0.4); font-family: 'Orbitron', sans-serif; font-size: 9px; margin-top: 25px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 12px; text-align: right; letter-spacing: 4px;">// END_OF_SIGNAL</div>
+                  <div style="color: rgba(0, 247, 255, 0.4); font-family: 'Orbitron', sans-serif; font-size: 8px; margin-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 10px; text-align: right; letter-spacing: 4px;">// END</div>
                 </div>
               </div>
             </div>
             
             <!-- Technical Footer -->
-            <div style="margin-top: 30px; display: table; width: 100%; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px;">
+            <div style="margin-top: 15px; display: table; width: 100%; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 15px;">
               <div style="display: table-cell; vertical-align: middle;">
-                <p style="color: #00f7ff; font-size: 11px; margin: 0; font-family: 'Orbitron', sans-serif; letter-spacing: 2px; font-weight: 600;">🛡️ ENCRYPTION_INTEGRITY: OPTIMAL</p>
-                <p style="color: #7e8ec2; font-size: 10px; margin-top: 6px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px;">NODE: MX_CDMX_HUB // TLS_1.3_AUTH</p>
+                <p style="color: #00f7ff; font-size: 10px; margin: 0; font-family: 'Orbitron', sans-serif; letter-spacing: 2px; font-weight: 600;">🛡️ INTEGRITY: OPTIMAL</p>
+                <p style="color: #7e8ec2; font-size: 9px; margin-top: 4px; font-family: 'Orbitron', sans-serif; opacity: 0.8;">PROTO: AES_256 // TLS_1.3</p>
               </div>
               <div style="display: table-cell; text-align: right; vertical-align: middle;">
-                <div style="width: 12px; height: 12px; background: #00f7ff; border-radius: 50%; display: inline-block; box-shadow: 0 0 20px #00f7ff;"></div>
+                <div style="width: 10px; height: 10px; background: #00f7ff; border-radius: 50%; display: inline-block; box-shadow: 0 0 20px #00f7ff;"></div>
               </div>
             </div>
           </div>
