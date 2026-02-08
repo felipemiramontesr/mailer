@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { Mail, Send, ShieldCheck, Satellite, Type, Loader2, CheckCircle2, AlertCircle, Eye, EyeOff } from 'lucide-vue-next';
+import { ref, computed } from 'vue';
+import { Mail, Send, ShieldCheck, Satellite, Type, Loader2, CheckCircle2, AlertCircle, Eye, EyeOff, Layout } from 'lucide-vue-next';
 import { sendEmailViaProxy } from '../services/aiService';
 
 const form = ref({
@@ -14,11 +14,87 @@ const isSending = ref(false);
 const sendStatus = ref<'idle' | 'sending' | 'success' | 'error' | 'awaiting_2fa'>('idle');
 const errorMessage = ref('');
 const showPassword = ref(false);
+const showPreview = ref(false);
 const security = ref({
   password: '',
   authCode: '',
   showPinField: false
 });
+
+const emailTemplateHTML = computed(() => `
+  <div style="display:none; max-height:0px; max-width:0px; opacity:0; overflow:hidden; font-size:1px; line-height:1px; color:#080b2a;">
+    ${form.value.subject || 'Subject Preview'} &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+  </div>
+  <div style="background: radial-gradient(circle at 50% 0%, #1a224d 0%, #080b2a 100%); color: #ffffff; padding: 0; font-family: 'Inter', Arial, sans-serif; max-width: 1000px; width: 95%; margin: 20px auto; border: 1px solid rgba(0, 247, 255, 0.25); box-sizing: border-box; border-radius: 12px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.7);">
+    <!-- Glowing Top Bar -->
+    <div style="height: 4px; background: linear-gradient(90deg, transparent, #00f7ff, transparent); box-shadow: 0 0 15px #00f7ff;"></div>
+    
+    <div style="padding: 25px 40px;">
+      <!-- HUD System Header -->
+      <div style="border-bottom: 1px solid rgba(0, 247, 255, 0.3); padding-bottom: 12px; margin-bottom: 20px; display: table; width: 100%;">
+        <div style="display: table-cell; vertical-align: middle;">
+          <span style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);">felipemiramontesr&zwnj;.net</span>
+        </div>
+        <div style="display: table-cell; text-align: right; vertical-align: middle; color: #7e8ec2; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px;">
+          LOG_STREAM // ${new Date().toISOString().split('T')[0]}
+        </div>
+      </div>
+
+      <!-- Main Interface Card (Upper Glass) -->
+      <div style="background: rgba(255, 255, 255, 0.07); padding: 20px 30px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.1); position: relative; box-shadow: inset 0 0 50px rgba(0, 247, 255, 0.05); margin-bottom: 15px;">
+        
+        <!-- Sender Info (Unified Style) -->
+        <div style="margin-bottom: 12px;">
+          <div style="margin-bottom: 4px;">
+            <span style="color: #7e8ec2; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase;">👤 ORIGIN_POINT</span>
+          </div>
+          <div style="background: rgba(0, 247, 255, 0.08); border-left: 4px solid #00f7ff; padding: 8px 15px; border-radius: 0 8px 8px 0; box-shadow: 0 0 20px rgba(0, 247, 255, 0.05);">
+            <p style="margin: 0; color: #00f7ff; font-size: 15px; font-weight: 600; text-shadow: 0 0 15px rgba(0, 247, 255, 0.4); text-transform: uppercase; letter-spacing: 1px;">
+              B. Eng. Felipe de Jesús Miramontes Romero
+            </p>
+          </div>
+        </div>
+        
+        <!-- Subject Info (Unified Style) -->
+        <div style="margin-bottom: 12px;">
+          <div style="margin-bottom: 4px;">
+            <span style="color: #7e8ec2; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase;">🛰️ TRANSMISSION_SUBJECT</span>
+          </div>
+          <div style="background: rgba(0, 247, 255, 0.1); border-left: 4px solid #00f7ff; padding: 10px 15px; border-radius: 0 8px 8px 0; box-shadow: 0 0 25px rgba(0, 247, 255, 0.1);">
+            <p style="margin: 0; color: #00f7ff; font-size: 18px; font-weight: 700; text-shadow: 0 0 20px rgba(0, 247, 255, 0.5); letter-spacing: 1px;">
+              ${form.value.subject || '[ SUBJECT_MISSING ]'}
+            </p>
+          </div>
+        </div>
+        
+        <!-- Content Section -->
+        <div style="border-top: 1px solid rgba(0, 247, 255, 0.2); padding-top: 20px; margin-top: 10px;">
+          <div style="margin-bottom: 8px;">
+            <span style="color: #ffffff; font-family: 'Orbitron', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;">📥 SIGNAL_DATA</span>
+          </div>
+          <div style="color: #ffffff; line-height: 1.6; font-size: 15px; padding: 25px; background: rgba(0, 0, 0, 0.5); border-radius: 12px; border: 1px solid rgba(0, 247, 255, 0.3); box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.8), 0 10px 30px rgba(0,0,0,0.5); position: relative;">
+            <div style="color: rgba(0, 247, 255, 0.4); font-family: 'Orbitron', sans-serif; font-size: 8px; margin-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 8px; letter-spacing: 4px;">// START</div>
+            
+            <div style="white-space: pre-wrap; word-break: break-word;">${form.value.message || 'Waiting for signal input...'}</div>
+            
+            <div style="color: rgba(0, 247, 255, 0.4); font-family: 'Orbitron', sans-serif; font-size: 8px; margin-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 10px; text-align: right; letter-spacing: 4px;">// END</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Technical Footer -->
+      <div style="margin-top: 15px; display: table; width: 100%; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 15px;">
+        <div style="display: table-cell; vertical-align: middle;">
+          <p style="color: #00f7ff; font-size: 10px; margin: 0; font-family: 'Orbitron', sans-serif; letter-spacing: 2px; font-weight: 600;">🛡️ INTEGRITY: OPTIMAL</p>
+          <p style="color: #7e8ec2; font-size: 9px; margin-top: 4px; font-family: 'Orbitron', sans-serif; opacity: 0.8;">PROTO: AES_256 // TLS_1.3</p>
+        </div>
+        <div style="display: table-cell; text-align: right; vertical-align: middle;">
+          <div style="width: 10px; height: 10px; background: #00f7ff; border-radius: 50%; display: inline-block; box-shadow: 0 0 20px #00f7ff;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+`);
 
 const sendEmail = async () => {
   if (!form.value.message || !form.value.subject) {
@@ -33,80 +109,7 @@ const sendEmail = async () => {
       to_name: form.value.clientName,
       to_email: form.value.clientEmail,
       subject: form.value.subject,
-      body: `
-        <div style="display:none; max-height:0px; max-width:0px; opacity:0; overflow:hidden; font-size:1px; line-height:1px; color:#080b1a;">
-          ${form.value.subject} &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-        </div>
-        <div style="background: radial-gradient(circle at 50% 0%, #1a224d 0%, #080b2a 100%); color: #ffffff; padding: 0; font-family: 'Inter', Arial, sans-serif; max-width: 1000px; width: 95%; margin: 20px auto; border: 1px solid rgba(0, 247, 255, 0.25); box-sizing: border-box; border-radius: 12px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.7);">
-          <!-- Glowing Top Bar -->
-          <div style="height: 4px; background: linear-gradient(90deg, transparent, #00f7ff, transparent); box-shadow: 0 0 15px #00f7ff;"></div>
-          
-          <div style="padding: 25px 40px;">
-            <!-- HUD System Header -->
-            <div style="border-bottom: 1px solid rgba(0, 247, 255, 0.3); padding-bottom: 12px; margin-bottom: 20px; display: table; width: 100%;">
-              <div style="display: table-cell; vertical-align: middle;">
-                <span style="color: #00f7ff; font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);">felipemiramontesr&zwnj;.net</span>
-              </div>
-              <div style="display: table-cell; text-align: right; vertical-align: middle; color: #7e8ec2; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px;">
-                LOG_STREAM // ${new Date().toISOString().split('T')[0]}
-              </div>
-            </div>
-
-            <!-- Main Interface Card (Upper Glass) -->
-            <div style="background: rgba(255, 255, 255, 0.07); padding: 20px 30px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.1); position: relative; box-shadow: inset 0 0 50px rgba(0, 247, 255, 0.05); margin-bottom: 15px;">
-              
-              <!-- Sender Info (Unified Style) -->
-              <div style="margin-bottom: 12px;">
-                <div style="margin-bottom: 4px;">
-                  <span style="color: #7e8ec2; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase;">👤 ORIGIN_POINT</span>
-                </div>
-                <div style="background: rgba(0, 247, 255, 0.08); border-left: 4px solid #00f7ff; padding: 8px 15px; border-radius: 0 8px 8px 0; box-shadow: 0 0 20px rgba(0, 247, 255, 0.05);">
-                  <p style="margin: 0; color: #00f7ff; font-size: 15px; font-weight: 600; text-shadow: 0 0 15px rgba(0, 247, 255, 0.4); text-transform: uppercase; letter-spacing: 1px;">
-                    B. Eng. Felipe de Jesús Miramontes Romero
-                  </p>
-                </div>
-              </div>
-              
-              <!-- Subject Info (Unified Style) -->
-              <div style="margin-bottom: 12px;">
-                <div style="margin-bottom: 4px;">
-                  <span style="color: #7e8ec2; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase;">🛰️ TRANSMISSION_SUBJECT</span>
-                </div>
-                <div style="background: rgba(0, 247, 255, 0.1); border-left: 4px solid #00f7ff; padding: 10px 15px; border-radius: 0 8px 8px 0; box-shadow: 0 0 25px rgba(0, 247, 255, 0.1);">
-                  <p style="margin: 0; color: #00f7ff; font-size: 18px; font-weight: 700; text-shadow: 0 0 20px rgba(0, 247, 255, 0.5); letter-spacing: 1px;">
-                    ${form.value.subject}
-                  </p>
-                </div>
-              </div>
-              
-              <!-- Content Section -->
-              <div style="border-top: 1px solid rgba(0, 247, 255, 0.2); padding-top: 20px; margin-top: 10px;">
-                <div style="margin-bottom: 8px;">
-                  <span style="color: #ffffff; font-family: 'Orbitron', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;">📥 SIGNAL_DATA</span>
-                </div>
-                <div style="color: #ffffff; line-height: 1.6; font-size: 15px; padding: 25px; background: rgba(0, 0, 0, 0.5); border-radius: 12px; border: 1px solid rgba(0, 247, 255, 0.3); box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.8), 0 10px 30px rgba(0,0,0,0.5); position: relative;">
-                  <div style="color: rgba(0, 247, 255, 0.4); font-family: 'Orbitron', sans-serif; font-size: 8px; margin-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 8px; letter-spacing: 4px;">// START</div>
-                  
-                  <div style="white-space: pre-wrap; word-break: break-word;">${form.value.message}</div>
-                  
-                  <div style="color: rgba(0, 247, 255, 0.4); font-family: 'Orbitron', sans-serif; font-size: 8px; margin-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 10px; text-align: right; letter-spacing: 4px;">// END</div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Technical Footer -->
-            <div style="margin-top: 15px; display: table; width: 100%; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 15px;">
-              <div style="display: table-cell; vertical-align: middle;">
-                <p style="color: #00f7ff; font-size: 10px; margin: 0; font-family: 'Orbitron', sans-serif; letter-spacing: 2px; font-weight: 600;">🛡️ INTEGRITY: OPTIMAL</p>
-                <p style="color: #7e8ec2; font-size: 9px; margin-top: 4px; font-family: 'Orbitron', sans-serif; opacity: 0.8;">PROTO: AES_256 // TLS_1.3</p>
-              </div>
-              <div style="display: table-cell; text-align: right; vertical-align: middle;">
-                <div style="width: 10px; height: 10px; background: #00f7ff; border-radius: 50%; display: inline-block; box-shadow: 0 0 20px #00f7ff;"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      `
+      body: emailTemplateHTML.value
     };
 
     const result = await sendEmailViaProxy(templateParams, security.value.password, security.value.authCode);
@@ -144,104 +147,121 @@ const sendEmail = async () => {
 </script>
 
 <template>
-  <div class="tech-card email-form-container">
+  <div class="tech-card email-form-container" :class="{ 'with-preview': showPreview }">
     <div class="form-header">
       <h2 class="glow-text">felipemiramontesr.net</h2>
-      <div class="status-indicator">
-        <span class="dot"></span> SECURE CONNECTION
+      <div class="header-actions">
+        <button type="button" class="preview-toggle" @click="showPreview = !showPreview" :class="{ active: showPreview }">
+          <Layout v-if="!showPreview" :size="16" />
+          <EyeOff v-else :size="16" />
+          {{ showPreview ? 'HIDE PREVIEW' : 'LIVE PREVIEW' }}
+        </button>
+        <div class="status-indicator">
+          <span class="dot"></span> SECURE_CONNECTION
+        </div>
       </div>
     </div>
 
-    <form @submit.prevent="sendEmail" class="main-form" autocomplete="off">
-      <div class="input-row">
-        <div class="input-group icon-inside">
-          <ShieldCheck :size="16" class="inner-icon" />
-          <input v-model="form.clientName" type="text" readonly autocomplete="off" />
-        </div>
-        <div class="input-group icon-inside">
-          <Satellite :size="16" class="inner-icon" />
-          <input v-model="form.clientEmail" type="email" placeholder="felipemiramontesr@gmail.com" required autocomplete="off" />
-        </div>
-      </div>
-
-      <div class="input-group">
-        <label><Type :size="14" /> SUBJECT</label>
-        <input v-model="form.subject" type="text" placeholder="Insert a massage subject" required />
-      </div>
-
-      <div class="message-section">
-        <label><Mail :size="14" /> Message Content</label>
-        <textarea 
-          v-model="form.message" 
-          rows="8" 
-          placeholder="Input your message here..." 
-          required
-        ></textarea>
-      </div>
-
-      <!-- Security Shield Layer -->
-      <div class="security-layer tech-card">
-        <div v-if="!security.showPinField" class="input-group">
-          <label><ShieldCheck :size="14" /> Master Access Key</label>
-          <div class="input-with-eye">
-            <input 
-              v-model="security.password" 
-              :type="showPassword ? 'text' : 'password'" 
-              placeholder="Enter secure password" 
-              required 
-            />
-            <button type="button" class="eye-btn" @click="showPassword = !showPassword">
-              <Eye v-if="!showPassword" :size="18" />
-              <EyeOff v-else :size="18" />
-            </button>
+    <div class="form-layout">
+      <form @submit.prevent="sendEmail" class="main-form" autocomplete="off">
+        <div class="input-row">
+          <div class="input-group icon-inside">
+            <ShieldCheck :size="16" class="inner-icon" />
+            <input v-model="form.clientName" type="text" readonly autocomplete="off" />
+          </div>
+          <div class="input-group icon-inside">
+            <Satellite :size="16" class="inner-icon" />
+            <input v-model="form.clientEmail" type="email" placeholder="felipemiramontesr@gmail.com" required autocomplete="off" />
           </div>
         </div>
-        
-        <div v-else class="input-group 2fa-group animate-in">
-          <label><AlertCircle :size="14" color="#00f7ff" /> Insert a verification PIN</label>
-          <input 
-            v-model="security.authCode" 
-            type="text" 
-            placeholder="••••••" 
-            maxlength="6"
-            required 
-            class="pin-input"
-          />
+
+        <div class="input-group">
+          <label><Type :size="14" /> SUBJECT</label>
+          <input v-model="form.subject" type="text" placeholder="Insert a massage subject" required />
+        </div>
+
+        <div class="message-section">
+          <label><Mail :size="14" /> MESSAGE CONTENT</label>
+          <textarea 
+            v-model="form.message" 
+            rows="8" 
+            placeholder="Input your message here..." 
+            required
+          ></textarea>
+        </div>
+
+        <!-- Security Shield Layer -->
+        <div class="security-layer tech-card">
+          <div v-if="!security.showPinField" class="input-group">
+            <label><ShieldCheck :size="14" /> Master Access Key</label>
+            <div class="input-with-eye">
+              <input 
+                v-model="security.password" 
+                :type="showPassword ? 'text' : 'password'" 
+                placeholder="Enter secure password" 
+                required 
+              />
+              <button type="button" class="eye-btn" @click="showPassword = !showPassword">
+                <Eye v-if="!showPassword" :size="18" />
+                <EyeOff v-else :size="18" />
+              </button>
+            </div>
+          </div>
+          
+          <div v-else class="input-group 2fa-group animate-in">
+            <label><AlertCircle :size="14" color="#00f7ff" /> Insert a verification PIN</label>
+            <input 
+              v-model="security.authCode" 
+              type="text" 
+              placeholder="••••••" 
+              maxlength="6"
+              required 
+              class="pin-input"
+            />
+          </div>
+        </div>
+
+        <button 
+          type="submit" 
+          class="cyan-btn send-btn" 
+          :class="sendStatus"
+          :disabled="isSending || sendStatus === 'success'"
+        >
+          <template v-if="sendStatus === 'idle'">
+            <Send :size="20" /> 
+            INITIALIZE SEND SEQUENCE
+          </template>
+          
+          <template v-else-if="sendStatus === 'sending'">
+            <Loader2 :size="20" class="spin" />
+            DECRYPTING & SENDING...
+          </template>
+
+          <template v-else-if="sendStatus === 'awaiting_2fa'">
+            <ShieldCheck :size="20" />
+            VERIFY PIN & AUTHORIZE
+          </template>
+          
+          <template v-else-if="sendStatus === 'success'">
+            <CheckCircle2 :size="20" />
+            TRANSMISSION COMPLETE ✅
+          </template>
+          
+          <template v-else-if="sendStatus === 'error'">
+            <AlertCircle :size="20" />
+            {{ errorMessage || 'TRANSMISSION ERROR ⚠️' }}
+          </template>
+        </button>
+      </form>
+
+      <!-- Live HUD Preview Section -->
+      <div v-if="showPreview" class="live-preview-container animate-in">
+        <div class="preview-badge">HUD_LIVE_FEED</div>
+        <div class="preview-scroll-area">
+          <div class="email-canvas" v-html="emailTemplateHTML"></div>
         </div>
       </div>
-
-      <button 
-        type="submit" 
-        class="cyan-btn send-btn" 
-        :class="sendStatus"
-        :disabled="isSending || sendStatus === 'success'"
-      >
-        <template v-if="sendStatus === 'idle'">
-          <Send :size="20" /> 
-          INITIALIZE SEND SEQUENCE
-        </template>
-        
-        <template v-else-if="sendStatus === 'sending'">
-          <Loader2 :size="20" class="spin" />
-          DECRYPTING & SENDING...
-        </template>
-
-        <template v-else-if="sendStatus === 'awaiting_2fa'">
-          <ShieldCheck :size="20" />
-          VERIFY PIN & AUTHORIZE
-        </template>
-        
-        <template v-else-if="sendStatus === 'success'">
-          <CheckCircle2 :size="20" />
-          TRANSMISSION COMPLETE ✅
-        </template>
-        
-        <template v-else-if="sendStatus === 'error'">
-          <AlertCircle :size="20" />
-          {{ errorMessage || 'TRANSMISSION ERROR ⚠️' }}
-        </template>
-      </button>
-    </form>
+    </div>
   </div>
 </template>
 
@@ -250,12 +270,21 @@ const sendEmail = async () => {
   max-width: 700px;
   margin: 0 auto;
   text-align: left;
+  transition: max-width 0.4s ease;
 }
 
-.input-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+.email-form-container.with-preview {
+  max-width: 1300px;
+}
+
+.form-layout {
+  display: flex;
+  gap: 30px;
+}
+
+.form-layout > form {
+  flex: 1;
+  min-width: 0;
 }
 
 .form-header {
@@ -265,6 +294,38 @@ const sendEmail = async () => {
   margin-bottom: 10px;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--border-color);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.preview-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 247, 255, 0.05);
+  border: 1px solid rgba(0, 247, 255, 0.2);
+  color: var(--accent);
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.preview-toggle:hover {
+  background: rgba(0, 247, 255, 0.15);
+  box-shadow: 0 0 10px rgba(0, 247, 255, 0.2);
+}
+
+.preview-toggle.active {
+  background: var(--accent);
+  color: #080b1a;
+  border-color: var(--accent);
 }
 
 .status-indicator {
@@ -293,6 +354,65 @@ const sendEmail = async () => {
   0% { opacity: 0.4; }
   50% { opacity: 1; }
   100% { opacity: 0.4; }
+}
+
+/* Preview Styles */
+.live-preview-container {
+  flex: 1.5;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(0, 247, 255, 0.2);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: inset 0 0 40px rgba(0, 247, 255, 0.03);
+}
+
+.preview-badge {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: var(--accent);
+  color: #080b1a;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.6rem;
+  padding: 2px 8px;
+  border-radius: 2px;
+  z-index: 10;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.preview-scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) transparent;
+}
+
+.preview-scroll-area::-webkit-scrollbar {
+  width: 4px;
+}
+
+.preview-scroll-area::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 10px;
+}
+
+.email-canvas {
+  width: 100%;
+  background: transparent;
+  transform: scale(0.9);
+  transform-origin: top center;
+}
+
+.input-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
 }
 
 .main-form {
@@ -442,6 +562,12 @@ input[readonly] {
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+@media (max-width: 1000px) {
+  .form-layout {
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 600px) {
