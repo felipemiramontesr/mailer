@@ -148,7 +148,7 @@ if (empty($authCode)) {
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
 
-        $mail->setFrom(SMTP_USER, 'Security Protocol');
+        $mail->setFrom(SMTP_USER, 'Felipe Miramontes (SECURE_NODE)');
         $mail->addAddress(MASTER_AUTH_EMAIL);
         $mail->Subject = "VERIFICATION PIN: $newPIN";
 
@@ -234,8 +234,12 @@ if ($action === 'send') {
     $subject = $input['subject'] ?? 'SIGNAL_TRANSMISSION';
     $messageBody = $input['body'] ?? null;
 
-    if (!$recipient || !$messageBody)
+    if (!$recipient || !$messageBody) {
+        technicalLog("Transmission aborted: Missing recipient or body. Action=$action", true);
         sendResponse(['error' => 'Payload incomplete'], 400);
+    }
+
+    technicalLog("COMMENCING_FINAL_TRANSMISSION: Recipient=" . substr($recipient, 0, 3) . "***" . strrchr($recipient, "@"));
 
     if ($isMockSMTP) {
         sendResponse(['success' => true, 'message' => 'MOCKED: Signal transmitted successfully.']);
@@ -252,7 +256,7 @@ if ($action === 'send') {
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
 
-        $mail->setFrom(SMTP_USER, 'B. Eng. Felipe de Jesús Miramontes Romero');
+        $mail->setFrom(SMTP_USER, 'Felipe Miramontes (SECURE_NODE)');
         $mail->addAddress($recipient);
         $mail->addReplyTo(SMTP_USER, 'Felipe Miramontes');
 
