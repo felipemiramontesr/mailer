@@ -160,10 +160,10 @@ if (empty($authCode)) {
             <div style=\"height: 4px; background: linear-gradient(90deg, transparent, #00f7ff, transparent);\"></div>
             
             <div style=\"padding: 30px;\">
-                <div style=\"border-bottom: 1px solid rgba(0, 247, 255, 0.3); padding-bottom: 10px; margin-bottom: 20px;\">
-                    <span style=\"color: #00f7ff !important; text-decoration: none !important; font-family: 'Inter', Arial, sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 2px;\">
+                <div style=\"border-bottom: 1px solid rgba(0, 247, 255, 0.3); padding-bottom: 10px; margin-bottom: 15px;\">
+                    <a href=\"https://felipemiramontesr.net\" style=\"color: #00f7ff !important; text-decoration: none !important; font-family: 'Inter', Arial, sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 2px;\">
                         felipemiramontesr&zwnj;.net
-                    </span>
+                    </a>
                     <span style=\"float: right; color: #7e8ec2; font-size: 9px; letter-spacing: 1px; font-family: Arial, sans-serif;\">LOG_STREAM // $currentDate</span>
                 </div>
 

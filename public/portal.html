@@ -158,8 +158,8 @@
             flex-direction: column;
             gap: 15px;
             border-bottom: 1px solid var(--hud-border);
-            padding-bottom: 15px;
-            margin-bottom: 20px;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         @media (min-width: 768px) {
@@ -167,24 +167,31 @@
                 flex-direction: row;
                 justify-content: space-between;
                 align-items: flex-end;
-                padding-bottom: 10px;
-                margin-bottom: 30px;
+                padding-bottom: 8px;
+                margin-bottom: 25px;
             }
         }
 
         .brand-text {
             font-family: 'Outfit', sans-serif;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             letter-spacing: 2px;
             color: var(--hud-cyan);
             text-shadow: 0 0 15px rgba(0, 247, 255, 0.4);
-            text-transform: uppercase;
+            text-transform: lowercase;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .brand-text:hover {
+            text-shadow: 0 0 25px rgba(0, 247, 255, 0.8);
+            opacity: 0.8;
         }
 
         @media (min-width: 768px) {
             .brand-text {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
                 letter-spacing: 4px;
             }
         }
@@ -232,7 +239,7 @@
 
         .msg-container {
             padding: 20px;
-            min-height: 300px;
+            min-height: 200px;
             position: relative;
             scrollbar-width: none;
             overflow-x: hidden;
@@ -240,8 +247,8 @@
 
         @media (min-width: 768px) {
             .msg-container {
-                padding: 40px;
-                min-height: 400px;
+                padding: 25px 40px;
+                min-height: 250px;
             }
         }
 
@@ -253,10 +260,10 @@
             font-family: 'Fira Code', monospace;
             font-size: 9px;
             background: rgba(0, 0, 0, 0.6);
-            padding: 10px 15px;
+            padding: 8px 15px;
             color: rgba(0, 247, 255, 0.4);
             border-top: 1px solid var(--hud-border);
-            max-height: 100px;
+            max-height: 80px;
             overflow-y: auto;
             scrollbar-width: none;
         }
@@ -264,8 +271,8 @@
         @media (min-width: 768px) {
             .terminal-log-dock {
                 font-size: 10px;
-                padding: 15px 20px;
-                max-height: 120px;
+                padding: 10px 20px;
+                max-height: 100px;
             }
         }
 
@@ -327,11 +334,10 @@
                 ESTABLISHING_AES_GCM_HANDSHAKE...</p>
         </div>
 
-        <!-- STAGE 2: REVEAL -->
         <div class="reveal-stage" id="stage2">
             <header class="portal-header">
                 <div>
-                    <h1 class="brand-text">SIGNAL_ACQUIRED</h1>
+                    <a href="https://felipemiramontesr.net" class="brand-text" target="_blank">felipemiramontesr.net</a>
                     <div class="status-badge">BURN_AFTER_READING_ACTIVE</div>
                 </div>
                 <div class="tech-metadata">
