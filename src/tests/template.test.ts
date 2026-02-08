@@ -29,9 +29,9 @@ describe('Email Template Utility', () => {
     expect(html).toContain('Hello World');
   });
 
-  it('should have a fixed width of 1000px', () => {
+  it('should have a fluid width of 100%', () => {
     const html = generateEmailTemplate(mockForm);
-    expect(html).toContain('width: 1000px');
+    expect(html).toContain('width: 100%');
   });
 
   it('should contain the current date in the LOG_STREAM', () => {
