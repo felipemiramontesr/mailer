@@ -80,7 +80,7 @@ export function useEmailForm() {
         addLog('CRYPTO', `ENCRPYTION_COMPLETE: ID=${signalId.toUpperCase()}`);
 
         addLog('NETWORK', 'STORING_EPHEMERAL_SIGNAL');
-        await storeSignal(signalId, iv, ciphertext);
+        await storeSignal(signalId, iv, ciphertext, security.value.password);
 
         const portalUrl = `${window.location.origin}/portal.html?id=${signalId}#${keyHex}`;
         subject = `[SECURE_SIGNAL] ${subject}`;

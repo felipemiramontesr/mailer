@@ -93,18 +93,13 @@ $password = $input['password'] ?? '';
 $authCode = $input['auth_code'] ?? '';
 
 // --- Security Phase 1: Master Password ---
-technicalLog("DEBUG: Request received. Password length=" . strlen($password) . ", Hash length=" . strlen(MAILER_PASSWORD_HASH));
+$public_actions = ['fetch_signal', 'shred_signal'];
 
-// Honey-pot Credentials (The Silent Alarm)
-$decoy_hash = '$2y$10$v5W6l8bXg7Zc4P2Q6R9S.u8m0X5Y6Z7W8v9C0E1F2G3H4I5J6K7L'; // dec: black_ops_decoy
-if (password_verify($password, $decoy_hash)) {
-    technicalLog("HONEYPOT_TRIGGERED: IP=" . $_SERVER['REMOTE_ADDR'], true);
-    sendResponse(['status' => '2fa_required', 'msg' => 'Operational sync required.']);
-}
-
-if (!password_verify($password, MAILER_PASSWORD_HASH)) {
-    technicalLog("Unauthorized access attempt. IP: " . $_SERVER['REMOTE_ADDR'], true);
-    sendResponse(['error' => 'Access Denied. Invalid credentials.'], 401);
+if (!in_array($action, $public_actions)) {
+    if (!password_verify($password, MAILER_PASSWORD_HASH)) {
+        technicalLog("Unauthorized access attempt. IP: " . $_SERVER['REMOTE_ADDR'], true);
+        sendResponse(['error' => 'Access Denied. Invalid credentials.'], 401);
+    }
 }
 
 // --- BLACK-OPS ACTION ROUTING ---
