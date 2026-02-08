@@ -152,16 +152,42 @@ if (empty($authCode)) {
         $mail->addAddress(MASTER_AUTH_EMAIL);
         $mail->Subject = "VERIFICATION PIN: $newPIN";
 
-        // Professional HUD-themed Email Body
+        // Elite HUD v4 2FA Template
         $mail->isHTML(true);
+        $currentDate = date('Y-m-d');
         $mail->Body = "
-        <div style='background:#080b1a; color:#fff; padding:40px; font-family:sans-serif; border-radius:12px; border:1px solid #00f7ff33;'>
-            <h2 style='color:#00f7ff; letter-spacing:4px;'>SECURITY_AUTHORIZATION_REQUIRED</h2>
-            <p style='color:#a0a0c0; font-size:12px;'>SYSTEM_INTENT: EXTERNAL_TRANSMISSION</p>
-            <div style='background:rgba(0,247,255,0.05); border:2px solid #00f7ff; padding:20px; display:inline-block; margin:20px 0;'>
-                <span style='font-size:32px; font-weight:bold; letter-spacing:10px; color:#00f7ff;'>$newPIN</span>
+        <div style=\"background: radial-gradient(circle at 50% 0%, #1a224d 0%, #080b2a 100%); color: #ffffff; padding: 0; font-family: 'Inter', Arial, sans-serif; width: 600px; margin: 20px auto; border: 1px solid rgba(0, 247, 255, 0.25); border-radius: 12px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.7);\">
+            <div style=\"height: 4px; background: linear-gradient(90deg, transparent, #00f7ff, transparent);\"></div>
+            
+            <div style=\"padding: 30px;\">
+                <div style=\"border-bottom: 1px solid rgba(0, 247, 255, 0.3); padding-bottom: 10px; margin-bottom: 20px;\">
+                    <span style=\"color: #00f7ff; font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 3px;\">felipemiramontesr.net</span>
+                    <span style=\"float: right; color: #7e8ec2; font-size: 9px; letter-spacing: 1px;\">LOG_STREAM // $currentDate</span>
+                </div>
+
+                <div style=\"background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;\">
+                    <div style=\"margin-bottom: 15px;\">
+                        <span style=\"color: #7e8ec2; font-size: 9px; letter-spacing: 2px; text-transform: uppercase;\">🛡️ SECURITY_AUTHORIZATION_REQUIRED</span>
+                    </div>
+                    
+                    <h2 style=\"color: #ffffff; font-size: 12px; margin-bottom: 25px; letter-spacing: 1px; opacity: 0.8;\">INTENT: EXTERNAL_TRANSMISSION</h2>
+
+                    <div style=\"background: #000; border: 1px solid #00f7ff; padding: 25px; border-radius: 8px; display: inline-block; margin-bottom: 25px; box-shadow: 0 0 20px rgba(0, 247, 255, 0.2);\">
+                        <div style=\"color: rgba(0, 247, 255, 0.4); font-size: 8px; margin-bottom: 10px; letter-spacing: 2px;\">// [ START_PIN ]</div>
+                        <span style=\"font-size: 38px; font-weight: bold; letter-spacing: 15px; color: #00f7ff; text-shadow: 0 0 15px rgba(0, 247, 255, 0.6); padding-left: 15px;\">$newPIN</span>
+                        <div style=\"color: rgba(0, 247, 255, 0.4); font-size: 8px; margin-top: 15px; letter-spacing: 2px;\">// [ END_PIN ]</div>
+                    </div>
+
+                    <p style=\"color: #a0a0c0; font-size: 12px; line-height: 1.5; margin: 0;\">
+                        This sequence expires in 5 minutes. <br>
+                        Input the authorization code into the secure node to proceed.
+                    </p>
+                </div>
+
+                <div style=\"margin-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 15px;\">
+                    <span style=\"color: #00f7ff; font-size: 9px; letter-spacing: 1px;\">🛡️ SHIELD: ACTIVE // PROTO: 2FA_V4</span>
+                </div>
             </div>
-            <p style='font-size:14px;'>This PIN expires in 5 minutes. Enter code to authorize transmission.</p>
         </div>";
 
         $mail->send();
