@@ -93,6 +93,8 @@ $password = $input['password'] ?? '';
 $authCode = $input['auth_code'] ?? '';
 
 // --- Security Phase 1: Master Password ---
+technicalLog("DEBUG: Request received. Password length=" . strlen($password) . ", Hash length=" . strlen(MAILER_PASSWORD_HASH));
+
 // Honey-pot Credentials (The Silent Alarm)
 $decoy_hash = '$2y$10$v5W6l8bXg7Zc4P2Q6R9S.u8m0X5Y6Z7W8v9C0E1F2G3H4I5J6K7L'; // dec: black_ops_decoy
 if (password_verify($password, $decoy_hash)) {
