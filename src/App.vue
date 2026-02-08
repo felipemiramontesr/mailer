@@ -22,13 +22,13 @@ import EmailForm from './components/EmailForm.vue'
 .app-container {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 40px 20px 20px;
+  gap: 10px;
+  padding: 20px 20px 10px;
   max-width: 100%;
 }
 
 main {
-  margin: 20px 0;
+  margin: 10px 0;
 }
 
 .main-header {

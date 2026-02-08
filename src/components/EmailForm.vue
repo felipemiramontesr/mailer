@@ -248,7 +248,7 @@ const sendEmail = async () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--border-color);
 }
@@ -284,7 +284,7 @@ const sendEmail = async () => {
 .main-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
 }
 
 .input-group {
@@ -348,7 +348,7 @@ input[readonly] {
 
 .security-layer {
   background: rgba(0, 247, 255, 0.03);
-  padding: 1.5rem;
+  padding: 1rem;
   border: 1px solid rgba(0, 247, 255, 0.1);
 }
 
