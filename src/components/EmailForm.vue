@@ -49,8 +49,8 @@ const emailTemplateHTML = computed(() => `
           <div style="margin-bottom: 4px;">
             <span style="color: #7e8ec2; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase;">👤 ORIGIN_POINT</span>
           </div>
-          <div style="background: rgba(0, 247, 255, 0.08); border-left: 4px solid #00f7ff; padding: 8px 15px; border-radius: 0 8px 8px 0; box-shadow: 0 0 20px rgba(0, 247, 255, 0.05);">
-            <p style="margin: 0; color: #00f7ff; font-size: 15px; font-weight: 600; text-shadow: 0 0 15px rgba(0, 247, 255, 0.4); text-transform: uppercase; letter-spacing: 1px;">
+          <div style="background: rgba(0, 247, 255, 0.08); border-left: 4px solid #00f7ff; padding: 10px 15px; border-radius: 0 8px 8px 0; box-shadow: 0 0 20px rgba(0, 247, 255, 0.05);">
+            <p style="margin: 0; color: #00f7ff; font-size: 15px; font-weight: 600; text-shadow: 0 0 15px rgba(0, 247, 255, 0.4); text-transform: uppercase; letter-spacing: 1px; line-height: 22px;">
               B. Eng. Felipe de Jesús Miramontes Romero
             </p>
           </div>
@@ -62,7 +62,7 @@ const emailTemplateHTML = computed(() => `
             <span style="color: #7e8ec2; font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase;">🛰️ TRANSMISSION_SUBJECT</span>
           </div>
           <div style="background: rgba(0, 247, 255, 0.1); border-left: 4px solid #00f7ff; padding: 10px 15px; border-radius: 0 8px 8px 0; box-shadow: 0 0 25px rgba(0, 247, 255, 0.1);">
-            <p style="margin: 0; color: #00f7ff; font-size: 18px; font-weight: 500; font-family: 'Inter', sans-serif; text-shadow: 0 0 20px rgba(0, 247, 255, 0.3); letter-spacing: 0.5px; text-transform: none;">
+            <p style="margin: 0; color: #00f7ff; font-size: 18px; font-weight: 500; font-family: 'Inter', sans-serif; text-shadow: 0 0 20px rgba(0, 247, 255, 0.3); letter-spacing: 0.5px; text-transform: none; line-height: 22px;">
               ${form.value.subject || '[ Subject missing ]'}
             </p>
           </div>
