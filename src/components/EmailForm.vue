@@ -389,7 +389,7 @@ const sendEmail = async () => {
   display: flex;
   flex-direction: column;
   box-shadow: inset 0 0 40px rgba(0, 247, 255, 0.03);
-  min-height: 500px;
+  align-self: flex-start;
 }
 
 .preview-header {
@@ -431,8 +431,7 @@ const sendEmail = async () => {
 .email-canvas {
   width: 1000px;
   background: transparent;
-  transform: scale(0.55);
-  transform-origin: top center;
+  zoom: 0.55;
   flex-shrink: 0;
 }
 
