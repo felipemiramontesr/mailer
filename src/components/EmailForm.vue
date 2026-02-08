@@ -74,11 +74,12 @@ const emailTemplateHTML = computed(() => `
             <span style="color: #ffffff; font-family: 'Orbitron', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;">📥 SIGNAL_DATA</span>
           </div>
           <div style="color: #ffffff; line-height: 1.6; font-size: 15px; padding: 25px; background: rgba(0, 0, 0, 0.5); border-radius: 12px; border: 1px solid rgba(0, 247, 255, 0.3); box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.8), 0 10px 30px rgba(0,0,0,0.5); position: relative;">
-            <div style="color: rgba(0, 247, 255, 0.4); font-family: 'Orbitron', sans-serif; font-size: 8px; margin-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 8px; letter-spacing: 4px;">// START</div>
+            <div style="color: rgba(0, 247, 255, 0.4); font-family: 'Orbitron', sans-serif; font-size: 8px; margin-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 8px; letter-spacing: 2px; display: table; width: 100%;">
+              <div style="display: table-cell; text-align: left;">// [ START_TRANSMISSION ]</div>
+              <div style="display: table-cell; text-align: right;">[ END_SIGNAL ] //</div>
+            </div>
             
             <div style="white-space: pre-wrap; word-break: break-word;">${form.value.message || 'Waiting for signal input...'}</div>
-            
-            <div style="color: rgba(0, 247, 255, 0.4); font-family: 'Orbitron', sans-serif; font-size: 8px; margin-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 10px; text-align: right; letter-spacing: 4px;">// END</div>
           </div>
         </div>
       </div>
