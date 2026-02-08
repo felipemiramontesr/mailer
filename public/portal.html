@@ -149,8 +149,8 @@
             justify-content: space-between;
             align-items: flex-end;
             border-bottom: 1px solid var(--hud-border);
-            padding-bottom: 10px;
-            margin-bottom: 30px;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
         }
 
         .brand-text {
@@ -198,31 +198,31 @@
         }
 
         .msg-container {
-            padding: 40px;
-            max-height: 70vh;
-            overflow-y: auto;
+            padding: 30px 40px;
+            min-height: 200px;
             position: relative;
-            scrollbar-width: thin;
-            scrollbar-color: var(--hud-cyan) transparent;
+            scrollbar-width: none;
+            /* Hide scrollbar for HUD feel */
         }
 
         .msg-container::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .msg-container::-webkit-scrollbar-thumb {
-            background: var(--hud-cyan);
+            display: none;
         }
 
         .terminal-log-dock {
             font-family: 'Fira Code', monospace;
-            font-size: 11px;
-            background: #000;
-            padding: 15px;
-            color: rgba(0, 247, 255, 0.7);
+            font-size: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 20px;
+            color: rgba(0, 247, 255, 0.5);
             border-top: 1px solid var(--hud-border);
-            max-height: 100px;
+            max-height: 120px;
             overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        .terminal-log-dock::-webkit-scrollbar {
+            display: none;
         }
 
         .status-badge {
