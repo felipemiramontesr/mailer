@@ -47,5 +47,4 @@ jobs:
           server-dir: ./
           protocol: ftp
           port: 21
-          # Note: Hostinger FTP can be sensitive to timeouts. 
-          # Keeping it simple for maximum compatibility.
+          timeout: 60000 # Increased timeout to 60s for better stability
