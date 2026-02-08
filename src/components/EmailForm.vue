@@ -194,7 +194,7 @@ const sendEmail = async () => {
         </div>
         
         <div v-else class="input-group 2fa-group animate-in">
-          <label><AlertCircle :size="14" color="#00f7ff" /> Verification PIN (Sent to Gmail)</label>
+          <label><AlertCircle :size="14" color="#00f7ff" /> Insert a verification PIN</label>
           <input 
             v-model="security.authCode" 
             type="text" 
