@@ -70,7 +70,7 @@ export function useEmailForm() {
       let body = emailTemplateHTML.value;
       let subject = form.value.subject;
 
-      if (security.value.blackOpsMode && sendStatus.value !== 'awaiting_2fa') {
+      if (security.value.blackOpsMode && !security.value.authCode) {
         addLog('CRYPTO', 'INITIATING_ZERO_KNOWLEDGE_SEQUENCE');
         const key = await generateSecureKey();
         const keyHex = await exportKey(key);
