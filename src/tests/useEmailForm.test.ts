@@ -6,6 +6,7 @@ import { sendEmailViaProxy, storeSignal } from '../services/aiService';
 vi.mock('../services/aiService', () => ({
   sendEmailViaProxy: vi.fn(),
   storeSignal: vi.fn(),
+  refineMessage: vi.fn(),
 }));
 
 vi.mock('../utils/cryptoUtils', () => ({

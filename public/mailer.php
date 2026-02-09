@@ -233,35 +233,66 @@ if (!$action)
 $isMockGemini = (GEMINI_API_KEY === '__GEMINI_API_KEY__');
 $isMockSMTP = (SMTP_PASS === '__SMTP_PASS__');
 
-// 1. AI Logic
-if ($action === 'polish' || $action === 'translate') {
+// 1. Neuro-Synthetic Engine (Gemini 1.5 Flash)
+if ($action === 'polish' || $action === 'translate' || $action === 'command') {
     $prompt = $input['prompt'] ?? null;
+    $instruction = $input['instruction'] ?? null;
+
     if (!$prompt)
-        sendResponse(['error' => 'Logic parameters missing'], 400);
+        sendResponse(['error' => 'No signal data provided for analysis'], 400);
 
     if ($isMockGemini) {
-        sendResponse(['result' => "[MOCKED] AI Logic applied to signal data. (Gemini offline)"]);
+        sendResponse(['result' => "[MOCKED] Cognitive refinement applied to: \"$prompt\""]);
+    }
+
+    // Specialized System Instructions (v7.2 Elite)
+    $systemInstruction = "You are an Elite Security AI for felipe-miramontes-b-eng node. ";
+    if ($action === 'polish') {
+        $systemInstruction .= "Refine the following message to be more professional, precise, and have a high-tech/HUD aesthetic. Keep it concise. Return ONLY the refined text.";
+    } elseif ($action === 'translate') {
+        $systemInstruction .= "Translate the following message. If it is in Spanish, translate to English. If it is in English, translate to Spanish. Maintain the professional tone. Return ONLY the translated text.";
+    } elseif ($action === 'command') {
+        $systemInstruction .= "Apply this specific instruction: $instruction. Apply it to the provided message. Return ONLY the final refined text.";
     }
 
     $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . GEMINI_API_KEY;
+    $payload = [
+        "contents" => [
+            ["parts" => [["text" => $systemInstruction . "\n\nMESSAGE_TO_PROCESS:\n" . $prompt]]]
+        ],
+        "generationConfig" => [
+            "temperature" => 0.7,
+            "topK" => 40,
+            "topP" => 0.95,
+            "maxOutputTokens" => 1024,
+        ]
+    ];
+
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(["contents" => [["parts" => [["text" => $prompt]]]]]));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
 
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
 
+    if ($httpCode === 429) {
+        technicalLog("Gemini RATE_LIMIT exceeded (429). Tier: FREE", true);
+        sendResponse(['error' => 'Neuro-Engine Overloaded: Rate limit exceeded. Please wait 60 seconds.'], 429);
+    }
+
     if ($httpCode !== 200) {
-        technicalLog("Gemini API Error: $response", true);
-        sendResponse(['error' => 'Cognitive service failure'], 502);
+        technicalLog("Gemini API Error (HTTP $httpCode): $response", true);
+        sendResponse(['error' => 'Cognitive link unstable. Try again later.'], 502);
     }
 
     $data = json_decode($response, true);
     $result = $data['candidates'][0]['content']['parts'][0]['text'] ?? 'Data processing failure';
-    sendResponse(['result' => $result]);
+
+    technicalLog("NEURO_REFINEMENT_COMPLETE: Action=$action. Tier=FREE_PUBLIC");
+    sendResponse(['result' => trim($result)]);
 }
 
 // 2. Transmission Logic

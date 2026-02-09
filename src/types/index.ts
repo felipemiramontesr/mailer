@@ -51,3 +51,10 @@ export interface EmailPayload {
   body: string;
   burn_timer?: number; // Seconds until autodestroy
 }
+
+export type AIRefinementAction = 'polish' | 'translate' | 'command';
+
+export interface AIRefineResponse {
+  result: string;
+  error?: string;
+}

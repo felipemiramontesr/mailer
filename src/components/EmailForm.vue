@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   Eye,
   EyeOff,
+  Languages,
   Layout,
   Loader2,
   Mail,
@@ -17,7 +18,9 @@ import {
   Send,
   ShieldAlert,
   ShieldCheck,
+  Sparkles,
   Type,
+  Wand2,
   X,
 } from 'lucide-vue-next';
 import { useEmailForm } from '../composables/useEmailForm';
@@ -33,12 +36,16 @@ const {
   emailTemplateHTML,
   isFormValid,
   handleSubmit,
+  handleAIRefine,
+  isRefining,
   toasts,
   removeToast,
   logs,
 } = useEmailForm();
 
 const terminalBody = ref<HTMLElement | null>(null);
+const showNeuroPanel = ref(false);
+const neuroCommand = ref('');
 
 watch(
   logs,
@@ -155,12 +162,56 @@ watch(
         </div>
 
         <div class="message-section">
-          <label><Mail :size="14" /> MESSAGE CONTENT</label>
+          <div class="message-label-row">
+            <label><Mail :size="14" /> MESSAGE CONTENT</label>
+            <div class="neuro-tools-wrapper">
+              <button
+                type="button"
+                class="neuro-btn"
+                :class="{ active: showNeuroPanel, loading: isRefining }"
+                @click="showNeuroPanel = !showNeuroPanel"
+                title="Neuro-Enhancer Console"
+              >
+                <Sparkles v-if="!isRefining" :size="14" />
+                <Loader2 v-else :size="14" class="spin" />
+                NEURO_ENHANCER
+              </button>
+
+              <!-- Neuro Overlay Panel -->
+              <div v-if="showNeuroPanel" class="neuro-panel animate-in">
+                <div class="neuro-panel-header"><Wand2 :size="12" /> AI_REFINEMENT_PROTOCOLS</div>
+                <div class="neuro-options">
+                  <button type="button" class="neuro-opt" @click="handleAIRefine('polish')">
+                    <Sparkles :size="12" /> POLISH_SIGNAL
+                  </button>
+                  <button type="button" class="neuro-opt" @click="handleAIRefine('translate')">
+                    <Languages :size="12" /> TRANSLATE_ES_EN
+                  </button>
+                </div>
+                <div class="neuro-command-area">
+                  <input
+                    v-model="neuroCommand"
+                    type="text"
+                    placeholder="Enter Custom Command..."
+                    @keyup.enter="handleAIRefine('command', neuroCommand)"
+                  />
+                  <button
+                    type="button"
+                    class="command-send"
+                    @click="handleAIRefine('command', neuroCommand)"
+                  >
+                    <Send :size="14" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
           <textarea
             v-model="form.message"
             rows="4"
             placeholder="Input your message here..."
             required
+            :disabled="isRefining"
           ></textarea>
         </div>
 
@@ -588,6 +639,131 @@ input[readonly] {
 
 .eye-btn:hover {
   opacity: 1;
+}
+
+.message-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.neuro-tools-wrapper {
+  position: relative;
+}
+
+.neuro-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 247, 255, 0.05);
+  border: 1px solid rgba(0, 247, 255, 0.2);
+  color: var(--accent);
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.neuro-btn:hover,
+.neuro-btn.active {
+  background: var(--accent);
+  color: #080b1a;
+  box-shadow: 0 0 15px var(--accent-glow);
+  transform: translateY(-2px);
+}
+
+.neuro-btn.loading {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.neuro-panel {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  right: 0;
+  width: 240px;
+  background: rgba(3, 10, 22, 0.95);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  padding: 12px;
+  z-index: 100;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(12px);
+}
+
+.neuro-panel-header {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.6rem;
+  color: var(--accent);
+  opacity: 0.6;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.neuro-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.neuro-opt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.neuro-opt:hover {
+  background: rgba(0, 247, 255, 0.1);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.neuro-command-area {
+  display: flex;
+  gap: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 10px;
+}
+
+.neuro-command-area input {
+  flex: 1;
+  padding: 6px 10px;
+  font-size: 0.7rem;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.command-send {
+  background: var(--accent);
+  border: none;
+  color: #080b1a;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.command-send:hover {
+  filter: brightness(1.2);
 }
 
 .pin-input {

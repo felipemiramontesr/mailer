@@ -1,6 +1,12 @@
 import { computed, ref } from 'vue';
-import { sendEmailViaProxy, storeSignal } from '../services/aiService';
-import type { EmailFormData, EmailPayload, SecurityState, SendStatus } from '../types';
+import { refineMessage, sendEmailViaProxy, storeSignal } from '../services/aiService';
+import type {
+  AIRefinementAction,
+  EmailFormData,
+  EmailPayload,
+  SecurityState,
+  SendStatus,
+} from '../types';
 import { encryptData, exportKey, generateSecureKey } from '../utils/cryptoUtils';
 import { generateEmailTemplate } from '../utils/emailTemplate';
 
@@ -166,6 +172,43 @@ export function useEmailForm() {
     }
   };
 
+  /**
+   * AI Refinement Logic (v7.2)
+   */
+  const isRefining = ref(false);
+  const handleAIRefine = async (action: AIRefinementAction, customCommand?: string) => {
+    if (!form.value.message) {
+      addToast('No content to optimize', 'warning');
+      return;
+    }
+
+    isRefining.value = true;
+    addLog('AI', `SIGNAL_ANALYSIS_START: ACTION=${action.toUpperCase()}`);
+
+    try {
+      const result = await refineMessage(
+        form.value.message,
+        action,
+        security.value.password,
+        customCommand
+      );
+
+      if (result.result) {
+        form.value.message = result.result;
+        addLog('AI', 'OPTIMIZATION_COMPLETE: SIGNAL_OVERWRITTEN');
+        addToast('Signal Refined Successfully', 'success');
+      } else if (result.error) {
+        throw new Error(result.error);
+      }
+    } catch (error: any) {
+      const msg = error.response?.data?.error || error.message || 'AI processing failure';
+      addLog('AI', `CRITICAL_ERROR: ${msg.toUpperCase()}`);
+      addToast(msg, 'error');
+    } finally {
+      isRefining.value = false;
+    }
+  };
+
   return {
     form,
     security,
@@ -177,6 +220,8 @@ export function useEmailForm() {
     emailTemplateHTML,
     isFormValid,
     handleSubmit,
+    handleAIRefine,
+    isRefining,
     toasts,
     removeToast,
     logs,

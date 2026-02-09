@@ -1,5 +1,5 @@
-// Email Service - Black Ops v6
 import axios from 'axios';
+import type { AIRefineResponse, AIRefinementAction } from '../types';
 
 const API_URL = import.meta.env.DEV ? 'http://localhost:5173/mailer.php' : '/mailer.php';
 
@@ -43,6 +43,24 @@ export const storeSignal = async (
   const response = await axios.post(
     API_URL,
     injectNoise({ action: 'store_signal', id, iv, blob, password, burn_timer: burnTimer })
+  );
+  return response.data;
+};
+
+export const refineMessage = async (
+  text: string,
+  action: AIRefinementAction,
+  password?: string,
+  command?: string
+): Promise<AIRefineResponse> => {
+  const response = await axios.post(
+    API_URL,
+    injectNoise({
+      action: action === 'command' ? 'command' : action,
+      prompt: text,
+      password,
+      instruction: command,
+    })
   );
   return response.data;
 };
