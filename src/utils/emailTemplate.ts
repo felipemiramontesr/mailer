@@ -36,7 +36,7 @@ export const generateEmailTemplate = (form: EmailFormData): string => {
             <span style="color: #7e8ec2; font-family: Arial, sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase;">👤 ORIGIN_SOURCE</span>
           </div>
           <div style="background: rgba(0, 247, 255, 0.08); border-left: 3px solid #00f7ff; padding: 10px 15px; border-radius: 0 6px 6px 0;">
-            <p style="margin: 0; color: #00f7ff; font-size: 15px; font-weight: 600; text-shadow: 0 0 10px rgba(0, 247, 255, 0.4); text-transform: uppercase; letter-spacing: 1px; line-height: 20px;">
+            <p style="margin: 0; color: #00f7ff; font-size: 15px; font-weight: 500; text-shadow: 0 0 10px rgba(0, 247, 255, 0.4); text-transform: none; letter-spacing: 0.5px; line-height: 20px; font-family: 'Inter', sans-serif;">
               B. Eng. Felipe de Jesús Miramontes Romero
             </p>
           </div>
