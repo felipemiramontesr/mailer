@@ -182,6 +182,12 @@ export function useEmailForm() {
       return;
     }
 
+    if (!security.value.password) {
+      addLog('AI', 'PROCESS_HALTED: MASTER_ACCESS_KEY_REQUIRED');
+      addToast('Master Access Key required for AI processing', 'warning');
+      return;
+    }
+
     isRefining.value = true;
     addLog('AI', `SIGNAL_ANALYSIS_START: ACTION=${action.toUpperCase()}`);
 

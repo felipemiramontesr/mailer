@@ -161,50 +161,63 @@ watch(
           </div>
         </div>
 
-        <div class="message-section">
-          <div class="message-label-row">
-            <label><Mail :size="14" /> MESSAGE CONTENT</label>
-            <div class="neuro-tools-wrapper">
-              <button
-                type="button"
-                class="neuro-btn"
-                :class="{ active: showNeuroPanel, loading: isRefining }"
-                @click="showNeuroPanel = !showNeuroPanel"
-                title="Neuro-Enhancer Console"
-              >
-                <Sparkles v-if="!isRefining" :size="14" />
-                <Loader2 v-else :size="14" class="spin" />
-                NEURO_ENHANCER
-              </button>
+        <!-- Neuro-Enhancer Stationary Shelf (v7.3) -->
+        <Transition name="expand">
+          <div v-if="showNeuroPanel" class="neuro-shelf">
+            <div class="neuro-shelf-header">
+              <div class="shelf-title"><Wand2 :size="12" /> NEURO_SYNTHETIC_SHELF // V7.3</div>
+              <div class="shelf-status">
+                <div class="dot mini"></div>
+                COGNITIVE_LINK_READY
+              </div>
+            </div>
 
-              <!-- Neuro Overlay Panel -->
-              <div v-if="showNeuroPanel" class="neuro-panel animate-in">
-                <div class="neuro-panel-header"><Wand2 :size="12" /> AI_REFINEMENT_PROTOCOLS</div>
-                <div class="neuro-options">
-                  <button type="button" class="neuro-opt" @click="handleAIRefine('polish')">
-                    <Sparkles :size="12" /> POLISH_SIGNAL
-                  </button>
-                  <button type="button" class="neuro-opt" @click="handleAIRefine('translate')">
-                    <Languages :size="12" /> TRANSLATE_ES_EN
-                  </button>
-                </div>
-                <div class="neuro-command-area">
+            <div class="neuro-shelf-content">
+              <div class="neuro-options">
+                <button type="button" class="neuro-opt" @click="handleAIRefine('polish')">
+                  <Sparkles :size="12" /> POLISH_SIGNAL
+                </button>
+                <button type="button" class="neuro-opt" @click="handleAIRefine('translate')">
+                  <Languages :size="12" /> TRANSLATE_ES_EN
+                </button>
+              </div>
+
+              <div class="neuro-command-area">
+                <div class="command-input-wrapper">
+                  <Type :size="12" class="cmd-icon" />
                   <input
                     v-model="neuroCommand"
                     type="text"
-                    placeholder="Enter Custom Command..."
+                    placeholder="Input Manual AI Command..."
                     @keyup.enter="handleAIRefine('command', neuroCommand)"
                   />
-                  <button
-                    type="button"
-                    class="command-send"
-                    @click="handleAIRefine('command', neuroCommand)"
-                  >
-                    <Send :size="14" />
-                  </button>
                 </div>
+                <button
+                  type="button"
+                  class="command-send"
+                  @click="handleAIRefine('command', neuroCommand)"
+                  :disabled="isRefining"
+                >
+                  <Send v-if="!isRefining" :size="14" />
+                  <Loader2 v-else :size="14" class="spin" />
+                </button>
               </div>
             </div>
+          </div>
+        </Transition>
+
+        <div class="message-section">
+          <div class="message-label-row">
+            <label><Mail :size="14" /> MESSAGE CONTENT</label>
+            <button
+              type="button"
+              class="neuro-btn-toggle"
+              :class="{ active: showNeuroPanel }"
+              @click="showNeuroPanel = !showNeuroPanel"
+            >
+              <Sparkles :size="12" />
+              {{ showNeuroPanel ? 'HIDE_NEURO' : 'NEURO_ENHANCER' }}
+            </button>
           </div>
           <textarea
             v-model="form.message"
@@ -641,129 +654,173 @@ input[readonly] {
   opacity: 1;
 }
 
-.message-label-row {
+.neuro-shelf {
+  background: rgba(0, 247, 255, 0.02);
+  border: 1px solid rgba(0, 247, 255, 0.15);
+  border-radius: 8px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  box-shadow: inset 0 0 20px rgba(0, 247, 255, 0.05);
+  backdrop-filter: blur(5px);
+}
+
+.neuro-shelf-header {
+  background: rgba(0, 247, 255, 0.05);
+  padding: 8px 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 247, 255, 0.1);
 }
 
-.neuro-tools-wrapper {
-  position: relative;
-}
-
-.neuro-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(0, 247, 255, 0.05);
-  border: 1px solid rgba(0, 247, 255, 0.2);
-  color: var(--accent);
-  padding: 4px 10px;
-  border-radius: 4px;
+.shelf-title {
   font-family: 'Orbitron', sans-serif;
   font-size: 0.65rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.neuro-btn:hover,
-.neuro-btn.active {
-  background: var(--accent);
-  color: #080b1a;
-  box-shadow: 0 0 15px var(--accent-glow);
-  transform: translateY(-2px);
-}
-
-.neuro-btn.loading {
-  opacity: 0.7;
-  cursor: wait;
-}
-
-.neuro-panel {
-  position: absolute;
-  bottom: calc(100% + 10px);
-  right: 0;
-  width: 240px;
-  background: rgba(3, 10, 22, 0.95);
-  border: 1px solid var(--accent);
-  border-radius: 8px;
-  padding: 12px;
-  z-index: 100;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(12px);
-}
-
-.neuro-panel-header {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 0.6rem;
   color: var(--accent);
-  opacity: 0.6;
-  margin-bottom: 10px;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.8;
+}
+
+.shelf-status {
+  font-size: 0.6rem;
+  color: #7e8ec2;
   display: flex;
   align-items: center;
   gap: 6px;
+  letter-spacing: 0.5px;
+}
+
+.dot.mini {
+  width: 5px;
+  height: 5px;
+  background: var(--accent);
+  box-shadow: 0 0 5px var(--accent-glow);
+}
+
+.neuro-shelf-content {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .neuro-options {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
 .neuro-opt {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
-  padding: 8px 12px;
+  padding: 10px;
   border-radius: 6px;
-  font-family: 'Inter', sans-serif;
   font-size: 0.75rem;
-  text-align: left;
-  cursor: pointer;
   transition: all 0.2s;
+  cursor: pointer;
 }
 
 .neuro-opt:hover {
   background: rgba(0, 247, 255, 0.1);
   border-color: var(--accent);
   color: var(--accent);
+  transform: translateY(-1px);
 }
 
 .neuro-command-area {
   display: flex;
-  gap: 6px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 10px;
+  gap: 8px;
 }
 
-.neuro-command-area input {
+.command-input-wrapper {
   flex: 1;
-  padding: 6px 10px;
-  font-size: 0.7rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cmd-icon {
+  position: absolute;
+  left: 10px;
+  color: var(--accent);
+  opacity: 0.5;
+}
+
+.command-input-wrapper input {
+  padding-left: 30px;
   background: rgba(0, 0, 0, 0.4);
+  font-size: 0.75rem;
 }
 
 .command-send {
   background: var(--accent);
   border: none;
   color: #080b1a;
-  width: 28px;
-  height: 28px;
-  border-radius: 4px;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
-.command-send:hover {
+.command-send:hover:not(:disabled) {
   filter: brightness(1.2);
+  transform: scale(1.05);
+}
+
+.command-send:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.neuro-btn-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 247, 255, 0.05);
+  border: 1px solid rgba(0, 247, 255, 0.2);
+  color: var(--accent);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.neuro-btn-toggle:hover,
+.neuro-btn-toggle.active {
+  background: var(--accent);
+  color: #080b1a;
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+
+/* Expand Transition */
+.expand-enter-active,
+.expand-leave-active {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  max-height: 200px;
+  opacity: 1;
+}
+
+.expand-enter-from,
+.expand-leave-to {
+  max-height: 0;
+  opacity: 0;
+  margin-bottom: 0;
+  transform: translateY(-10px);
 }
 
 .pin-input {
