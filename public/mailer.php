@@ -1,6 +1,6 @@
 <?php
 /**
- * Professional Mailer Proxy v3.1 (Senior+ Edition)
+ * AI Secure Mailer - Core Engine v7.3.1 (Neuro-Enhanced)
  * Handles AI polishing, 2FA authorization, and SMTP transmission.
  */
 error_reporting(E_ALL);
