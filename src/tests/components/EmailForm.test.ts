@@ -5,14 +5,6 @@ import { sendEmailViaProxy } from '../../services/aiService';
 
 // Mock lucide icons
 vi.mock('lucide-vue-next', () => ({
-  Mail: { name: 'Mail' },
-  ShieldAlert: { name: 'ShieldAlert' },
-  Satellite: { name: 'Satellite' },
-  Send: { name: 'Send' },
-  ShieldCheck: { name: 'ShieldCheck' },
-  Type: { name: 'Type' },
-  Loader2: { name: 'Loader2' },
-  CheckCircle2: { name: 'CheckCircle2' },
   AlertCircle: { name: 'AlertCircle' },
   CheckCircle2: { name: 'CheckCircle2' },
   Eye: { name: 'Eye' },
@@ -34,6 +26,7 @@ vi.mock('lucide-vue-next', () => ({
 // Mock the AI service
 vi.mock('../../services/aiService', () => ({
   sendEmailViaProxy: vi.fn(),
+  refineMessage: vi.fn(),
 }));
 
 describe('EmailForm.vue', () => {
