@@ -100,10 +100,10 @@ export function useEmailForm() {
           );
 
           const portalUrl = `${window.location.origin}/portal.html?id=${signalId}#${keyHex}`;
-          pendingSubject.value = `[SECURE_SIGNAL] ${subject}`;
+          pendingSubject.value = `[Secure Signal] ${subject}`;
           pendingBody.value = `
                     <div style="font-family: 'Inter', sans-serif; background: #030a16; color: #fff; padding: 40px; text-align: center; border: 1px solid rgba(0, 247, 255, 0.2);">
-                        <h2 style="color: #00f7ff; letter-spacing: 2px;">INCOMING_SECURE_SIGNAL</h2>
+                        <h2 style="color: #00f7ff; letter-spacing: 2px;">Incoming Secure Signal</h2>
                         <p style="color: rgba(255,255,255,0.7); margin-bottom: 30px;">A high-priority encrypted transmission has been registered for your node.</p>
                         <a href="${portalUrl}" style="background: transparent; color: #00f7ff; border: 1px solid #00f7ff; padding: 12px 24px; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; font-size: 14px;">Access Secure Portal</a>
                         <p style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 40px;">SIGNAL_REF: ${signalId.toUpperCase()} // BURN_AFTER_READING_ACTIVE</p>

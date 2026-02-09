@@ -19,8 +19,7 @@ header("X-Content-Type-Options: nosniff");
 header("X-Frame-Options: DENY");
 header("Strict-Transport-Security: max-age=31536000; includeSubDomains");
 
-// --- MIMICRY HEADERS (Cyber-Warfare Camouflage) ---
-header("X-Powered-By: Siemens-S7-1200/PLC-OS");
+// --- SECURITY HEADERS ---
 header("X-Security-Node: FELIPE-MIRAMONTES-B_ENG");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -173,10 +172,10 @@ if (empty($authCode)) {
 
                 <div style=\"background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;\">
                     <div style=\"margin-bottom: 15px;\">
-                        <span style=\"color: #7e8ec2; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; font-family: Arial, sans-serif;\">🛡️ SECURITY_AUTHORIZATION_REQUIRED</span>
+                        <span style=\"color: #7e8ec2; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; font-family: Arial, sans-serif;\">🛡️ Security Authorization Required</span>
                     </div>
                     
-                    <h2 style=\"color: #00f7ff; font-size: 11px; margin-bottom: 25px; letter-spacing: 1.5px; font-family: Arial, sans-serif; text-transform: lowercase; text-shadow: 0 0 10px rgba(0, 247, 255, 0.3);\">intent: external_transmission</h2>
+                    <h2 style=\"color: #00f7ff; font-size: 11px; margin-bottom: 25px; letter-spacing: 1.5px; font-family: Arial, sans-serif; text-transform: lowercase; text-shadow: 0 0 10px rgba(0, 247, 255, 0.3);\">Intent: External Transmission</h2>
 
                     <div style=\"background: #000; border: 1px solid #00f7ff; padding: 25px; border-radius: 8px; display: block; margin-bottom: 25px; box-shadow: 0 0 20px rgba(0, 247, 255, 0.2);\">
                         <div style=\"color: rgba(0, 247, 255, 0.4); font-size: 8px; margin-bottom: 15px; letter-spacing: 2px; text-align: left; font-family: Arial, sans-serif;\">// [ START_PIN ]</div>

@@ -57,29 +57,37 @@ export const generateEmailTemplate = (form: EmailFormData): string => {
         <!-- Content Section -->
         <div style="border-top: 1px solid rgba(0, 247, 255, 0.2); padding-top: 15px; margin-top: 5px;">
           <div style="margin-bottom: 8px;">
-            <span style="color: #ffffff; font-family: Arial, sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;">📥 SIGNAL_DATA</span>
+            <span style="color: #ffffff; font-family: Arial, sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;">📥 Secure Message Content</span>
           </div>
           <div style="color: #ffffff; line-height: 1.6; font-size: 15px; padding: 20px; background: rgba(0, 0, 0, 0.5); border-radius: 8px; border: 1px solid rgba(0, 247, 255, 0.3); box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.8), 0 5px 15px rgba(0,0,0,0.5); position: relative;">
             <div style="color: rgba(0, 247, 255, 0.4); font-family: Arial, sans-serif; font-size: 8px; margin-bottom: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 8px; letter-spacing: 2px;">
-              // [ START_TRANSMISSION ]
+              // [ SECURE_TRANSMISSION_START ]
             </div>
             
-            <div style="white-space: pre-wrap; word-break: break-word; min-height: 100px;">${form.message || 'Waiting for signal input...'}</div>
+            <div style="white-space: pre-wrap; word-break: break-word; min-height: 100px;">${form.message || 'Waiting for message input...'}</div>
  
             <div style="color: rgba(0, 247, 255, 0.4); font-family: Arial, sans-serif; font-size: 8px; margin-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 10px; letter-spacing: 2px;">
-              // [ END_SIGNAL ]
+              // [ SECURE_SIGNAL_END ]
             </div>
           </div>
         </div>
       </div>
       
-      <!-- Technical Footer -->
-      <div style="margin-top: 12px; display: table; width: 100%; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 12px;">
+      <!-- Transactional Footer (Spam Evasion) -->
+      <div style="padding: 0 30px 20px 30px; text-align: center;">
+        <p style="color: #7e8ec2; font-size: 11px; font-family: Arial, sans-serif; margin-bottom: 15px; line-height: 1.4; opacity: 0.8;">
+          Has recibido este mensaje porque se ha generado una señal segura por parte del B. Eng. Felipe de Jesús Miramontes. 
+          Esta transmisión utiliza cifrado de extremo a extremo para garantizar la confidencialidad de la información.
+        </p>
+      </div>
+
+      <!-- Technical HUD Footer -->
+      <div style="background: rgba(0, 0, 0, 0.3); padding: 12px 30px; display: table; width: 100%; border-top: 1px solid rgba(255, 255, 255, 0.1);">
         <div style="display: table-cell; vertical-align: middle; text-align: left;">
-          <span style="color: #00f7ff; font-size: 9px; font-family: Arial, sans-serif; letter-spacing: 2px; font-weight: 600; text-transform: uppercase;">🛡️ INTEGRITY_INDEX: NOMINAL</span>
+          <span style="color: #00f7ff; font-size: 9px; font-family: Arial, sans-serif; letter-spacing: 2px; font-weight: 600; text-transform: uppercase;">🛡️ Integrity: Nominal</span>
         </div>
         <div style="display: table-cell; vertical-align: middle; text-align: right;">
-          <span style="color: #7e8ec2; font-size: 8px; font-family: Arial, sans-serif; opacity: 0.8; letter-spacing: 1px; text-transform: uppercase;">PROTO: AES_256 // TLS_1.3</span>
+          <span style="color: #7e8ec2; font-size: 8px; font-family: Arial, sans-serif; opacity: 0.8; letter-spacing: 1px; text-transform: uppercase;">Encrypted Signal // TLS 1.3</span>
         </div>
       </div>
     </div>
