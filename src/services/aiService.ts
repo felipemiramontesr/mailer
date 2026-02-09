@@ -33,10 +33,16 @@ export const sendEmailViaProxy = async (params: any, password?: string, authCode
   }
 };
 
-export const storeSignal = async (id: string, iv: string, blob: string, password?: string) => {
+export const storeSignal = async (
+  id: string,
+  iv: string,
+  blob: string,
+  password?: string,
+  burnTimer?: number
+) => {
   const response = await axios.post(
     API_URL,
-    injectNoise({ action: 'store_signal', id, iv, blob, password })
+    injectNoise({ action: 'store_signal', id, iv, blob, password, burn_timer: burnTimer })
   );
   return response.data;
 };

@@ -116,20 +116,40 @@ watch(
 
         <!-- Black-Ops Toggle (Phase 6) -->
         <div class="black-ops-field">
-          <div class="black-ops-card" @click="security.blackOpsMode = !security.blackOpsMode">
-            <div class="black-ops-info">
-              <ShieldAlert
-                class="field-icon"
-                :size="20"
-                :class="{ active: security.blackOpsMode }"
-              />
-              <div class="black-ops-text">
-                <span class="black-ops-label">BLACK_OPS_ENCRYPTION (ZCSD)</span>
-                <span class="black-ops-hint">Zero-Knowledge Secure Delivery Protocol Active</span>
+          <div class="black-ops-card" :class="{ morphed: security.blackOpsMode }">
+            <div
+              class="black-ops-main-info"
+              @click="security.blackOpsMode = !security.blackOpsMode"
+            >
+              <div class="black-ops-info">
+                <ShieldAlert
+                  class="field-icon"
+                  :size="20"
+                  :class="{ active: security.blackOpsMode }"
+                />
+                <div class="black-ops-text">
+                  <span class="black-ops-label">BLACK_OPS_ENCRYPTION (ZCSD)</span>
+                  <span class="black-ops-hint">Zero-Knowledge Secure Delivery Active</span>
+                </div>
+              </div>
+              <div class="black-ops-switch" :class="{ active: security.blackOpsMode }">
+                <div class="switch-handle"></div>
               </div>
             </div>
-            <div class="black-ops-switch" :class="{ active: security.blackOpsMode }">
-              <div class="switch-handle"></div>
+
+            <!-- Chronos Timer Expansion -->
+            <div v-if="security.blackOpsMode" class="chronos-timer-area animate-slide-in">
+              <div class="timer-divider"></div>
+              <div class="timer-input-wrapper">
+                <label class="timer-label">AUTODESTRUCT_TMR (SEC)</label>
+                <input
+                  v-model.number="security.burnTimer"
+                  type="number"
+                  min="5"
+                  max="3600"
+                  class="timer-input"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -210,10 +230,18 @@ watch(
 
       <!-- Live HUD Preview Section -->
       <div v-if="showPreview" class="live-preview-container animate-in">
+        <div class="viewfinder-corner top-left"></div>
+        <div class="viewfinder-corner top-right"></div>
+        <div class="viewfinder-corner bottom-left"></div>
+        <div class="viewfinder-corner bottom-right"></div>
+
         <div class="preview-header">
-          <div class="preview-badge">HUD_LIVE_FEED</div>
+          <div class="header-led"></div>
+          <div class="preview-badge">HUD_LIVE_FEED // V5.2_MIRROR</div>
         </div>
+
         <div class="preview-scroll-area">
+          <div class="scanline"></div>
           <!-- Skeleton Shimmer Loader -->
           <div v-if="isSending" class="skeleton-overlay">
             <div class="skeleton-item skeleton-header"></div>
@@ -344,16 +372,59 @@ watch(
 
 /* Preview Styles */
 .live-preview-container {
-  flex: 1.5;
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(0, 247, 255, 0.2);
-  border-radius: 12px;
+  flex: 1.8;
+  background: #030a16;
+  border: 1px solid rgba(0, 247, 255, 0.3);
+  border-radius: 4px;
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: inset 0 0 40px rgba(0, 247, 255, 0.03);
-  align-self: flex-start;
+  box-shadow:
+    0 0 40px rgba(0, 0, 0, 0.8),
+    inset 0 0 100px rgba(0, 247, 255, 0.05);
+  align-self: stretch;
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(0, 247, 255, 0.08) 0%, transparent 80%),
+    linear-gradient(rgba(0, 247, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 247, 255, 0.03) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    25px 25px,
+    25px 25px;
+}
+
+.viewfinder-corner {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border: 2px solid var(--accent);
+  z-index: 5;
+  opacity: 0.5;
+}
+.top-left {
+  top: 10px;
+  left: 10px;
+  border-right: none;
+  border-bottom: none;
+}
+.top-right {
+  top: 10px;
+  right: 10px;
+  border-left: none;
+  border-bottom: none;
+}
+.bottom-left {
+  bottom: 10px;
+  left: 10px;
+  border-right: none;
+  border-top: none;
+}
+.bottom-right {
+  bottom: 10px;
+  right: 10px;
+  border-left: none;
+  border-top: none;
 }
 
 .preview-header {
@@ -378,25 +449,41 @@ watch(
 .preview-scroll-area {
   flex: 1;
   overflow: hidden;
-  padding: 15px;
+  padding: 20px;
   display: flex;
   justify-content: center;
+  position: relative;
 }
 
-.preview-scroll-area::-webkit-scrollbar {
-  width: 4px;
+.scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: rgba(0, 247, 255, 0.15);
+  z-index: 10;
+  pointer-events: none;
+  animation: scanline 6s linear infinite;
+  box-shadow: 0 0 10px rgba(0, 247, 255, 0.2);
 }
 
-.preview-scroll-area::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 10px;
+@keyframes scanline {
+  from {
+    top: -5%;
+  }
+  to {
+    top: 105%;
+  }
 }
 
 .email-canvas {
-  width: 1000px;
+  width: 100%;
+  max-width: 1000px;
   background: transparent;
-  zoom: 0.55;
+  zoom: 0.75;
   flex-shrink: 0;
+  transform-origin: top center;
 }
 
 .input-row {
@@ -760,21 +847,87 @@ input[readonly] {
   padding: 15px;
   border-radius: 8px;
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  gap: 0;
 }
 
-.black-ops-card:hover {
+.black-ops-card.morphed {
   background: rgba(255, 60, 0, 0.08);
-  border-color: rgba(255, 60, 0, 0.3);
+  border-color: rgba(255, 60, 0, 0.4);
+  box-shadow: 0 0 20px rgba(255, 60, 0, 0.1);
+}
+
+.black-ops-main-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+  cursor: pointer;
+  transition: all 0.5s ease;
+}
+
+.morphed .black-ops-main-info {
+  flex: 0 0 60%;
+  border-right: 1px solid rgba(255, 60, 0, 0.2);
+  padding-right: 20px;
 }
 
 .black-ops-info {
   display: flex;
   align-items: center;
   gap: 15px;
+}
+
+.chronos-timer-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  gap: 15px;
+}
+
+.timer-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.timer-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.6rem;
+  color: #ff3c00;
+  opacity: 0.8;
+  letter-spacing: 1px;
+}
+
+.timer-input {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 60, 0, 0.3);
+  border-radius: 4px;
+  padding: 4px 8px;
+  color: #ff3c00;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9rem;
+  width: 80px;
+  text-align: center;
+}
+
+.animate-slide-in {
+  animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .black-ops-text {

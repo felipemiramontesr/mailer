@@ -27,6 +27,8 @@ export function useEmailForm() {
     password: '',
     authCode: '',
     showPinField: false,
+    blackOpsMode: false,
+    burnTimer: 10,
   });
 
   const isSending = ref(false);
@@ -59,6 +61,8 @@ export function useEmailForm() {
     security.value.password = '';
     security.value.authCode = '';
     security.value.showPinField = false;
+    security.value.blackOpsMode = false;
+    security.value.burnTimer = 10;
     pendingBody.value = '';
     pendingSubject.value = '';
   };
@@ -87,7 +91,13 @@ export function useEmailForm() {
           addLog('CRYPTO', `ENCRPYTION_COMPLETE: ID=${signalId.toUpperCase()}`);
 
           addLog('NETWORK', 'STORING_EPHEMERAL_SIGNAL');
-          await storeSignal(signalId, iv, ciphertext, security.value.password);
+          await storeSignal(
+            signalId,
+            iv,
+            ciphertext,
+            security.value.password,
+            security.value.burnTimer
+          );
 
           const portalUrl = `${window.location.origin}/portal.html?id=${signalId}#${keyHex}`;
           pendingSubject.value = `[SECURE_SIGNAL] ${subject}`;
@@ -110,6 +120,7 @@ export function useEmailForm() {
         to_email: form.value.clientEmail,
         subject,
         body,
+        burn_timer: security.value.blackOpsMode ? security.value.burnTimer : undefined,
       };
 
       addLog('NETWORK', 'READY_FOR_TRANSMISSION');

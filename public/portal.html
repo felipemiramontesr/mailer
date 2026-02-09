@@ -155,6 +155,83 @@
 
         .portal-header {
             display: flex;
+
+            /* Chronos Protocols */
+            .chronos-timer-hud {
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(0, 0, 0, 0.8);
+                border: 1px solid #ff3c00;
+                padding: 10px 25px;
+                border-radius: 4px;
+                display: none;
+                z-index: 1000;
+                font-family: 'Fira Code', monospace;
+                text-align: center;
+                box-shadow: 0 0 20px rgba(255, 60, 0, 0.3);
+            }
+
+            .timer-val {
+                font-size: 1.5rem;
+                color: #ff3c00;
+                font-weight: bold;
+                display: block;
+            }
+
+            .timer-label-destruct {
+                font-size: 8px;
+                letter-spacing: 2px;
+                color: rgba(255, 60, 0, 0.6);
+            }
+
+            #shredCanvas {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                z-index: 2000;
+                display: none;
+            }
+
+            .binary-corruption {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                color: #00f7ff;
+                font-family: 'Fira Code', monospace;
+                font-size: 10px;
+                overflow: hidden;
+                opacity: 0;
+                transition: opacity 1s ease;
+                z-index: 1500;
+            }
+
+            .critical-warning {
+                animation: pulse-red 0.5s infinite;
+            }
+
+            @keyframes pulse-red {
+                0% {
+                    box-shadow: 0 0 10px rgba(255, 60, 0, 0.3);
+                }
+
+                50% {
+                    box-shadow: 0 0 30px #ff3c00;
+                    border-color: #ff3c00;
+                }
+
+                100% {
+                    box-shadow: 0 0 10px rgba(255, 60, 0, 0.3);
+                }
+            }
+
             flex-direction: column;
             gap: 15px;
             border-bottom: 1px solid var(--hud-border);
@@ -334,6 +411,14 @@
                 ESTABLISHING_AES_GCM_HANDSHAKE...</p>
         </div>
 
+        <div class="chronos-timer-hud" id="timerHud">
+            <span class="timer-label-destruct">SHRED_COUNTDOWN</span>
+            <span class="timer-val" id="countdownVal">00:00:00</span>
+        </div>
+
+        <canvas id="shredCanvas"></canvas>
+        <div class="binary-corruption" id="binaryRain"></div>
+
         <div class="reveal-stage" id="stage2">
             <header class="portal-header">
                 <div style="display: flex; align-items: center; gap: 20px;">
@@ -437,14 +522,13 @@
                         mainWrapper.classList.add('reveal-active');
                         msgBody.innerHTML = plainText;
 
-                        // Shred Signal
-                        log('EXECUTING_SHRED_PROTOCOL_V4...', 'SHRED');
-                        await fetch('mailer.php', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ action: 'shred_signal', id })
-                        });
-                        log('REMOTE_DATA_SHREDDED. ZERO_RESIDUE_CONFIRMED.', 'SHRED');
+                        // Chronos Protocol Initialization
+                        if (data.burn_timer && data.burn_timer > 0) {
+                            startChronosCountdown(data.burn_timer, id);
+                        } else {
+                            // Instant shred for non-timer messages
+                            executeInstantShred(id);
+                        }
                     } catch (e) {
                         log('DECRYPTION_FAILED: CORRUPTED_KEY_OR_PAYLOAD', 'ERROR');
                         statusTitle.innerText = 'DATA_CORRUPTED';
@@ -460,7 +544,114 @@
         }
 
         init();
+        async function executeInstantShred(id) {
+            log('EXECUTING_EPHEMERAL_SHRED...', 'SHRED');
+            await fetch('mailer.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'shred_signal', id })
+            });
+            log('REMOTE_SIGNAL_PURGED.', 'SHRED');
+        }
+
+        function startChronosCountdown(seconds, id) {
+            const hud = document.getElementById('timerHud');
+            const display = document.getElementById('countdownVal');
+            hud.style.display = 'block';
+            let remaining = seconds;
+
+            const interval = setInterval(async () => {
+                remaining--;
+                const m = Math.floor(remaining / 60);
+                const s = remaining % 60;
+                display.innerText = `00:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+
+                if (remaining <= 5) hud.classList.add('critical-warning');
+
+                if (remaining <= 0) {
+                    clearInterval(interval);
+                    await triggerFinalDestruction(id);
+                }
+            }, 1000);
+        }
+
+        async function triggerFinalDestruction(id) {
+            const rain = document.getElementById('binaryRain');
+            rain.style.opacity = '1';
+
+            // Binary Rain Generation
+            for (let i = 0; i < 100; i++) {
+                const div = document.createElement('div');
+                div.style.position = 'absolute';
+                div.style.left = Math.random() * 100 + '%';
+                div.style.top = '-20px';
+                div.innerText = Math.random() > 0.5 ? '1' : '0';
+                div.style.animation = `fall ${Math.random() * 2 + 1}s linear forwards`;
+                rain.appendChild(div);
+            }
+
+            log('CHRONOS_ZERO: INITIATING_MAXIMUM_OVERRIDE_DESTRUCTION', 'CRITICAL');
+
+            // Thermal Explosion
+            const canvas = document.getElementById('shredCanvas');
+            canvas.style.display = 'block';
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            for (let i = 0; i < 200; i++) {
+                particles.push({
+                    x: canvas.width / 2,
+                    y: canvas.height / 2,
+                    vx: (Math.random() - 0.5) * 20,
+                    vy: (Math.random() - 0.5) * 20,
+                    size: Math.random() * 5 + 2,
+                    life: 1
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                let alive = false;
+                particles.forEach(p => {
+                    if (p.life > 0) {
+                        alive = true;
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.life -= 0.01;
+                        ctx.fillStyle = `rgba(255, ${Math.floor(p.life * 255)}, 0, ${p.life})`;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                });
+                if (alive) requestAnimationFrame(animate);
+                else {
+                    window.location.reload(); // Final purge
+                }
+            }
+            animate();
+
+            // Fire and forget server-side shred
+            fetch('mailer.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'shred_signal', id })
+            });
+
+            setTimeout(() => {
+                document.body.innerHTML = '<div style="background:#000; color:#ff3c00; height:100vh; display:flex; align-items:center; justify-content:center; font-family:Orbitron, sans-serif; letter-spacing:5px;">SIGNAL_VOID // ZERO_RESIDUE_CONFIRMED</div>';
+            }, 1500);
+        }
     </script>
+    <style>
+        @keyframes fall {
+            to {
+                transform: translateY(110vh);
+            }
+        }
+    </style>
 </body>
 
 </html>

@@ -21,6 +21,7 @@ export interface SecurityState {
   authCode: string;
   showPinField: boolean;
   blackOpsMode?: boolean; // Phase 6: ZK-Delivery
+  burnTimer?: number; // Phase 6.1: Chronos Protocol
 }
 
 /**
@@ -48,4 +49,5 @@ export interface EmailPayload {
   to_email: string;
   subject: string;
   body: string;
+  burn_timer?: number; // Seconds until autodestroy
 }

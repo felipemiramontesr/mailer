@@ -322,7 +322,8 @@ function handleStoreSignal($data)
     $payload = [
         'timestamp' => time(),
         'blob' => $data['blob'],
-        'iv' => $data['iv'] ?? ''
+        'iv' => $data['iv'] ?? '',
+        'burn_timer' => isset($data['burn_timer']) ? (int) $data['burn_timer'] : null
     ];
 
     if (file_put_contents($file, json_encode($payload))) {
@@ -360,7 +361,8 @@ function handleFetchSignal($data)
     sendResponse([
         'status' => 'retrieved',
         'blob' => $content['blob'],
-        'iv' => $content['iv']
+        'iv' => $content['iv'],
+        'burn_timer' => $content['burn_timer'] ?? null
     ]);
 }
 
