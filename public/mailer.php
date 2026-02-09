@@ -125,9 +125,9 @@ if (!is_dir($authDir))
     mkdir($authDir, 0700);
 $codeFile = $authDir . '/current_code.json';
 
-// Reuse PHPMailer logic
+$ai_actions = ['polish', 'translate', 'command'];
 
-if (empty($authCode)) {
+if (empty($authCode) && !in_array($action, $ai_actions)) {
     // Phase 5: Rate Limiting
     if (!rateLimitCheck($_SERVER['REMOTE_ADDR'])) {
         technicalLog("Rate Limit EXCEEDED for IP: " . $_SERVER['REMOTE_ADDR'], true);
