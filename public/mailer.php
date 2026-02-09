@@ -1,8 +1,10 @@
 <?php
 /**
- * Professional Mailer Proxy v3.0 (Senior+ Edition)
+ * Professional Mailer Proxy v3.1 (Senior+ Edition)
  * Handles AI polishing, 2FA authorization, and SMTP transmission.
  */
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 // --- Pre-flight Headers & Security ---
 define('SECURE_PATH', true);
@@ -28,6 +30,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 require_once 'config.php';
 require_once 'access_hash.php';
+
+// Reuse PHPMailer logic
+require 'PHPMailer/Exception.php';
+require 'PHPMailer/PHPMailer.php';
+require 'PHPMailer/SMTP.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 /**
  * Technical Rate Limiter (Token Bucket Pattern)
@@ -117,12 +127,6 @@ if (!is_dir($authDir))
 $codeFile = $authDir . '/current_code.json';
 
 // Reuse PHPMailer logic
-require 'PHPMailer/Exception.php';
-require 'PHPMailer/PHPMailer.php';
-require 'PHPMailer/SMTP.php';
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 
 if (empty($authCode)) {
     // Phase 5: Rate Limiting
@@ -263,6 +267,7 @@ if ($action === 'polish' || $action === 'translate') {
 
 // 2. Transmission Logic
 if ($action === 'send') {
+    technicalLog("ACCESSING_SEND_ACTION: Recipient=" . ($input['to_email'] ?? 'UNKNOWN'));
     $recipient = $input['to_email'] ?? null;
     $subject = $input['subject'] ?? 'SIGNAL_TRANSMISSION';
     $messageBody = $input['body'] ?? null;
