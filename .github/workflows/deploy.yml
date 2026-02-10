@@ -49,4 +49,3 @@ jobs:
           port: 65002
           source: "dist/*"
           target: "./"
-          strip_components: 1 # This removes 'dist/' from the target path
