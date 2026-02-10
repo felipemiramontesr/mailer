@@ -40,12 +40,15 @@ jobs:
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
           MAILER_PASSWORD_HASH: ${{ secrets.MAILER_PASSWORD_HASH }}
 
-      - name: Deploy via SCP (SFTP Bypass)
-        uses: appleboy/scp-action@v0.1.7
+      - name: Deploy via FTP (Firewall Bypass)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          host: felipemiramontesr.net
+          server: felipemiramontesr.net
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          port: 65002
-          source: "dist/*"
-          target: "domains/felipemiramontesr.net/public_html/mailer.felipemiramontesr.net"
+          local-dir: ./dist/
+          server-dir: ./domains/felipemiramontesr.net/public_html/mailer.felipemiramontesr.net/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
