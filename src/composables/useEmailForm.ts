@@ -158,8 +158,12 @@ export function useEmailForm() {
         error.response?.data?.error || error.message || 'System error during transmission';
       console.error('[Transmission Core Error]:', error);
 
-      // Detailed error for 502/403
-      if (error.response?.status === 502 || error.response?.status === 403) {
+      // Detailed error for 502/403 or Soft Failures
+      if (
+        error.response?.status === 502 ||
+        error.response?.status === 403 ||
+        error.message.includes('Cognitive link')
+      ) {
         addLog('AI', `CRITICAL_ERROR: ${errorMsg}`);
       }
       addLog('NETWORK', `FAILED: ${errorMsg.toUpperCase()}`);

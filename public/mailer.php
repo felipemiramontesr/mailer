@@ -169,7 +169,8 @@ if (in_array($action, $ai_actions)) {
         // CRITICAL DIAGNOSTIC HOOK
         $keyPrefix = substr(GEMINI_API_KEY, 0, 4) . '...';
         technicalLog("Gemini API Failure: $detail | Response: $response | KeyPrefix: $keyPrefix", true);
-        sendResponse(['error' => "Cognitive link unstable ($detail). Detail: " . $response], 502);
+        // FORCE HTTP 200 to avoid server error pages (Bad Gateway/Forbidden default pages)
+        sendResponse(['error' => "Cognitive link unstable ($detail). Detail: " . $response], 200);
     }
 
     $data = json_decode($response, true);
