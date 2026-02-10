@@ -40,15 +40,13 @@ jobs:
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
           MAILER_PASSWORD_HASH: ${{ secrets.MAILER_PASSWORD_HASH }}
 
-      - name: Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: Deploy via SCP (SFTP Bypass)
+        uses: appleboy/scp-action@v0.1.7
         with:
-          server: felipemiramontesr.net
+          host: felipemiramontesr.net
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./dist/
-          server-dir: ./
-          protocol: sftp
           port: 65002
-          timeout: 300000 # Increased to 5 minutes for stability
-          log-level: verbose
+          source: "dist/*"
+          target: "./"
+          strip_components: 1 # This removes 'dist/' from the target path
