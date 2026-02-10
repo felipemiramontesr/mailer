@@ -161,63 +161,66 @@ watch(
           </div>
         </div>
 
-        <!-- Neuro-Enhancer Stationary Shelf (v7.3) -->
-        <Transition name="expand">
-          <div v-if="showNeuroPanel" class="neuro-shelf">
-            <div class="neuro-shelf-header">
-              <div class="shelf-title"><Wand2 :size="12" /> NEURO_SYNTHETIC_SHELF // V7.3</div>
-              <div class="shelf-status">
-                <div class="dot mini"></div>
-                COGNITIVE_LINK_READY
-              </div>
-            </div>
+        <!-- AI Protocol Zone (v7.4) -->
+        <div class="ai-protocol-zone">
+          <button
+            type="button"
+            class="neuro-btn-toggle elite"
+            :class="{ active: showNeuroPanel }"
+            @click="showNeuroPanel = !showNeuroPanel"
+          >
+            <Sparkles :size="14" />
+            {{ showNeuroPanel ? 'CLOSE_NEURO_ACCESS' : 'INITIALIZE_NEURO_ENHANCER' }}
+          </button>
 
-            <div class="neuro-shelf-content">
-              <div class="neuro-options">
-                <button type="button" class="neuro-opt" @click="handleAIRefine('polish')">
-                  <Sparkles :size="12" /> POLISH_SIGNAL
-                </button>
-                <button type="button" class="neuro-opt" @click="handleAIRefine('translate')">
-                  <Languages :size="12" /> TRANSLATE_ES_EN
-                </button>
-              </div>
-
-              <div class="neuro-command-area">
-                <div class="command-input-wrapper">
-                  <Type :size="12" class="cmd-icon" />
-                  <input
-                    v-model="neuroCommand"
-                    type="text"
-                    placeholder="Input Manual AI Command..."
-                    @keyup.enter="handleAIRefine('command', neuroCommand)"
-                  />
+          <Transition name="expand">
+            <div v-if="showNeuroPanel" class="neuro-shelf v74">
+              <div class="neuro-shelf-header">
+                <div class="shelf-title"><Wand2 :size="12" /> NEURO_SYNTHETIC_SHELF // V7.4</div>
+                <div class="shelf-status">
+                  <div class="dot mini"></div>
+                  COGNITIVE_LINK_READY
                 </div>
-                <button
-                  type="button"
-                  class="command-send"
-                  @click="handleAIRefine('command', neuroCommand)"
-                  :disabled="isRefining"
-                >
-                  <Send v-if="!isRefining" :size="14" />
-                  <Loader2 v-else :size="14" class="spin" />
-                </button>
+              </div>
+
+              <div class="neuro-shelf-content">
+                <div class="neuro-options">
+                  <button type="button" class="neuro-opt" @click="handleAIRefine('polish')">
+                    <Sparkles :size="12" /> POLISH_SIGNAL
+                  </button>
+                  <button type="button" class="neuro-opt" @click="handleAIRefine('translate')">
+                    <Languages :size="12" /> TRANSLATE_ES_EN
+                  </button>
+                </div>
+
+                <div class="neuro-command-area">
+                  <div class="command-input-wrapper">
+                    <Type :size="12" class="cmd-icon" />
+                    <input
+                      v-model="neuroCommand"
+                      type="text"
+                      placeholder="Input Manual AI Command..."
+                      @keyup.enter="handleAIRefine('command', neuroCommand)"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    class="command-send"
+                    @click="handleAIRefine('command', neuroCommand)"
+                    :disabled="isRefining"
+                  >
+                    <Send v-if="!isRefining" :size="14" />
+                    <Loader2 v-else :size="14" class="spin" />
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        </Transition>
+          </Transition>
+        </div>
 
         <div class="message-section">
           <div class="message-label-row">
             <label><Mail :size="14" /> MESSAGE CONTENT</label>
-            <button
-              type="button"
-              class="neuro-btn-toggle"
-              :class="{ active: showNeuroPanel }"
-              @click="showNeuroPanel = !showNeuroPanel"
-            >
-              <Sparkles :size="12" />
-              {{ showNeuroPanel ? 'HIDE_NEURO' : 'NEURO_ENHANCER' }}
-            </button>
           </div>
           <textarea
             v-model="form.message"
@@ -337,7 +340,7 @@ watch(
 
 <style scoped>
 .email-form-container {
-  max-width: 700px;
+  max-width: 1000px;
   margin: 0 auto;
   text-align: left;
   transition: max-width 0.4s ease;
@@ -791,20 +794,53 @@ input[readonly] {
   background: rgba(0, 247, 255, 0.05);
   border: 1px solid rgba(0, 247, 255, 0.2);
   color: var(--accent);
-  padding: 5px 12px;
-  border-radius: 20px;
+  padding: 8px 16px;
+  border-radius: 4px;
   font-family: 'Orbitron', sans-serif;
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s;
+  width: 100%;
+  justify-content: center;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
 }
 
 .neuro-btn-toggle:hover,
 .neuro-btn-toggle.active {
-  background: var(--accent);
-  color: #080b1a;
-  box-shadow: 0 0 15px var(--accent-glow);
+  background: rgba(0, 247, 255, 0.15);
+  color: #ffffff;
+  border-color: var(--accent);
+  text-shadow: 0 0 8px rgba(0, 247, 255, 0.8);
+  box-shadow:
+    0 0 20px rgba(0, 247, 255, 0.2),
+    inset 0 0 10px rgba(0, 247, 255, 0.1);
+  animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 15px rgba(0, 247, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(0, 247, 255, 0.4);
+    border-color: #ffffff;
+  }
+  100% {
+    box-shadow: 0 0 15px rgba(0, 247, 255, 0.2);
+  }
+}
+
+.neuro-btn-toggle.elite {
+  border-left: 4px solid var(--accent);
+  background: linear-gradient(90deg, rgba(0, 247, 255, 0.1) 0%, transparent 100%);
+}
+
+.ai-protocol-zone {
+  margin-bottom: 20px;
+  border-top: 1px solid rgba(0, 247, 255, 0.1);
+  padding-top: 15px;
 }
 
 /* Expand Transition */
