@@ -177,7 +177,7 @@ export function useEmailForm() {
    */
   const isRefining = ref(false);
   const handleAIRefine = async (action: AIRefinementAction, customCommand?: string) => {
-    if (!form.value.message) {
+    if (!form.value.message && action !== 'command') {
       addToast('No content to optimize', 'warning');
       return;
     }

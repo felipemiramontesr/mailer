@@ -126,39 +126,41 @@ if (!is_dir($authDir))
 $codeFile = $authDir . '/current_code.json';
 
 $ai_actions = ['polish', 'translate', 'command'];
+$is_ai_action = in_array($action, $ai_actions);
 
-if (empty($authCode) && !in_array($action, $ai_actions)) {
-    // Phase 5: Rate Limiting
-    if (!rateLimitCheck($_SERVER['REMOTE_ADDR'])) {
-        technicalLog("Rate Limit EXCEEDED for IP: " . $_SERVER['REMOTE_ADDR'], true);
-        sendResponse(['error' => 'Rate Limit exceeded. Please wait 60 seconds before retrying.'], 429);
-    }
+if (!$is_ai_action) {
+    if (empty($authCode)) {
+        // Phase 5: Rate Limiting
+        if (!rateLimitCheck($_SERVER['REMOTE_ADDR'])) {
+            technicalLog("Rate Limit EXCEEDED for IP: " . $_SERVER['REMOTE_ADDR'], true);
+            sendResponse(['error' => 'Rate Limit exceeded. Please wait 60 seconds before retrying.'], 429);
+        }
 
-    // Generate new PIN
-    $newPIN = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-    $expiry = time() + (5 * 60); // 5 Minutes
+        // Generate new PIN
+        $newPIN = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        $expiry = time() + (5 * 60); // 5 Minutes
 
-    file_put_contents($codeFile, json_encode(['code' => $newPIN, 'expires' => $expiry]));
+        file_put_contents($codeFile, json_encode(['code' => $newPIN, 'expires' => $expiry]));
 
-    $mail = new PHPMailer(true);
-    try {
-        $mail->isSMTP();
-        $mail->Host = SMTP_HOST;
-        $mail->SMTPAuth = true;
-        $mail->Username = SMTP_USER;
-        $mail->Password = SMTP_PASS;
-        $mail->SMTPSecure = (SMTP_SECURE === 'ssl') ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = SMTP_PORT;
-        $mail->CharSet = 'UTF-8';
+        $mail = new PHPMailer(true);
+        try {
+            $mail->isSMTP();
+            $mail->Host = SMTP_HOST;
+            $mail->SMTPAuth = true;
+            $mail->Username = SMTP_USER;
+            $mail->Password = SMTP_PASS;
+            $mail->SMTPSecure = (SMTP_SECURE === 'ssl') ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = SMTP_PORT;
+            $mail->CharSet = 'UTF-8';
 
-        $mail->setFrom(SMTP_USER, 'Felipe Miramontes (SECURE_NODE)');
-        $mail->addAddress(MASTER_AUTH_EMAIL);
-        $mail->Subject = "VERIFICATION PIN: $newPIN";
+            $mail->setFrom(SMTP_USER, 'Felipe Miramontes (SECURE_NODE)');
+            $mail->addAddress(MASTER_AUTH_EMAIL);
+            $mail->Subject = "VERIFICATION PIN: $newPIN";
 
-        // Elite HUD v5.0 2FA Template (Universal Elite)
-        $mail->isHTML(true);
-        $currentDate = date('Y-m-d');
-        $mail->Body = "
+            // Elite HUD v5.0 2FA Template (Universal Elite)
+            $mail->isHTML(true);
+            $currentDate = date('Y-m-d');
+            $mail->Body = "
         <div style=\"background: radial-gradient(circle at 50% 0%, #1a224d 0%, #080b2a 100%); color: #ffffff; padding: 0; font-family: 'Inter', Arial, sans-serif; width: 600px; margin: 20px auto; border: 1px solid rgba(0, 247, 255, 0.25); border-radius: 12px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.7);\">
             <div style=\"height: 4px; background: linear-gradient(90deg, transparent, #00f7ff, transparent);\"></div>
             
@@ -200,30 +202,31 @@ if (empty($authCode) && !in_array($action, $ai_actions)) {
             </div>
         </div>";
 
-        $mail->send();
-        sendResponse(['status' => '2fa_required', 'message' => 'PIN dispatched to master email.']);
-    } catch (Exception $e) {
-        technicalLog("2FA Dispatch failed: " . $e->getMessage(), true);
-        sendResponse(['error' => 'Security Shield Error: Could not dispatch 2FA PIN.'], 500);
-    }
-} else {
-    // Validate PIN
-    if (!file_exists($codeFile)) {
-        sendResponse(['error' => 'No active PIN found.'], 403);
-    }
+            $mail->send();
+            sendResponse(['status' => '2fa_required', 'message' => 'PIN dispatched to master email.']);
+        } catch (Exception $e) {
+            technicalLog("2FA Dispatch failed: " . $e->getMessage(), true);
+            sendResponse(['error' => 'Security Shield Error: Could not dispatch 2FA PIN.'], 500);
+        }
+    } else {
+        // Validate PIN
+        if (!file_exists($codeFile)) {
+            sendResponse(['error' => 'No active PIN found.'], 403);
+        }
 
-    $stored = json_decode(file_get_contents($codeFile), true);
-    if (time() > $stored['expires']) {
+        $stored = json_decode(file_get_contents($codeFile), true);
+        if (time() > $stored['expires']) {
+            @unlink($codeFile);
+            sendResponse(['error' => 'PIN expired. Request new authorization.'], 403);
+        }
+
+        if ($authCode !== $stored['code']) {
+            sendResponse(['error' => 'Invalid Security PIN.'], 403);
+        }
+
+        // Success: Consume code
         @unlink($codeFile);
-        sendResponse(['error' => 'PIN expired. Request new authorization.'], 403);
     }
-
-    if ($authCode !== $stored['code']) {
-        sendResponse(['error' => 'Invalid Security PIN.'], 403);
-    }
-
-    // Success: Consume code
-    @unlink($codeFile);
 }
 
 // --- Operational Phase ---
@@ -238,15 +241,21 @@ if ($action === 'polish' || $action === 'translate' || $action === 'command') {
     $prompt = $input['prompt'] ?? null;
     $instruction = $input['instruction'] ?? null;
 
-    if (!$prompt)
+    if ($action !== 'command' && !$prompt)
         sendResponse(['error' => 'No signal data provided for analysis'], 400);
 
     if ($isMockGemini) {
         sendResponse(['result' => "[MOCKED] Cognitive refinement applied to: \"$prompt\""]);
     }
 
-    // Specialized System Instructions (v7.2 Elite)
+    // Specialized System Instructions (v7.6 Generative Elite)
     $systemInstruction = "You are an Elite Security AI for felipe-miramontes-b-eng node. ";
+    $systemInstruction .= "Your mission is to assist the user in crafting professional, high-standard, and technical emails. ";
+
+    if ($action === 'command') {
+        $systemInstruction .= "You have been granted GENERATIVE PROTOCOLS. If the user provides an instruction but no base text, draft an entire email based on that instruction. ";
+        $systemInstruction .= "If base text is provided, modify it according to the instruction. ";
+    }
     if ($action === 'polish') {
         $systemInstruction .= "Refine the following message to be more professional, precise, and have a high-tech/HUD aesthetic. Keep it concise. Return ONLY the refined text.";
     } elseif ($action === 'translate') {
