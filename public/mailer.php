@@ -167,6 +167,8 @@ if (in_array($action, $ai_actions)) {
     if ($httpCode !== 200) {
         $detail = ($httpCode === 0) ? "CURL_ERROR: $curlError" : "HTTP_$httpCode";
         // CRITICAL DIAGNOSTIC HOOK
+        $keyPrefix = substr(GEMINI_API_KEY, 0, 4) . '...';
+        technicalLog("Gemini API Failure: $detail | Response: $response | KeyPrefix: $keyPrefix", true);
         sendResponse(['error' => "Cognitive link unstable ($detail). Detail: " . $response], 502);
     }
 
