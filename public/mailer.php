@@ -298,7 +298,8 @@ if ($action === 'polish' || $action === 'translate' || $action === 'command') {
     if ($httpCode !== 200) {
         technicalLog("Gemini API Error (HTTP $httpCode): $response | cURL: $curlError", true);
         $detail = ($httpCode === 0) ? "CURL_ERROR: $curlError" : "HTTP_$httpCode";
-        sendResponse(['error' => "Cognitive link unstable ($detail). Try again later."], 502);
+        // Deep Diagnostics: Expose response body temporarily to identify 403 cause
+        sendResponse(['error' => "Cognitive link unstable ($detail). Detail: " . $response], 502);
     }
 
     $data = json_decode($response, true);
