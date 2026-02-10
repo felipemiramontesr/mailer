@@ -48,7 +48,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/
           server-dir: ./
-          protocol: ftps
-          port: 21
+          protocol: sftp
+          port: 65002
           timeout: 300000 # Increased to 5 minutes for stability
           log-level: verbose
