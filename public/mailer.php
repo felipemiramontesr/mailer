@@ -282,9 +282,12 @@ if ($action === 'polish' || $action === 'translate' || $action === 'command') {
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curlError = curl_error($ch);
     curl_close($ch);
 
     if ($httpCode === 429) {
@@ -293,12 +296,18 @@ if ($action === 'polish' || $action === 'translate' || $action === 'command') {
     }
 
     if ($httpCode !== 200) {
-        technicalLog("Gemini API Error (HTTP $httpCode): $response", true);
-        sendResponse(['error' => 'Cognitive link unstable. Try again later.'], 502);
+        technicalLog("Gemini API Error (HTTP $httpCode): $response | cURL: $curlError", true);
+        $detail = ($httpCode === 0) ? "CURL_ERROR: $curlError" : "HTTP_$httpCode";
+        sendResponse(['error' => "Cognitive link unstable ($detail). Try again later."], 502);
     }
 
     $data = json_decode($response, true);
-    $result = $data['candidates'][0]['content']['parts'][0]['text'] ?? 'Data processing failure';
+    $result = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
+
+    if (!$result) {
+        technicalLog("Gemini response parsing failed or empty. Response: $response", true);
+        sendResponse(['error' => 'Neuro-Engine failed to generate valid data. Please retry.'], 502);
+    }
 
     technicalLog("NEURO_REFINEMENT_COMPLETE: Action=$action. Tier=FREE_PUBLIC");
     sendResponse(['result' => trim($result)]);
