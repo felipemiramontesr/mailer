@@ -43,7 +43,7 @@ jobs:
       - name: Deploy via FTP (Firewall Bypass)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: felipemiramontesr.net
+          server: ftp.felipemiramontesr.net
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/
