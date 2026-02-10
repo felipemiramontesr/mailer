@@ -16,24 +16,24 @@ export const generateEmailTemplate = (form: EmailFormData): string => {
     <!-- Glowing Top Bar -->
     <div style="height: 4px; background: linear-gradient(90deg, transparent, #00f7ff, transparent); box-shadow: 0 0 15px #00f7ff;"></div>
     
-    <div style="padding: 15px 30px;">
+    <div style="padding: 10px 20px;">
       <!-- HUD System Header -->
-      <div style="border-bottom: 1px solid rgba(0, 247, 255, 0.3); padding-bottom: 10px; margin-bottom: 15px; display: table; width: 100%;">
+      <div style="border-bottom: 1px solid rgba(0, 247, 255, 0.3); padding-bottom: 8px; margin-bottom: 10px; display: table; width: 100%;">
         <div style="display: table-cell; vertical-align: middle; width: 65%;">
           <a href="https://felipemiramontesr.net" style="color: #00f7ff; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 500; text-decoration: none; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);">felipemiramontesr&zwnj;.net</a>
         </div>
-        <div style="display: table-cell; text-align: right; vertical-align: middle; width: 35%; color: #7e8ec2; font-family: Arial, sans-serif; font-size: 9px; letter-spacing: 1.5px; white-space: nowrap;">
+        <div style="display: table-cell; text-align: right; vertical-align: middle; width: 35%; color: #7e8ec2; font-family: 'Inter', sans-serif; font-size: 9px; letter-spacing: 1.5px; white-space: nowrap;">
           DATA_STREAM // ${currentDate}
         </div>
       </div>
  
       <!-- Main Interface Card (Upper Glass) -->
-      <div style="background: rgba(255, 255, 255, 0.07); padding: 18px 25px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); position: relative; box-shadow: inset 0 0 50px rgba(0, 247, 255, 0.05); margin-bottom: 12px;">
+      <div style="background: rgba(255, 255, 255, 0.07); padding: 15px 20px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); position: relative; box-shadow: inset 0 0 50px rgba(0, 247, 255, 0.05); margin-bottom: 10px;">
         
         <!-- Sender Info (Unified Style) -->
-        <div style="margin-bottom: 12px;">
+        <div style="margin-bottom: 10px;">
           <div style="margin-bottom: 4px;">
-            <span style="color: #7e8ec2; font-family: Arial, sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase;">👤 ORIGIN_SOURCE</span>
+            <span style="color: #7e8ec2; font-family: 'Inter', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase;">👤 ORIGIN_SOURCE</span>
           </div>
           <div style="background: rgba(0, 247, 255, 0.08); border-left: 3px solid #00f7ff; padding: 10px 15px; border-radius: 0 6px 6px 0;">
             <p style="margin: 0; color: #00f7ff; font-size: 15px; font-weight: 500; text-shadow: 0 0 10px rgba(0, 247, 255, 0.4); text-transform: none; letter-spacing: 0.5px; line-height: 20px; font-family: 'Inter', sans-serif;">
@@ -43,9 +43,9 @@ export const generateEmailTemplate = (form: EmailFormData): string => {
         </div>
         
         <!-- Subject Info (Unified Style) -->
-        <div style="margin-bottom: 12px;">
+        <div style="margin-bottom: 10px;">
           <div style="margin-bottom: 4px;">
-            <span style="color: #7e8ec2; font-family: Arial, sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase;">🛰️ TRANSMISSION_SUBJECT</span>
+            <span style="color: #7e8ec2; font-family: 'Inter', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase;">🛰️ TRANSMISSION_SUBJECT</span>
           </div>
           <div style="background: rgba(0, 247, 255, 0.1); border-left: 3px solid #00f7ff; padding: 10px 15px; border-radius: 0 6px 6px 0;">
             <p style="margin: 0; color: #00f7ff; font-size: 15px; font-weight: 500; font-family: 'Inter', sans-serif; letter-spacing: 0.5px; text-transform: none; line-height: 20px; text-shadow: 0 0 10px rgba(0, 247, 255, 0.4);">
@@ -57,16 +57,16 @@ export const generateEmailTemplate = (form: EmailFormData): string => {
         <!-- Content Section -->
         <div style="border-top: 1px solid rgba(0, 247, 255, 0.2); padding-top: 15px; margin-top: 5px;">
           <div style="margin-bottom: 8px;">
-            <span style="color: #ffffff; font-family: Arial, sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;">📥 Secure Message Content</span>
+            <span style="color: #ffffff; font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;">📥 Secure Message Content</span>
           </div>
           <div style="color: #ffffff; line-height: 1.6; font-size: 15px; padding: 20px; background: rgba(0, 0, 0, 0.5); border-radius: 8px; border: 1px solid rgba(0, 247, 255, 0.3); box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.8), 0 5px 15px rgba(0,0,0,0.5); position: relative;">
-            <div style="color: rgba(0, 247, 255, 0.4); font-family: Arial, sans-serif; font-size: 8px; margin-bottom: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 8px; letter-spacing: 2px;">
+            <div style="color: rgba(0, 247, 255, 0.4); font-family: 'Inter', sans-serif; font-size: 8px; margin-bottom: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 8px; letter-spacing: 2px;">
               // [ SECURE_TRANSMISSION_START ]
             </div>
             
             <div style="white-space: pre-wrap; word-break: break-word; min-height: 100px;">${form.message || 'Waiting for message input...'}</div>
  
-            <div style="color: rgba(0, 247, 255, 0.4); font-family: Arial, sans-serif; font-size: 8px; margin-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 10px; letter-spacing: 2px;">
+            <div style="color: rgba(0, 247, 255, 0.4); font-family: 'Inter', sans-serif; font-size: 8px; margin-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 10px; letter-spacing: 2px;">
               // [ SECURE_SIGNAL_END ]
             </div>
           </div>
@@ -75,7 +75,7 @@ export const generateEmailTemplate = (form: EmailFormData): string => {
       
       <!-- Transactional Footer (Spam Evasion) -->
       <div style="padding: 0 30px 20px 30px; text-align: center;">
-        <p style="color: #7e8ec2; font-size: 11px; font-family: Arial, sans-serif; margin-bottom: 15px; line-height: 1.4; opacity: 0.8;">
+        <p style="color: #7e8ec2; font-size: 11px; font-family: 'Inter', sans-serif; margin-bottom: 15px; line-height: 1.4; opacity: 0.8;">
           Has recibido este mensaje porque se ha generado una señal segura por parte del B. Eng. Felipe de Jesús Miramontes. 
           Esta transmisión utiliza cifrado de extremo a extremo para garantizar la confidencialidad de la información.
         </p>
@@ -84,10 +84,10 @@ export const generateEmailTemplate = (form: EmailFormData): string => {
       <!-- Technical HUD Footer -->
       <div style="background: rgba(0, 0, 0, 0.3); padding: 12px 30px; display: table; width: 100%; border-top: 1px solid rgba(255, 255, 255, 0.1);">
         <div style="display: table-cell; vertical-align: middle; text-align: left;">
-          <span style="color: #00f7ff; font-size: 9px; font-family: Arial, sans-serif; letter-spacing: 2px; font-weight: 600; text-transform: uppercase;">🛡️ Integrity: Nominal</span>
+          <span style="color: #00f7ff; font-size: 9px; font-family: 'Inter', sans-serif; letter-spacing: 2px; font-weight: 600; text-transform: uppercase;">🛡️ Integrity: Nominal</span>
         </div>
         <div style="display: table-cell; vertical-align: middle; text-align: right;">
-          <span style="color: #7e8ec2; font-size: 8px; font-family: Arial, sans-serif; opacity: 0.8; letter-spacing: 1px; text-transform: uppercase;">Encrypted Signal // TLS 1.3</span>
+          <span style="color: #7e8ec2; font-size: 8px; font-family: 'Inter', sans-serif; opacity: 0.8; letter-spacing: 1px; text-transform: uppercase;">Encrypted Signal // TLS 1.3</span>
         </div>
       </div>
     </div>
