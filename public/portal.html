@@ -153,248 +153,51 @@
             transform: translateY(0);
         }
 
-        .portal-header {
-            display: flex;
-
-            /* Chronos Protocols */
-            .chronos-timer-hud {
-                position: fixed;
-                top: 20px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: rgba(0, 0, 0, 0.8);
-                border: 1px solid #ff3c00;
-                padding: 10px 25px;
-                border-radius: 4px;
-                display: none;
-                z-index: 1000;
-                font-family: 'Fira Code', monospace;
-                text-align: center;
-                box-shadow: 0 0 20px rgba(255, 60, 0, 0.3);
-            }
-
-            .timer-val {
-                font-size: 1.5rem;
-                color: #ff3c00;
-                font-weight: bold;
-                display: block;
-            }
-
-            .timer-label-destruct {
-                font-size: 8px;
-                letter-spacing: 2px;
-                color: rgba(255, 60, 0, 0.6);
-            }
-
-            #shredCanvas {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                pointer-events: none;
-                z-index: 2000;
-                display: none;
-            }
-
-            .binary-corruption {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                pointer-events: none;
-                color: #00f7ff;
-                font-family: 'Fira Code', monospace;
-                font-size: 10px;
-                overflow: hidden;
-                opacity: 0;
-                transition: opacity 1s ease;
-                z-index: 1500;
-            }
-
-            .critical-warning {
-                animation: pulse-red 0.5s infinite;
-            }
-
-            @keyframes pulse-red {
-                0% {
-                    box-shadow: 0 0 10px rgba(255, 60, 0, 0.3);
-                }
-
-                50% {
-                    box-shadow: 0 0 30px #ff3c00;
-                    border-color: #ff3c00;
-                }
-
-                100% {
-                    box-shadow: 0 0 10px rgba(255, 60, 0, 0.3);
-                }
-            }
-
-            flex-direction: column;
-            gap: 15px;
-            border-bottom: 1px solid var(--hud-border);
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-
-        @media (min-width: 768px) {
-            .portal-header {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: flex-end;
-                padding-bottom: 8px;
-                margin-bottom: 25px;
-            }
-        }
-
-        .brand-text {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1rem;
-            font-weight: 600;
-            letter-spacing: 2px;
-            color: var(--hud-cyan);
-            text-shadow: 0 0 15px rgba(0, 247, 255, 0.4);
-            text-transform: lowercase;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .brand-text:hover {
-            text-shadow: 0 0 25px rgba(0, 247, 255, 0.8);
-            opacity: 0.8;
-        }
-
-        @media (min-width: 768px) {
-            .brand-text {
-                font-size: 1.3rem;
-                letter-spacing: 4px;
-            }
-        }
-
-        .tech-metadata {
-            font-family: 'Fira Code', monospace;
-            font-size: 9px;
-            color: rgba(255, 255, 255, 0.4);
-            text-transform: none;
-        }
-
-        @media (min-width: 768px) {
-            .tech-metadata {
-                font-size: 10px;
-                text-align: right;
-            }
-        }
-
-        .document-viewer {
-            background: rgba(13, 17, 28, 0.85);
-            border: 1px solid var(--hud-border);
-            border-radius: 4px;
-            overflow: hidden;
+        /* --- MILITARY HUD TIMER --- */
+        .chronos-timer-hud {
             position: relative;
-            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.6);
-        }
-
-        .viewer-controls {
-            background: rgba(0, 247, 255, 0.05);
-            padding: 8px 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--hud-border);
-        }
-
-        .control-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--hud-border);
-            display: inline-block;
-            margin-right: 4px;
-        }
-
-        .msg-container {
-            padding: 5px;
-            min-height: 200px;
-            position: relative;
-            scrollbar-width: none;
-            overflow-x: hidden;
-        }
-
-        @media (min-width: 768px) {
-            .msg-container {
-                padding: 10px;
-                min-height: 250px;
-            }
-        }
-
-        .msg-container::-webkit-scrollbar {
+            top: auto;
+            left: auto;
+            transform: none;
+            background: rgba(20, 0, 0, 0.6);
+            border: 1px solid rgba(255, 60, 0, 0.3);
+            padding: 5px 15px;
+            border-radius: 2px;
             display: none;
-        }
-
-        .terminal-log-dock {
             font-family: 'Fira Code', monospace;
-            font-size: 9px;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 8px 15px;
-            color: rgba(0, 247, 255, 0.4);
-            border-top: 1px solid var(--hud-border);
-            max-height: 80px;
-            overflow-y: auto;
-            scrollbar-width: none;
+            text-align: right;
+            box-shadow: none;
+            margin-left: auto;
+            /* Push to right in flex header */
         }
 
-        @media (min-width: 768px) {
-            .terminal-log-dock {
-                font-size: 10px;
-                padding: 10px 20px;
-                max-height: 100px;
-            }
+        .timer-val {
+            font-size: 1.1rem;
+            color: #ff3c00;
+            font-weight: bold;
+            display: block;
+            text-shadow: 0 0 10px rgba(255, 60, 0, 0.4);
         }
 
-        .terminal-log-dock::-webkit-scrollbar {
-            display: none;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 3px 10px;
-            border: 1px solid var(--hud-cyan);
-            color: var(--hud-cyan);
+        .timer-label-destruct {
             font-size: 8px;
             letter-spacing: 1px;
-            border-radius: 20px;
-            margin-top: 5px;
+            color: rgba(255, 60, 0, 0.8);
+            display: block;
+            margin-bottom: 2px;
         }
 
-        /* --- UTILS --- */
-        .glitch-text {
-            animation: glitch 3s infinite;
-        }
-
-        @keyframes glitch {
-            0% {
-                transform: translate(0);
-            }
-
-            1% {
-                transform: translate(-1px, 1px);
-            }
-
-            2% {
-                transform: translate(1px, -1px);
-            }
-
-            3% {
-                transform: translate(0);
-            }
-        }
-
-        .error-stage {
-            color: var(--hud-red);
-            border-color: var(--hud-red) !important;
-            text-shadow: 0 0 10px rgba(255, 62, 62, 0.3);
+        #shredCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2000;
+            display: none;
+            filter: blur(2px) contrast(3);
+            /* Fire effect base */
         }
     </style>
 </head>
@@ -411,11 +214,6 @@
                 ESTABLISHING_AES_GCM_HANDSHAKE...</p>
         </div>
 
-        <div class="chronos-timer-hud" id="timerHud">
-            <span class="timer-label-destruct">SHRED_COUNTDOWN</span>
-            <span class="timer-val" id="countdownVal">00:00:00</span>
-        </div>
-
         <canvas id="shredCanvas"></canvas>
         <div class="binary-corruption" id="binaryRain"></div>
 
@@ -428,6 +226,12 @@
                         style="margin-top: 0; padding: 4px 12px; font-size: 9px; height: fit-content;">
                         BURN_AFTER_READING_ACTIVE</div>
                 </div>
+
+                <div class="chronos-timer-hud" id="timerHud">
+                    <span class="timer-label-destruct">TIME_TO_SELF_DESTRUCT</span>
+                    <span class="timer-val" id="countdownVal">00:00:00</span>
+                </div>
+
                 <div class="tech-metadata">
                     SECURE_NODE: B. Eng. Felipe de Jesús Miramontes Romero<br>
                     <span id="sigIdStamp">SIGNAL_ID: NULL</span><br>
@@ -436,6 +240,7 @@
             </header>
 
             <main class="document-viewer">
+                <!-- ... content ... -->
                 <div class="viewer-controls">
                     <div>
                         <span class="control-dot"></span>
@@ -459,6 +264,7 @@
     </div>
 
     <script type="module">
+        // ... (existing init/decrypt/log logic remains same) ...
         const consoleEl = document.getElementById('console');
         const statusTitle = document.getElementById('statusTitle');
         const msgBody = document.getElementById('msgBody');
@@ -526,7 +332,6 @@
                         if (data.burn_timer && data.burn_timer > 0) {
                             startChronosCountdown(data.burn_timer, id);
                         } else {
-                            // Instant shred for non-timer messages
                             executeInstantShred(id);
                         }
                     } catch (e) {
@@ -545,6 +350,7 @@
 
         init();
         async function executeInstantShred(id) {
+            // ... existing instant shred ...
             log('EXECUTING_EPHEMERAL_SHRED...', 'SHRED');
             await fetch('mailer.php', {
                 method: 'POST',
@@ -557,17 +363,16 @@
         function startChronosCountdown(seconds, id) {
             const hud = document.getElementById('timerHud');
             const display = document.getElementById('countdownVal');
-            hud.style.display = 'block';
+            hud.style.display = 'block'; // Now inside header
             let remaining = seconds;
 
-            // REDUNDANT FAILSAFE: Force destruction at T+1 second even if interval fails
+            // REDUNDANT FAILSAFE
             setTimeout(() => {
                 triggerFinalDestruction(id);
             }, (seconds + 1) * 1000);
 
             const interval = setInterval(async () => {
                 remaining--;
-                // Sanity check for negative display
                 const r = Math.max(0, remaining);
                 const m = Math.floor(r / 60);
                 const s = r % 60;
@@ -583,27 +388,14 @@
         }
 
         async function triggerFinalDestruction(id) {
-            // IMMEDIATE UI KILL SWITCH
+            // KILL SWITCH: Hide content immediately
+            document.getElementById('stage2').style.visibility = 'hidden';
+            // We use visibility:hidden to keep layout size for canvas overlay if needed, or just display:none
             document.getElementById('stage2').style.display = 'none';
-            document.getElementById('timerHud').style.display = 'none';
 
-            const rain = document.getElementById('binaryRain');
-            rain.style.opacity = '1';
+            log('CHRONOS_ZERO: INITIATING_THERMAL_INCINERATION', 'CRITICAL');
 
-            // Binary Rain Generation
-            for (let i = 0; i < 100; i++) {
-                const div = document.createElement('div');
-                div.style.position = 'absolute';
-                div.style.left = Math.random() * 100 + '%';
-                div.style.top = '-20px';
-                div.innerText = Math.random() > 0.5 ? '1' : '0';
-                div.style.animation = `fall ${Math.random() * 2 + 1}s linear forwards`;
-                rain.appendChild(div);
-            }
-
-            log('CHRONOS_ZERO: INITIATING_MAXIMUM_OVERRIDE_DESTRUCTION', 'CRITICAL');
-
-            // Thermal Explosion
+            // Fire Effect (DuckDuckGo style - Rising Flames)
             const canvas = document.getElementById('shredCanvas');
             canvas.style.display = 'block';
             const ctx = canvas.getContext('2d');
@@ -611,38 +403,53 @@
             canvas.height = window.innerHeight;
 
             const particles = [];
-            for (let i = 0; i < 200; i++) {
+            const particleCount = 400;
+
+            for (let i = 0; i < particleCount; i++) {
                 particles.push({
-                    x: canvas.width / 2,
-                    y: canvas.height / 2,
-                    vx: (Math.random() - 0.5) * 20,
-                    vy: (Math.random() - 0.5) * 20,
-                    size: Math.random() * 5 + 2,
-                    life: 1
+                    x: Math.random() * canvas.width,
+                    y: canvas.height + Math.random() * 100, // Start below screen
+                    targetY: -100,
+                    speed: Math.random() * 15 + 5,
+                    size: Math.random() * 30 + 10,
+                    hue: Math.random() * 30 + 10, // Orange/Yellow/Red
+                    life: Math.random() * 0.5 + 0.5
                 });
             }
 
-            function animate() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                let alive = false;
+            function animateFire() {
+                // fade effect for trails
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                let active = false;
                 particles.forEach(p => {
-                    if (p.life > 0) {
-                        alive = true;
-                        p.x += p.vx;
-                        p.y += p.vy;
-                        p.life -= 0.01;
-                        ctx.fillStyle = `rgba(255, ${Math.floor(p.life * 255)}, 0, ${p.life})`;
+                    p.y -= p.speed;
+                    p.size *= 0.95; // Shrink as it rises
+                    p.life -= 0.01;
+
+                    if (p.life > 0 && p.size > 0.5) {
+                        active = true;
                         ctx.beginPath();
                         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
+                        gradient.addColorStop(0, `hsla(${p.hue}, 100%, 60%, ${p.life})`);
+                        gradient.addColorStop(1, `hsla(${p.hue}, 100%, 50%, 0)`);
+                        ctx.fillStyle = gradient;
                         ctx.fill();
+
+                        // Jitter x for flicker
+                        p.x += (Math.random() - 0.5) * 4;
                     }
                 });
-                if (alive) requestAnimationFrame(animate);
-                else {
-                    window.location.reload(); // Final purge
+
+                if (active) {
+                    requestAnimationFrame(animateFire);
+                } else {
+                    document.body.innerHTML = '<div style="background:#000; color:#ff3c00; height:100vh; display:flex; flexDirection:column; align-items:center; justify-content:center; font-family:Orbitron, sans-serif; letter-spacing:5px; text-align:center;"><div>SIGNAL_ASHES</div><div style="font-size:10px; opacity:0.6; margin-top:10px;">ZERO_RESIDUE_CONFIRMED</div></div>';
                 }
             }
-            animate();
+            animateFire();
 
             // Fire and forget server-side shred
             fetch('mailer.php', {
@@ -650,10 +457,6 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'shred_signal', id })
             });
-
-            setTimeout(() => {
-                document.body.innerHTML = '<div style="background:#000; color:#ff3c00; height:100vh; display:flex; align-items:center; justify-content:center; font-family:Orbitron, sans-serif; letter-spacing:5px;">SIGNAL_VOID // ZERO_RESIDUE_CONFIRMED</div>';
-            }, 1500);
         }
     </script>
     <style>
