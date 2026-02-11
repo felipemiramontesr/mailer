@@ -199,7 +199,17 @@ if ($action === 'send') {
         $mail->SMTPSecure = (SMTP_SECURE === 'ssl') ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = SMTP_PORT;
         $mail->setFrom(SMTP_USER, 'Felipe Miramontes (SECURE_NODE)');
-        $mail->addAddress($recipient);
+
+        // Multi-Recipient Logic (Comma Separated)
+        // All recipients receive the SAME link. First to open destroys it.
+        $recipients = explode(',', $recipient);
+        foreach ($recipients as $email) {
+            $email = trim($email);
+            if (!empty($email)) {
+                $mail->addAddress($email);
+            }
+        }
+
         $mail->CharSet = 'UTF-8';
         $mail->isHTML(true);
         $mail->Subject = $subject;
