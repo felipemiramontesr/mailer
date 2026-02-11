@@ -121,6 +121,7 @@ if (!$is_ai_action && $action !== null && !in_array($action, ['fetch_signal', 's
             $mail->setFrom(SMTP_USER, 'Felipe Miramontes (SECURE_NODE)');
             $mail->addAddress(MASTER_AUTH_EMAIL);
             $mail->Subject = "VERIFICATION PIN: $newPIN";
+            $mail->CharSet = 'UTF-8';
             $mail->isHTML(true);
             $mail->Body = "HUD 2FA PIN: <b>$newPIN</b>";
             $mail->send();
@@ -199,6 +200,7 @@ if ($action === 'send') {
         $mail->Port = SMTP_PORT;
         $mail->setFrom(SMTP_USER, 'Felipe Miramontes (SECURE_NODE)');
         $mail->addAddress($recipient);
+        $mail->CharSet = 'UTF-8';
         $mail->isHTML(true);
         $mail->Subject = $subject;
         $mail->Body = $messageBody;
