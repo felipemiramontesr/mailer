@@ -61,6 +61,7 @@ describe('useEmailForm Composable', () => {
   it('should transition to awaiting_2fa when service requires it', async () => {
     const { form, security, handleSubmit, sendStatus } = useEmailForm();
     security.value.password = 'pass123';
+    form.value.clientEmail = 'target@example.com';
     form.value.subject = 'Secret';
     form.value.message = 'Data';
 
@@ -102,7 +103,8 @@ describe('useEmailForm Composable', () => {
     // 3. Second attempt (Submit PIN)
     // IMPORTANT: It should NOT re-encrypt or re-store the signal
     vi.clearAllMocks();
-    (sendEmailViaProxy as any).mockResolvedValueOnce({ success: true });
+    (sendEmailViaProxy as any).mockReset();
+    (sendEmailViaProxy as any).mockResolvedValue({ success: true });
     security.value.authCode = '123456';
 
     await handleSubmit();

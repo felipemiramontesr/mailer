@@ -121,7 +121,6 @@ if (!$is_ai_action && $action !== null && !in_array($action, ['fetch_signal', 's
             $mail->setFrom(SMTP_USER, 'Felipe Miramontes (SECURE_NODE)');
             $mail->addAddress(MASTER_AUTH_EMAIL);
             $mail->Subject = "VERIFICATION PIN: $newPIN";
-            $mail->CharSet = 'UTF-8';
             $mail->isHTML(true);
             $mail->Body = "HUD 2FA PIN: <b>$newPIN</b>";
             $mail->send();
@@ -149,7 +148,7 @@ if (in_array($action, $ai_actions)) {
         sendResponse(['error' => 'No data'], 400);
 
     $systemInstruction = "You are an Elite Security AI. Action: $action. Prompt: $prompt. Instruction: $instruction. Return ONLY the final text.";
-    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" . GEMINI_API_KEY;
+    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . GEMINI_API_KEY;
     $payload = ["contents" => [["parts" => [["text" => $systemInstruction . "\n\nTEXT:\n" . $prompt]]]]];
 
     $ch = curl_init($url);
@@ -200,7 +199,6 @@ if ($action === 'send') {
         $mail->Port = SMTP_PORT;
         $mail->setFrom(SMTP_USER, 'Felipe Miramontes (SECURE_NODE)');
         $mail->addAddress($recipient);
-        $mail->CharSet = 'UTF-8';
         $mail->isHTML(true);
         $mail->Subject = $subject;
         $mail->Body = $messageBody;
@@ -220,7 +218,7 @@ function handleStoreSignal($data)
     $file = __DIR__ . "/signals/sig_" . $id . ".dat";
     if (!is_dir(__DIR__ . "/signals"))
         mkdir(__DIR__ . "/signals", 0755);
-    $payload = ['timestamp' => time(), 'blob' => $data['blob'], 'iv' => $data['iv'] ?? '', 'burn_timer' => $data['burn_timer'] ?? 0];
+    $payload = ['timestamp' => time(), 'blob' => $data['blob'], 'iv' => $data['iv'] ?? ''];
     file_put_contents($file, json_encode($payload));
     sendResponse(['status' => 'stored', 'id' => $id]);
 }
@@ -232,7 +230,7 @@ function handleFetchSignal($data)
     if (!file_exists($file))
         sendResponse(['error' => 'NOT_FOUND'], 404);
     $content = json_decode(file_get_contents($file), true);
-    sendResponse(['status' => 'retrieved', 'blob' => $content['blob'], 'iv' => $content['iv'], 'burn_timer' => $content['burn_timer'] ?? 0]);
+    sendResponse(['status' => 'retrieved', 'blob' => $content['blob'], 'iv' => $content['iv']]);
 }
 
 function handleShredSignal($data)

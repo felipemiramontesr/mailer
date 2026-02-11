@@ -576,6 +576,10 @@
         }
 
         async function triggerFinalDestruction(id) {
+            // IMMEDIATE UI KILL SWITCH
+            document.getElementById('stage2').style.display = 'none';
+            document.getElementById('timerHud').style.display = 'none';
+
             const rain = document.getElementById('binaryRain');
             rain.style.opacity = '1';
 

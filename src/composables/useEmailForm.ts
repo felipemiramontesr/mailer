@@ -77,7 +77,23 @@ export function useEmailForm() {
    * Handles the primary email transmission sequence
    */
   const handleSubmit = async () => {
-    if (!isFormValid.value) return;
+    // Explicit Validation for better UX (No silent failures)
+    if (!form.value.clientEmail || !form.value.clientEmail.includes('@')) {
+      addToast('Recipient Email Required', 'error');
+      const emailInput = document.querySelector('input[type="email"]') as HTMLInputElement;
+      if (emailInput) emailInput.focus();
+      return;
+    }
+    if (!form.value.subject) {
+      addToast('Subject Line Required', 'error');
+      return;
+    }
+    if (!form.value.message) {
+      addToast('Message Content Required', 'error');
+      return;
+    }
+
+    if (isSending.value) return;
 
     isSending.value = true;
     sendStatus.value = 'sending';

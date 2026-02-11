@@ -263,10 +263,11 @@ watch(
         </div>
 
         <button
-          type="submit"
+          type="button"
           class="cyan-btn send-btn"
           :class="sendStatus"
-          :disabled="!isFormValid"
+          @click="handleSubmit"
+          :disabled="isRefining || isSending"
         >
           <template v-if="sendStatus === 'idle'">
             <Send :size="20" />

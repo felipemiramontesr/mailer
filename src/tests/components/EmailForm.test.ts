@@ -51,22 +51,17 @@ describe('EmailForm.vue', () => {
     expect(lpButton.classes()).toContain('active');
   });
 
-  it('disables send button when subject or message is empty', () => {
+  it('keeps send button enabled to allow validation toasts', () => {
     const wrapper = mount(EmailForm);
     const sendButton = wrapper.find('button.send-btn');
 
-    // Initial state is empty
-    expect(sendButton.attributes('disabled')).toBeDefined();
+    // Button should be enabled to show Error Toast on click
+    expect(sendButton.attributes('disabled')).toBeUndefined();
   });
 
   it('enables send button when form is filled', async () => {
     const wrapper = mount(EmailForm);
-
-    // Fill subject and message (usually indices 2 and 3 based on structure)
-    // Using v-model bindings via wrapper.setValue
-    await wrapper.find('input[placeholder*="subject"]').setValue('Project Update');
-    await wrapper.find('textarea').setValue('This is a test message');
-
+    // This test is less relevant now as button is always enabled, but ensures no regression
     const sendButton = wrapper.find('button.send-btn');
     expect(sendButton.attributes('disabled')).toBeUndefined();
   });
@@ -78,15 +73,21 @@ describe('EmailForm.vue', () => {
     expect(wrapper.find('input[type="password"]').exists()).toBe(true);
     expect(wrapper.find('.pin-input').exists()).toBe(false);
 
-    // Mock 2FA required response
+    // Mock 2FA required response (needs to be mocked before click)
     (sendEmailViaProxy as any).mockResolvedValueOnce({ status: '2fa_required' });
 
-    // Fill form to enable button
+    // Fill form to pass validation
+    await wrapper.find('input[type="text"][readonly]').setValue('Client'); // Client Name is readonly
+    await wrapper.find('input[type="email"]').setValue('test@example.com'); // Must replace empty email
     await wrapper.find('input[placeholder*="subject"]').setValue('Trial');
     await wrapper.find('textarea').setValue('Message');
     await wrapper.find('input[placeholder*="password"]').setValue('master123');
 
-    await wrapper.find('form').trigger('submit.prevent');
+    // Trigger click instead of submit
+    await wrapper.find('button.send-btn').trigger('click');
+
+    // Wait for async operations
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     // After submit and 2FA response, should show PIN field
     expect(wrapper.find('.pin-input').exists()).toBe(true);
