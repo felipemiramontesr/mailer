@@ -18,7 +18,6 @@ function inject() {
 
   // 1. Inject config.php
   if (fs.existsSync(paths.configTemplate)) {
-    console.log(`[DEBUG] VITE_GEMINI_API_KEY present? ${!!process.env.VITE_GEMINI_API_KEY} (Length: ${process.env.VITE_GEMINI_API_KEY?.length})`);
     let config = fs.readFileSync(paths.configTemplate, 'utf8');
     config = config.replace('__GEMINI_API_KEY__', () => process.env.VITE_GEMINI_API_KEY || '');
     config = config.replace('__SMTP_HOST__', () => process.env.SMTP_HOST || '');
