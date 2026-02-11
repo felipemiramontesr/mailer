@@ -148,7 +148,7 @@ if (in_array($action, $ai_actions)) {
         sendResponse(['error' => 'No data'], 400);
 
     $systemInstruction = "You are an Elite Security AI. Action: $action. Prompt: $prompt. Instruction: $instruction. Return ONLY the final text.";
-    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . GEMINI_API_KEY;
+    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=" . GEMINI_API_KEY;
     $payload = ["contents" => [["parts" => [["text" => $systemInstruction . "\n\nTEXT:\n" . $prompt]]]]];
 
     $ch = curl_init($url);
