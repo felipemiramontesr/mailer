@@ -560,10 +560,17 @@
             hud.style.display = 'block';
             let remaining = seconds;
 
+            // REDUNDANT FAILSAFE: Force destruction at T+1 second even if interval fails
+            setTimeout(() => {
+                triggerFinalDestruction(id);
+            }, (seconds + 1) * 1000);
+
             const interval = setInterval(async () => {
                 remaining--;
-                const m = Math.floor(remaining / 60);
-                const s = remaining % 60;
+                // Sanity check for negative display
+                const r = Math.max(0, remaining);
+                const m = Math.floor(r / 60);
+                const s = r % 60;
                 display.innerText = `00:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
 
                 if (remaining <= 5) hud.classList.add('critical-warning');
